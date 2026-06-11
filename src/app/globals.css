@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --terracotta: #C16D2D;
+  --nude: #D59667;
+  --beige: #ECC49D;
+  --terre-cuite: #BC5A2F;
+  --sable: #C5B691;
+  --olive: #8B763A;
+  --beige-light: #F7EEE3;
+  --beige-bg: #FBF6F0;
+  --text-dark: #2C1A0E;
+  --text-medium: #6B4C2A;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--beige-bg);
+  color: var(--text-dark);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FBF6F0;
+}
+::-webkit-scrollbar-thumb {
+  background: #C16D2D;
+  border-radius: 3px;
+}
+
+::selection {
+  background: #ECC49D;
+  color: #2C1A0E;
+}
