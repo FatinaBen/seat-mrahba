@@ -39,11 +39,11 @@ const reasons = [
 
 export default function WhyUs() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="pourquoi" className="py-24 bg-[#2C1A0E]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="pourquoi" className="py-24 md:py-32 bg-[#2C1A0E]">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
@@ -51,16 +51,16 @@ export default function WhyUs() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-sm font-medium tracking-[0.2em] uppercase text-[#D59667] mb-4">
-            ✦ Notre différence
+          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-[#D59667] mb-5">
+            <span>✦</span> Notre différence <span>✦</span>
           </span>
           <h2
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
+            className="text-[2rem] sm:text-4xl md:text-5xl font-bold text-white mb-5 leading-tight"
             style={{ fontFamily: 'Playfair Display, serif' }}
           >
             Pourquoi choisir Seat & Mrahba ?
           </h2>
-          <p className="text-lg text-[#C5B691] max-w-2xl mx-auto">
+          <p className="text-[17px] text-[#C5B691] max-w-xl mx-auto leading-relaxed">
             Parce que les grands moments méritent une attention aux détails que vous ne trouverez nulle part ailleurs.
           </p>
         </motion.div>

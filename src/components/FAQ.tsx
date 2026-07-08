@@ -7,93 +7,105 @@ import { Plus, Minus } from 'lucide-react';
 const faqs = [
   {
     question: 'Comment fonctionne le QR code ?',
-    answer: "Le QR code est un code scannable unique lié à votre page web personnalisée. Vos invités n'ont qu'à ouvrir l'appareil photo de leur smartphone et pointer vers le code. En une seconde, ils accèdent à toutes les informations de votre événement, sans application à installer.",
+    answer: "Le QR code est un code scannable unique lié à votre page web personnalisée. Vos invités n'ont qu'à ouvrir l'appareil photo de leur smartphone et le pointer vers le code. En une seconde, ils accèdent à toutes les informations de votre événement, sans application à installer.",
   },
   {
-    question: 'Peut-on modifier les informations après la création de la page ?',
-    answer: "Absolument. Nous pouvons modifier le contenu de votre page à tout moment avant et pendant votre événement. Changement de lieu de dernière minute, ajout d'un programme, modification du menu — tout peut être mis à jour rapidement, sans changer le QR code.",
+    question: 'Peut-on modifier les informations après la création ?',
+    answer: "Absolument. Nous pouvons modifier le contenu de votre page à tout moment avant et pendant votre événement. Changement de lieu de dernière minute, ajout d'un programme, modification du menu — tout est mis à jour en quelques heures, sans changer le QR code.",
   },
   {
     question: "Les invités doivent-ils installer une application ?",
-    answer: "Non, aucune application n'est nécessaire. La page est accessible directement via le navigateur web de votre smartphone après un simple scan du QR code. Cela fonctionne sur tous les appareils — iPhone, Android, tablettes — sans aucune friction.",
+    answer: "Non, aucune application n'est nécessaire. La page est accessible directement via le navigateur web après un simple scan. Cela fonctionne sur tous les appareils — iPhone, Android, tablettes — sans aucune friction.",
   },
   {
-    question: 'Combien de temps faut-il pour créer la page ?',
-    answer: "Une fois que vous nous avez transmis toutes les informations nécessaires, nous livrons votre page en général sous 48 à 72 heures ouvrées. Pour les formules Signature avec des personnalisations avancées, comptez 5 à 7 jours. Nous proposons également un service express sur demande.",
+    question: 'Combien de temps pour créer la page ?',
+    answer: "Une fois toutes les informations reçues, nous livrons votre page en 48 à 72 heures ouvrées. Pour les formules Signature avec personnalisations avancées, comptez 5 à 7 jours. Nous proposons également un service express sur demande.",
   },
   {
-    question: "La page est-elle accessible en plusieurs langues ?",
-    answer: "Oui, nous pouvons créer votre page en français, arabe, anglais ou dans une combinaison de langues selon vos besoins. Idéal pour les mariages mixtes ou internationaux où les invités viennent de différents pays.",
+    question: "La page est-elle disponible en plusieurs langues ?",
+    answer: "Oui, nous créons votre page en français, arabe, anglais ou en combinaison selon vos besoins. Idéal pour les mariages mixtes ou internationaux où les invités viennent de différents pays.",
   },
   {
     question: "Que se passe-t-il après l'événement ?",
-    answer: "Votre page reste accessible pendant 30 jours après l'événement. Cela permet à vos invités de retrouver les photos et souvenirs. À l'issue de cette période, vous pouvez choisir de prolonger l'accès, de télécharger le contenu ou de fermer la page. Tout cela est discuté en amont.",
+    answer: "Votre page reste accessible pendant 30 jours après l'événement, permettant à vos invités de retrouver photos et souvenirs. À l'issue de cette période, vous pouvez prolonger l'accès ou télécharger le contenu — tout est discuté en amont.",
   },
 ];
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="faq" className="py-24 bg-[#F7EEE3]">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="py-24 md:py-32 bg-[#F7EEE3]">
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-10">
+
+        {/* Header */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.65 }}
+          className="text-center mb-14"
         >
-          <span className="inline-block text-sm font-medium tracking-[0.2em] uppercase text-[#8B763A] mb-4">
-            ✦ Questions fréquentes
+          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-[#8B763A] mb-5">
+            <span>✦</span> FAQ <span>✦</span>
           </span>
           <h2
-            className="text-4xl md:text-5xl font-bold text-[#2C1A0E] mb-6"
+            className="text-[2rem] sm:text-4xl md:text-5xl font-bold text-[#2C1A0E] mb-5 leading-tight"
             style={{ fontFamily: 'Playfair Display, serif' }}
           >
             Vous avez des questions ?
           </h2>
-          <p className="text-lg text-[#6B4C2A]">
-            Nous avons les réponses. Et si vous n&apos;en trouvez pas, contactez-nous directement.
+          <p className="text-[17px] text-[#6B4C2A] leading-relaxed">
+            Nous avons les réponses. Et si vous n&apos;en trouvez pas, écrivez-nous directement.
           </p>
         </motion.div>
 
-        <div className="space-y-3">
+        {/* Accordion */}
+        <div className="space-y-3 mb-14">
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-white rounded-2xl border border-[#ECC49D]/30 overflow-hidden shadow-sm"
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className={`rounded-2xl overflow-hidden shadow-sm transition-shadow ${
+                openIndex === i
+                  ? 'border border-[#C16D2D]/30 bg-white shadow-md'
+                  : 'border border-[#ECC49D]/30 bg-white'
+              }`}
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-[#FBF6F0] transition-colors"
+                className="w-full flex items-center justify-between p-5 sm:p-6 text-left hover:bg-[#FBF6F0] transition-colors group"
+                aria-expanded={openIndex === i}
               >
-                <span className="font-semibold text-[#2C1A0E] pr-4 text-sm md:text-base">
+                <span className={`font-semibold pr-4 text-[14.5px] sm:text-[15.5px] leading-snug transition-colors ${
+                  openIndex === i ? 'text-[#C16D2D]' : 'text-[#2C1A0E] group-hover:text-[#C16D2D]'
+                }`}>
                   {faq.question}
                 </span>
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#ECC49D]/30 flex items-center justify-center">
+                <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                  openIndex === i ? 'bg-[#C16D2D]' : 'bg-[#ECC49D]/40'
+                }`}>
                   {openIndex === i ? (
-                    <Minus className="w-4 h-4 text-[#C16D2D]" />
+                    <Minus className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
                   ) : (
-                    <Plus className="w-4 h-4 text-[#C16D2D]" />
+                    <Plus className="w-3.5 h-3.5 text-[#C16D2D]" strokeWidth={2.5} />
                   )}
                 </span>
               </button>
 
-              <AnimatePresence>
+              <AnimatePresence initial={false}>
                 {openIndex === i && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.28 }}
                   >
-                    <div className="px-6 pb-6 text-[#6B4C2A] text-sm leading-relaxed border-t border-[#ECC49D]/20 pt-4">
+                    <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-[#6B4C2A] text-[14.5px] leading-relaxed border-t border-[#ECC49D]/25 pt-4">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -102,6 +114,31 @@ export default function FAQ() {
             </motion.div>
           ))}
         </div>
+
+        {/* CTA after FAQ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="bg-[#2C1A0E] rounded-3xl p-8 text-center"
+        >
+          <p className="text-[#D59667] text-sm tracking-widest uppercase mb-3">✦ Une autre question ?</p>
+          <h3
+            className="text-xl font-bold text-white mb-4"
+            style={{ fontFamily: 'Playfair Display, serif' }}
+          >
+            Nous sommes là pour vous répondre
+          </h3>
+          <p className="text-[#C5B691] text-sm mb-6 leading-relaxed max-w-sm mx-auto">
+            Envoyez-nous votre message, nous vous répondons sous 24 heures ouvrées.
+          </p>
+          <a
+            href="#contact"
+            className="inline-block bg-[#C16D2D] text-white px-8 py-3.5 rounded-full text-[14.5px] font-semibold hover:bg-[#BC5A2F] active:scale-[0.97] transition-all shadow-lg"
+          >
+            Nous contacter
+          </a>
+        </motion.div>
       </div>
     </section>
   );

@@ -37,15 +37,15 @@ const itemVariants: Variants = {
 
 export default function About() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
   const cardsRef = useRef(null);
-  const cardsInView = useInView(cardsRef, { once: true });
+  const cardsInView = useInView(cardsRef, { once: true, margin: '-80px' });
 
   return (
     <section
       id="about"
       ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden"
+      className="relative py-24 md:py-32 overflow-hidden bg-[#FBF6F0]"
       style={{ background: '#FBF6F0' }}
     >
       {/* Decorative arch / geometric element */}
@@ -64,7 +64,7 @@ export default function About() {
         </svg>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
         {/* Section label + Title */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -72,10 +72,8 @@ export default function About() {
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase text-[#8B763A] mb-4">
-            <span>✦</span>
-            <span>À propos</span>
-            <span>✦</span>
+          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-[#8B763A] mb-5">
+            <span>✦</span> À propos <span>✦</span>
           </span>
 
           <h2
