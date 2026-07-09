@@ -17,7 +17,7 @@ const steps = [
   {
     number: '03',
     title: 'Vos invités scannent',
-    description: "Placez votre QR code sur les faire-parts ou les tables. En un scan, vos invités accèdent à toutes les informations.",
+    description: "Un seul QR code à l'entrée de votre événement. Un scan suffit pour que vos invités retrouvent toutes les informations importantes.",
   },
 ];
 
