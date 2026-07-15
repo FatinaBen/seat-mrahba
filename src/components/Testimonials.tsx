@@ -2,134 +2,109 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Star } from 'lucide-react';
+import { Clock, Palette, HeadphonesIcon } from 'lucide-react';
 
-const testimonials = [
+const engagements = [
   {
-    quote: "Seat & Mrahba a transformé notre mariage. Nos invités ont été bluffés par le QR code — ils ont trouvé toutes les informations en quelques secondes. C'était raffiné, moderne et tellement nous.",
-    name: 'Nadia B.',
-    event: 'Mariage',
-    city: 'Casablanca',
-    initials: 'NB',
-    color: '#C16D2D',
+    icon: Clock,
+    title: 'Livraison en 48h',
+    description: 'Une fois vos informations reçues, votre page est conçue et livrée en 48 heures ouvrées. Service express disponible sur demande.',
   },
   {
-    quote: "Pour nos fiançailles à Marrakech, nous voulions quelque chose d'unique. Seat & Mrahba nous a livré une page magnifique en 48h. Nos familles ont adoré. Le plan de table digital a évité tellement de questions !",
-    name: 'Leila & Karim M.',
-    event: 'Fiançailles',
-    city: 'Marrakech',
-    initials: 'LK',
-    color: '#8B763A',
+    icon: Palette,
+    title: 'Personnalisation totale',
+    description: 'Couleurs, typographies, contenus, messages personnalisés par table — votre page reflète l\'identité unique de votre événement.',
   },
   {
-    quote: "J'ai organisé l'EVJF de ma meilleure amie avec Seat & Mrahba. Le QR code sur les invitations a fait l'effet d'une bombe — elles étaient toutes sur la page dès réception. Service impeccable !",
-    name: 'Sophie R.',
-    event: 'EVJF',
-    city: 'Paris',
-    initials: 'SR',
-    color: '#BC5A2F',
-  },
-  {
-    quote: "Un baby shower comme dans les magazines. Chaque invitée avait le programme sur son téléphone, la liste des cadeaux, les infos sur le lieu... C'était parfait et tellement pratique.",
-    name: 'Fatima O.',
-    event: 'Baby Shower',
-    city: 'Rabat',
-    initials: 'FO',
-    color: '#D59667',
+    icon: HeadphonesIcon,
+    title: 'Accompagnement dédié',
+    description: 'De la prise en charge à votre grand jour, notre équipe reste disponible. Modifications, ajustements, urgences — nous sommes là.',
   },
 ];
 
 export default function Testimonials() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="temoignages" className="py-24 bg-[#FBF6F0]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="engagements" className="py-28 md:py-36" style={{ background: '#FFFFFF' }}>
+      {/* Top rule */}
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
+
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-sm font-medium tracking-[0.2em] uppercase text-[#8B763A] mb-4">
-            ✦ Témoignages
-          </span>
+          <p className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#8A7235] mb-6">
+            Nos engagements
+          </p>
           <h2
-            className="text-4xl md:text-5xl font-bold text-[#2C1A0E] mb-6"
+            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
             style={{ fontFamily: 'Playfair Display, serif' }}
           >
-            Ils nous font confiance
+            Ce que nous vous promettons
           </h2>
-          <p className="text-lg text-[#6B4C2A] max-w-2xl mx-auto">
-            Des centaines d&apos;événements, des milliers d&apos;invités comblés. Voici quelques mots de nos clients.
+          <p className="text-base text-[#9B7A56] max-w-md mx-auto leading-relaxed">
+            Trois engagements concrets, sans compromis, pour chaque événement que nous accompagnons.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-              className="bg-white rounded-3xl p-8 shadow-md border border-[#ECC49D]/20 flex flex-col gap-6"
-            >
-              {/* Stars */}
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, j) => (
-                  <Star key={j} className="w-4 h-4 fill-[#D59667] text-[#D59667]" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <p className="text-[#2C1A0E] leading-relaxed italic text-sm flex-1">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-4">
+        <div className="grid md:grid-cols-3 gap-6">
+          {engagements.map((e, i) => {
+            const Icon = e.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: i * 0.14 }}
+                className="group text-center p-8 rounded-2xl transition-all duration-300"
+                style={{
+                  border: '1px solid rgba(232,196,154,0.2)',
+                  boxShadow: '0 2px 24px rgba(184,92,40,0.05)',
+                }}
+              >
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                  style={{ background: `linear-gradient(135deg, ${t.color}, ${t.color}99)` }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-6"
+                  style={{ background: 'rgba(138,114,53,0.08)' }}
                 >
-                  {t.initials}
+                  <Icon size={20} color="#8A7235" strokeWidth={1.5} />
                 </div>
-                <div>
-                  <p className="font-semibold text-[#2C1A0E] text-sm">{t.name}</p>
-                  <p className="text-[#8B763A] text-xs">
-                    {t.event} · {t.city}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                <h3
+                  className="text-lg font-semibold text-[#1A0F08] mb-3"
+                  style={{ fontFamily: 'Playfair Display, serif' }}
+                >
+                  {e.title}
+                </h3>
+                <p className="text-[13.5px] text-[#9B7A56] leading-relaxed">
+                  {e.description}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Stats */}
+        {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-16 grid grid-cols-3 gap-8 text-center bg-[#2C1A0E] rounded-3xl p-10"
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="text-center mt-16"
         >
-          {[
-            { value: '500+', label: 'Événements créés' },
-            { value: '98%', label: 'Clients satisfaits' },
-            { value: '10k+', label: 'Invités touchés' },
-          ].map((stat, i) => (
-            <div key={i}>
-              <p
-                className="text-4xl font-bold text-[#D59667] mb-2"
-                style={{ fontFamily: 'Playfair Display, serif' }}
-              >
-                {stat.value}
-              </p>
-              <p className="text-[#C5B691] text-sm">{stat.label}</p>
-            </div>
-          ))}
+          <a
+            href="#contact"
+            className="inline-block px-8 py-3.5 rounded-full text-[13px] font-medium text-white transition-all active:scale-[0.97]"
+            style={{ background: '#B85C28', boxShadow: '0 4px 20px rgba(184,92,40,0.25)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#A0501F')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#B85C28')}
+          >
+            Demander un devis gratuit →
+          </a>
         </motion.div>
+
       </div>
     </section>
   );

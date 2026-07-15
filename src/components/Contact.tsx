@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Mail, Phone, Share2, Send } from 'lucide-react';
+import { Mail, Phone, Share2, Send, CheckCircle } from 'lucide-react';
 
 const eventTypes = [
   'Mariage',
@@ -10,22 +10,19 @@ const eventTypes = [
   'EVJF',
   'Baby Shower',
   'Anniversaire',
-  'Événement d\'entreprise',
+  "Événement d'entreprise",
   'Autre',
 ];
 
+const inputClass = 'w-full px-4 py-3 rounded-xl text-[14px] text-[#1A0F08] focus:outline-none transition-all placeholder:text-[#C4B08A]'
+  + ' border border-[rgba(232,196,154,0.35)] bg-[#F8F4EF]'
+  + ' focus:border-[#B85C28] focus:bg-white focus:ring-1 focus:ring-[#B85C28]/15';
+const labelClass = 'block text-[10px] font-medium text-[#8A7235] mb-1.5 uppercase tracking-[0.18em]';
+
 export default function Contact() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    eventType: '',
-    date: '',
-    guests: '',
-    message: '',
-  });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', eventType: '', date: '', guests: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -38,92 +35,84 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 bg-[#FBF6F0]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="py-28 md:py-36" style={{ background: '#FFFFFF' }}>
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
+
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-sm font-medium tracking-[0.2em] uppercase text-[#8B763A] mb-4">
-            ✦ Contact
-          </span>
+          <p className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#8A7235] mb-6">
+            Contact
+          </p>
           <h2
-            className="text-4xl md:text-5xl font-bold text-[#2C1A0E] mb-6"
+            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
             style={{ fontFamily: 'Playfair Display, serif' }}
           >
             Parlons de votre événement
           </h2>
-          <p className="text-lg text-[#6B4C2A] max-w-2xl mx-auto">
-            Dites-nous tout sur votre projet. Nous vous répondrons sous 24h avec une proposition personnalisée.
+          <p className="text-base text-[#9B7A56] max-w-md mx-auto leading-relaxed">
+            Partagez votre projet. Nous vous répondrons sous 24h avec une proposition personnalisée.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-12">
-          {/* Contact info */}
+        <div className="grid lg:grid-cols-5 gap-10 xl:gap-14">
+
+          {/* Sidebar */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -24 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-2 flex flex-col gap-6"
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="lg:col-span-2 flex flex-col gap-5"
           >
-            <div className="bg-[#2C1A0E] rounded-3xl p-8 text-white flex-1">
+            <div
+              className="rounded-2xl p-7 text-white flex-1"
+              style={{ background: '#1A0F08' }}
+            >
               <h3
-                className="text-2xl font-bold mb-6"
+                className="text-xl font-semibold mb-7 text-white"
                 style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Restons en contact
               </h3>
-
               <div className="space-y-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-[#C16D2D]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-5 h-5 text-[#D59667]" />
+                {[
+                  { icon: Mail, label: 'Email', value: 'bonjour@seat-mrahba.com' },
+                  { icon: Phone, label: 'WhatsApp', value: '+212 6 00 00 00 00' },
+                  { icon: Share2, label: 'Instagram', value: '@seat.mrahba' },
+                ].map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="flex items-center gap-4">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(232,196,154,0.1)' }}>
+                      <Icon size={16} color="#CF9068" />
+                    </div>
+                    <div>
+                      <p className="text-[#9B7A56] text-[10px] uppercase tracking-wider mb-0.5">{label}</p>
+                      <p className="text-white text-[13px] font-medium">{value}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[#C5B691] text-xs">Email</p>
-                    <p className="text-white text-sm">bonjour@seat-mrahba.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-[#C16D2D]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 text-[#D59667]" />
-                  </div>
-                  <div>
-                    <p className="text-[#C5B691] text-xs">WhatsApp</p>
-                    <p className="text-white text-sm">+212 6 00 00 00 00</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-[#C16D2D]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Share2 className="w-5 h-5 text-[#D59667]" />
-                  </div>
-                  <div>
-                    <p className="text-[#C5B691] text-xs">Instagram</p>
-                    <p className="text-white text-sm">@seat.mrahba</p>
-                  </div>
-                </div>
+                ))}
               </div>
-
-              <div className="mt-8 pt-8 border-t border-white/10">
-                <p className="text-[#C5B691] text-sm leading-relaxed">
-                  Nous répondons à toutes les demandes sous{' '}
-                  <span className="text-[#D59667] font-semibold">24 heures</span>. Pour les urgences,
-                  contactez-nous directement sur WhatsApp.
+              <div className="mt-8 pt-6 border-t border-white/8">
+                <p className="text-[#9B7A56] text-[13px] leading-relaxed">
+                  Réponse garantie sous{' '}
+                  <span className="text-[#E8C49A] font-medium">24 heures</span>.
+                  Pour les urgences, WhatsApp.
                 </p>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#C16D2D] to-[#8B763A] rounded-3xl p-8 text-white">
-              <p className="text-3xl mb-3">✦</p>
-              <p className="font-bold text-lg mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <div
+              className="rounded-2xl p-7 text-white"
+              style={{ background: 'linear-gradient(135deg, #B85C28, #8A7235)' }}
+            >
+              <p className="text-white/60 text-lg mb-3">✦</p>
+              <p className="font-semibold text-[17px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
                 Devis gratuit & sans engagement
               </p>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/65 text-[13px] leading-relaxed">
                 Chaque projet est unique. Partagez votre vision et recevez une proposition sur mesure.
               </p>
             </div>
@@ -131,147 +120,106 @@ export default function Contact() {
 
           {/* Form */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 24 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.25 }}
             className="lg:col-span-3"
           >
             {submitted ? (
-              <div className="bg-white rounded-3xl p-12 shadow-lg border border-[#ECC49D]/20 text-center h-full flex flex-col items-center justify-center">
-                <div className="text-6xl mb-6">✦</div>
+              <div
+                className="rounded-2xl p-10 flex flex-col items-center justify-center text-center min-h-[480px] border"
+                style={{ borderColor: 'rgba(232,196,154,0.2)', boxShadow: '0 2px 28px rgba(184,92,40,0.06)' }}
+              >
+                <CheckCircle className="w-14 h-14 text-[#8A7235] mb-6" strokeWidth={1.5} />
                 <h3
-                  className="text-2xl font-bold text-[#2C1A0E] mb-4"
+                  className="text-2xl font-semibold text-[#1A0F08] mb-4"
                   style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   Message envoyé !
                 </h3>
-                <p className="text-[#6B4C2A] max-w-sm">
+                <p className="text-[#9B7A56] max-w-sm leading-relaxed mb-8 text-[14.5px]">
                   Merci pour votre demande. Nous vous contacterons dans les 24 heures avec une proposition personnalisée.
                 </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="text-[13px] text-[#8A7235] underline underline-offset-4 hover:text-[#B85C28] transition-colors"
+                >
+                  Envoyer une autre demande
+                </button>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-3xl p-8 shadow-lg border border-[#ECC49D]/20 space-y-5"
+                className="rounded-2xl p-7 lg:p-8 space-y-5 border"
+                style={{ borderColor: 'rgba(232,196,154,0.2)', boxShadow: '0 2px 28px rgba(184,92,40,0.06)' }}
+                noValidate
               >
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                      Nom complet *
-                    </label>
-                    <input
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Votre nom"
-                      className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors placeholder:text-[#C5B691]"
-                    />
+                    <label className={labelClass}>Nom complet <span className="text-[#B85C28]">*</span></label>
+                    <input name="name" value={form.name} onChange={handleChange} required placeholder="Votre nom" className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                      Email *
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="votre@email.com"
-                      className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors placeholder:text-[#C5B691]"
-                    />
+                    <label className={labelClass}>Email <span className="text-[#B85C28]">*</span></label>
+                    <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="votre@email.com" className={inputClass} />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                      Téléphone
-                    </label>
-                    <input
-                      name="phone"
-                      type="tel"
-                      value={form.phone}
-                      onChange={handleChange}
-                      placeholder="+212 6 00 00 00 00"
-                      className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors placeholder:text-[#C5B691]"
-                    />
+                    <label className={labelClass}>Téléphone</label>
+                    <input name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="+212 6 00 00 00 00" className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                      Type d&apos;événement *
-                    </label>
-                    <select
-                      name="eventType"
-                      value={form.eventType}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors"
-                    >
+                    <label className={labelClass}>Type d&apos;événement <span className="text-[#B85C28]">*</span></label>
+                    <select name="eventType" value={form.eventType} onChange={handleChange} required className={inputClass}>
                       <option value="">Choisir...</option>
-                      {eventTypes.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
+                      {eventTypes.map((t) => <option key={t} value={t}>{t}</option>)}
                     </select>
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                      Date de l&apos;événement
-                    </label>
-                    <input
-                      name="date"
-                      type="date"
-                      value={form.date}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors"
-                    />
+                    <label className={labelClass}>Date de l&apos;événement</label>
+                    <input name="date" type="date" value={form.date} onChange={handleChange} className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                      Nombre d&apos;invités
-                    </label>
-                    <input
-                      name="guests"
-                      type="number"
-                      value={form.guests}
-                      onChange={handleChange}
-                      placeholder="Ex: 150"
-                      min="1"
-                      className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors placeholder:text-[#C5B691]"
-                    />
+                    <label className={labelClass}>Nombre d&apos;invités</label>
+                    <input name="guests" type="number" value={form.guests} onChange={handleChange} placeholder="Ex: 150" min="1" className={inputClass} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#6B4C2A] mb-2 uppercase tracking-wider">
-                    Votre message
-                  </label>
+                  <label className={labelClass}>Votre message</label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
                     rows={4}
                     placeholder="Décrivez votre événement, vos envies, vos questions..."
-                    className="w-full px-4 py-3 rounded-xl border border-[#ECC49D]/50 bg-[#FBF6F0] text-[#2C1A0E] text-sm focus:outline-none focus:border-[#C16D2D] transition-colors resize-none placeholder:text-[#C5B691]"
+                    className={`${inputClass} resize-none`}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#C16D2D] text-white py-4 px-8 rounded-full font-medium hover:bg-[#BC5A2F] transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
+                  className="w-full text-white py-4 px-8 rounded-full text-[14px] font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+                  style={{ background: '#B85C28', boxShadow: '0 4px 20px rgba(184,92,40,0.3)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#A0501F')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = '#B85C28')}
                 >
                   <Send className="w-4 h-4" />
                   Envoyer ma demande
                 </button>
+
+                <p className="text-center text-[11px] text-[#9B7A56]">
+                  ✦ Gratuit · Sans engagement · Réponse sous 24h
+                </p>
               </form>
             )}
           </motion.div>
+
         </div>
       </div>
     </section>

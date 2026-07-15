@@ -8,193 +8,134 @@ const features = [
   {
     icon: Smartphone,
     title: 'Une page unique par événement',
-    description:
-      'Chaque mariage, fiançailles ou fête reçoit sa propre page digitale sur mesure, à votre image et à vos couleurs.',
+    description: 'Chaque mariage, fiançailles ou fête reçoit sa propre page web sur mesure — à votre image, à vos couleurs.',
   },
   {
     icon: Heart,
-    title: 'Toutes les infos en un scan',
-    description:
-      'Plan de table, programme de la soirée, menu, galerie photos, infos pratiques — accessibles instantanément sans application.',
+    title: 'Tout en un seul scan',
+    description: 'Plan de table, programme, menu, galerie, infos pratiques — accessibles instantanément sans aucune application.',
   },
   {
     icon: Star,
     title: 'Expérience personnalisée',
-    description:
-      'Chaque invité vit une expérience unique : son nom, sa table, ses informations spécifiques. Un luxe digital pour tous.',
+    description: 'Chaque invité accède à ses informations spécifiques. Un accueil digital chaleureux et raffiné, pour tous.',
   },
 ];
 
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.18 } },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
-};
+const container: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.15 } } };
+const fade: Variants = { hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } };
 
 export default function About() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
   const cardsRef = useRef(null);
-  const cardsInView = useInView(cardsRef, { once: true });
+  const cardsInView = useInView(cardsRef, { once: true, margin: '-80px' });
 
   return (
     <section
       id="about"
-      ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden"
-      style={{ background: '#FBF6F0' }}
+      className="py-28 md:py-36 overflow-hidden"
+      style={{ background: '#F8F4EF' }}
     >
-      {/* Decorative arch / geometric element */}
-      <div className="absolute top-0 right-0 opacity-5 pointer-events-none">
-        <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
-          <circle cx="400" cy="0" r="300" stroke="#8B763A" strokeWidth="60" fill="none" />
-          <circle cx="400" cy="0" r="200" stroke="#C16D2D" strokeWidth="30" fill="none" />
-          <circle cx="400" cy="0" r="100" stroke="#8B763A" strokeWidth="20" fill="none" />
-        </svg>
-      </div>
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
 
-      <div className="absolute bottom-0 left-0 opacity-5 pointer-events-none">
-        <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
-          <circle cx="0" cy="300" r="250" stroke="#C16D2D" strokeWidth="50" fill="none" />
-          <circle cx="0" cy="300" r="150" stroke="#8B763A" strokeWidth="30" fill="none" />
-        </svg>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section label + Title */}
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          ref={ref}
+          initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase text-[#8B763A] mb-4">
-            <span>✦</span>
-            <span>À propos</span>
-            <span>✦</span>
-          </span>
-
+          <p className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#8A7235] mb-6">
+            À propos
+          </p>
           <h2
-            className="font-['Playfair_Display'] text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6 max-w-3xl mx-auto"
-            style={{ color: '#2C1A0E' }}
+            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-6 leading-tight"
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
-            L'hospitalité marocaine, réinventée à l'ère digitale
+            L&apos;hospitalité marocaine,<br className="hidden sm:block" />
+            réinventée à l&apos;ère digitale
           </h2>
 
-          <p className="text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: '#6B4C2A' }}>
-            Le QR code n'est plus une simple redirection. Avec Seat & Mrahba, il devient la porte d'entrée vers
-            une expérience digitale premium — aussi chaleureuse et raffinée que l'hospitalité marocaine dont
-            nous sommes si fiers.
-          </p>
-        </motion.div>
+          {/* Ornament */}
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="h-px w-12 bg-[#E8C49A]" />
+            <span className="text-[#CF9068] text-xs">✦</span>
+            <div className="h-px w-12 bg-[#E8C49A]" />
+          </div>
 
-        {/* Decorative divider */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex items-center justify-center gap-4 mb-16"
-        >
-          <div className="h-px flex-1 max-w-32" style={{ background: 'linear-gradient(to right, transparent, #ECC49D)' }} />
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <path d="M16 2L19 12L29 16L19 20L16 30L13 20L3 16L13 12Z" fill="#8B763A" opacity="0.4" />
-            <circle cx="16" cy="16" r="4" fill="#C16D2D" opacity="0.6" />
-          </svg>
-          <div className="h-px flex-1 max-w-32" style={{ background: 'linear-gradient(to left, transparent, #ECC49D)' }} />
+          <p className="text-base text-[#9B7A56] max-w-lg mx-auto leading-relaxed">
+            Le QR code n&apos;est plus une simple redirection. Avec Seat & Mrahba, il devient la porte d&apos;entrée vers une expérience digitale aussi chaleureuse et raffinée que l&apos;hospitalité marocaine.
+          </p>
         </motion.div>
 
         {/* Feature cards */}
         <motion.div
           ref={cardsRef}
-          variants={containerVariants}
+          variants={container}
           initial="hidden"
           animate={cardsInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
               <motion.div
                 key={i}
-                variants={itemVariants}
-                className="group relative rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-default"
+                variants={fade}
+                className="group bg-white rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 cursor-default"
                 style={{
-                  background: 'linear-gradient(145deg, #FFFFFF, #FFF8F0)',
-                  border: '1px solid #ECC49D',
-                  boxShadow: '0 4px 24px rgba(193, 109, 45, 0.08)',
+                  border: '1px solid rgba(232,196,154,0.2)',
+                  boxShadow: '0 2px 24px rgba(184,92,40,0.06)',
                 }}
               >
-                {/* Corner ornament */}
-                <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L14 9L21 12L14 15L12 22L10 15L3 12L10 9Z" fill="#8B763A" />
-                  </svg>
-                </div>
-
                 {/* Icon */}
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300"
-                  style={{ background: 'linear-gradient(135deg, #C16D2D, #BC5A2F)' }}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300"
+                  style={{ background: 'rgba(184,92,40,0.08)' }}
                 >
-                  <Icon size={26} color="white" strokeWidth={1.5} />
+                  <Icon size={22} color="#B85C28" strokeWidth={1.5} />
                 </div>
 
-                {/* Content */}
                 <h3
-                  className="font-['Playfair_Display'] text-xl font-bold mb-3"
-                  style={{ color: '#2C1A0E' }}
+                  className="text-lg font-semibold text-[#1A0F08] mb-3"
+                  style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   {feature.title}
                 </h3>
-                <p className="text-base leading-relaxed" style={{ color: '#6B4C2A' }}>
+                <p className="text-[14px] leading-relaxed text-[#9B7A56]">
                   {feature.description}
                 </p>
 
-                {/* Bottom accent */}
+                {/* Hover underline */}
                 <div
-                  className="absolute bottom-0 left-8 right-8 h-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: 'linear-gradient(to right, #C16D2D, #8B763A)' }}
+                  className="mt-6 h-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: 'linear-gradient(to right, #B85C28, #8A7235)' }}
                 />
               </motion.div>
             );
           })}
         </motion.div>
 
-        {/* Bottom statement */}
+        {/* Brand promise — replaces fake stats */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={cardsInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.6 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
           className="mt-20 text-center"
         >
-          <div
-            className="inline-flex flex-col sm:flex-row items-center gap-6 sm:gap-10 px-10 py-8 rounded-3xl"
-            style={{
-              background: 'linear-gradient(135deg, #2C1A0E, #3D2510)',
-              boxShadow: '0 20px 60px rgba(44, 26, 14, 0.2)',
-            }}
+          <blockquote
+            className="text-xl sm:text-2xl font-medium italic text-[#8A7235] max-w-2xl mx-auto leading-relaxed"
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
-            {[
-              { num: '500+', label: 'Événements créés' },
-              { num: '98%', label: 'Invités satisfaits' },
-              { num: '48h', label: 'Délai de livraison' },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <span
-                  className="font-['Playfair_Display'] text-3xl font-bold"
-                  style={{ color: '#ECC49D' }}
-                >
-                  {stat.num}
-                </span>
-                <span className="text-sm mt-1 text-white/60">{stat.label}</span>
-              </div>
-            ))}
-          </div>
+            &ldquo;Chaque invité mérite d&apos;être accueilli avec attention, même avant d&apos;entrer dans la salle.&rdquo;
+          </blockquote>
+          <p className="mt-4 text-[12px] tracking-[0.2em] uppercase text-[#CF9068]">
+            — La philosophie Seat & Mrahba
+          </p>
         </motion.div>
+
       </div>
     </section>
   );

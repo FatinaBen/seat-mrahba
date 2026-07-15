@@ -2,124 +2,109 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Sparkles, Zap, Settings, MousePointer, Users } from 'lucide-react';
 
-const reasons = [
+const values = [
   {
-    icon: Sparkles,
-    title: 'Élégance sans compromis',
-    description: 'Chaque page est conçue avec soin, en harmonie avec l\'esthétique de votre événement. Un rendu premium qui impressionne dès le premier regard.',
-    color: '#8B763A',
+    label: 'Élégance',
+    description: 'Chaque page est conçue avec soin, en parfaite harmonie avec l\'esthétique de votre événement.',
   },
   {
-    icon: Zap,
-    title: 'Modernité & innovation',
-    description: 'Nous utilisons les dernières technologies web pour offrir une expérience rapide, fluide et visuellement captivante sur tous les appareils.',
-    color: '#C16D2D',
+    label: 'Simplicité',
+    description: 'Un scan suffit. Pas d\'application, pas de compte. Un accès immédiat pour chaque invité.',
   },
   {
-    icon: Settings,
-    title: 'Personnalisation totale',
-    description: 'Couleurs, typographies, contenus, messages... Tout est adapté à votre vision. Votre page, votre identité.',
-    color: '#BC5A2F',
-  },
-  {
-    icon: MousePointer,
-    title: 'Simplicité pour vos invités',
-    description: 'Un simple scan suffit. Pas d\'application à installer, pas de compte à créer. L\'accès est immédiat, intuitif et universel.',
-    color: '#8B763A',
-  },
-  {
-    icon: Users,
-    title: 'Expérience invité sublimée',
-    description: 'Vos invités méritent le meilleur. Avec Seat & Mrahba, ils se sentent attendus, guidés et choyés — avant même d\'entrer dans la salle.',
-    color: '#C16D2D',
+    label: 'Sur mesure',
+    description: 'Couleurs, typographies, contenus, messages — tout est adapté à votre vision et votre identité.',
   },
 ];
 
 export default function WhyUs() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="pourquoi" className="py-24 bg-[#2C1A0E]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="pourquoi"
+      className="py-28 md:py-36 relative overflow-hidden"
+      style={{ background: '#1A0F08' }}
+    >
+      {/* Ambient texture */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, #E8C49A 0%, transparent 70%)' }} />
+
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
+
+        {/* Central quote */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
-          <span className="inline-block text-sm font-medium tracking-[0.2em] uppercase text-[#D59667] mb-4">
-            ✦ Notre différence
-          </span>
-          <h2
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
+          <p className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#CF9068] mb-10">
+            Notre différence
+          </p>
+
+          <blockquote
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8 max-w-3xl mx-auto"
             style={{ fontFamily: 'Playfair Display, serif' }}
           >
-            Pourquoi choisir Seat & Mrahba ?
-          </h2>
-          <p className="text-lg text-[#C5B691] max-w-2xl mx-auto">
-            Parce que les grands moments méritent une attention aux détails que vous ne trouverez nulle part ailleurs.
-          </p>
+            Les grands moments méritent une{' '}
+            <em className="text-[#E8C49A] not-italic italic">attention</em>{' '}
+            aux détails.
+          </blockquote>
+
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-px w-12 bg-[#E8C49A]/30" />
+            <span className="text-[#CF9068] text-xs">✦</span>
+            <div className="h-px w-12 bg-[#E8C49A]/30" />
+          </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reasons.map((reason, i) => {
-            const Icon = reason.icon;
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10 hover:border-[#D59667]/30 transition-all group"
-              >
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                  style={{ background: `${reason.color}30` }}
-                >
-                  <Icon className="w-7 h-7" style={{ color: reason.color }} />
-                </div>
-                <h3
-                  className="text-xl font-bold text-white mb-3"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
-                >
-                  {reason.title}
-                </h3>
-                <p className="text-[#C5B691] text-sm leading-relaxed">{reason.description}</p>
-              </motion.div>
-            );
-          })}
-
-          {/* Decorative last card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="bg-gradient-to-br from-[#C16D2D] to-[#8B763A] rounded-3xl p-8 flex flex-col justify-between"
-          >
-            <div>
-              <p className="text-white/80 text-4xl mb-4">✦</p>
+        {/* Values */}
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          {values.map((v, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 24 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, delay: i * 0.14 }}
+              className="text-center px-4"
+            >
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="h-px w-6 bg-[#E8C49A]/30" />
+                <span className="text-[#CF9068] text-[10px]">✦</span>
+                <div className="h-px w-6 bg-[#E8C49A]/30" />
+              </div>
               <h3
-                className="text-2xl font-bold text-white mb-3"
+                className="text-xl font-semibold text-[#E8C49A] mb-3"
                 style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                Prêt à sublimer votre événement ?
+                {v.label}
               </h3>
-              <p className="text-white/80 text-sm leading-relaxed">
-                Rejoignez les centaines de couples et familles qui ont fait confiance à Seat & Mrahba.
+              <p className="text-[14px] text-white/50 leading-relaxed">
+                {v.description}
               </p>
-            </div>
-            <a
-              href="#contact"
-              className="mt-6 block text-center bg-white text-[#C16D2D] py-3 px-6 rounded-full font-medium hover:bg-[#FBF6F0] transition-colors"
-            >
-              Commencer →
-            </a>
-          </motion.div>
+            </motion.div>
+          ))}
         </div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="text-center"
+        >
+          <a
+            href="#contact"
+            className="inline-block px-8 py-3.5 rounded-full text-[13px] font-medium text-[#1A0F08] bg-[#E8C49A] hover:bg-white active:scale-[0.97] transition-all"
+          >
+            Sublimez votre événement →
+          </a>
+        </motion.div>
+
       </div>
     </section>
   );
