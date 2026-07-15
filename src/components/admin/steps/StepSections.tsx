@@ -12,140 +12,96 @@ interface Props {
 
 function Toggle({ active, onChange }: { active: boolean; onChange: () => void }) {
   return (
-    <button onClick={onChange} className="transition-colors">
+    <button onClick={onChange}>
       {active
         ? <ToggleRight size={22} className="text-[#B85C28]" />
-        : <ToggleLeft size={22} className="text-[rgba(26,15,8,0.25)]" />
+        : <ToggleLeft size={22} className="text-[rgba(26,15,8,0.2)]" />
       }
     </button>
   );
 }
 
+const inputStyle = { borderColor: 'rgba(26,15,8,0.1)', color: '#1A0F08' };
+
 export default function StepSections({ event, update, markComplete }: Props) {
   const isDone = event.builderSteps.find(s => s.key === 'sections')?.completed;
 
-  function updateSection(patch: Partial<Sections>) {
+  function sec(patch: Partial<Sections>) {
     update({ sections: { ...event.sections, ...patch } });
   }
 
   // Programme
-  function addProgrammeItem() {
-    const item: ProgrammeItem = { id: generateId(), time: '', title: '', description: '' };
-    update({ programme: [...event.programme, item] });
+  function addP() {
+    update({ programme: [...event.programme, { id: generateId(), time: '', title: '', description: '' }] });
   }
-
-  function updateProgramme(id: string, patch: Partial<ProgrammeItem>) {
+  function updP(id: string, patch: Partial<ProgrammeItem>) {
     update({ programme: event.programme.map(p => p.id === id ? { ...p, ...patch } : p) });
   }
-
-  function removeProgramme(id: string) {
-    update({ programme: event.programme.filter(p => p.id !== id) });
-  }
+  function delP(id: string) { update({ programme: event.programme.filter(p => p.id !== id) }); }
 
   // Menu
-  function addMenuSection() {
-    const s: MenuSection = { id: generateId(), label: 'Entrées', items: [] };
-    update({ menu: [...event.menu, s] });
+  function addSection() {
+    update({ menu: [...event.menu, { id: generateId(), label: 'Entrées', items: [] }] });
   }
-
-  function addMenuItem(sectionId: string) {
-    const item: MenuItem = { id: generateId(), name: '' };
-    update({ menu: event.menu.map(s => s.id === sectionId ? { ...s, items: [...s.items, item] } : s) });
+  function addItem(sid: string) {
+    update({ menu: event.menu.map(s => s.id === sid ? { ...s, items: [...s.items, { id: generateId(), name: '' }] } : s) });
   }
-
-  function updateMenuSection(id: string, label: string) {
+  function updSection(id: string, label: string) {
     update({ menu: event.menu.map(s => s.id === id ? { ...s, label } : s) });
   }
-
-  function updateMenuItem(sectionId: string, itemId: string, name: string) {
-    update({
-      menu: event.menu.map(s =>
-        s.id === sectionId
-          ? { ...s, items: s.items.map(i => i.id === itemId ? { ...i, name } : i) }
-          : s
-      ),
-    });
+  function updItem(sid: string, iid: string, name: string) {
+    update({ menu: event.menu.map(s => s.id === sid ? { ...s, items: s.items.map(i => i.id === iid ? { ...i, name } : i) } : s) });
+  }
+  function delSection(id: string) { update({ menu: event.menu.filter(s => s.id !== id) }); }
+  function delItem(sid: string, iid: string) {
+    update({ menu: event.menu.map(s => s.id === sid ? { ...s, items: s.items.filter(i => i.id !== iid) } : s) });
   }
 
-  function removeMenuSection(id: string) {
-    update({ menu: event.menu.filter(s => s.id !== id) });
-  }
-
-  function removeMenuItem(sectionId: string, itemId: string) {
-    update({ menu: event.menu.map(s => s.id === sectionId ? { ...s, items: s.items.filter(i => i.id !== itemId) } : s) });
-  }
-
-  const inputClass = "w-full px-3 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] focus:outline-none";
-  const inputStyle = { borderColor: 'rgba(26,15,8,0.1)', color: '#1A0F08' };
+  const inp = "w-full px-3 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] focus:outline-none";
 
   return (
     <div className="max-w-2xl mx-auto px-8 py-8 space-y-8">
 
-      {/* Toggle sections */}
+      {/* Sections actives */}
       <div>
-        <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-4">Sections visibles</p>
+        <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-3">Sections visibles sur la page invité</p>
         <div className="space-y-2">
           {[
             { key: 'seatingPlan' as const, label: 'Plan de table' },
             { key: 'menu' as const, label: 'Menu' },
             { key: 'programme' as const, label: 'Programme' },
             { key: 'gallery' as const, label: 'Galerie photos' },
-            { key: 'contact' as const, label: 'Contacts & informations' },
-            { key: 'socialMedia' as const, label: 'Réseaux sociaux' },
           ].map(({ key, label }) => (
-            <div
-              key={key}
-              className="flex items-center justify-between px-4 py-3 rounded-xl bg-white border"
-              style={{ borderColor: 'rgba(26,15,8,0.08)' }}
-            >
+            <div key={key} className="flex items-center justify-between px-4 py-3 rounded-xl bg-white border" style={{ borderColor: 'rgba(26,15,8,0.08)' }}>
               <span className="text-[13px] text-[#1A0F08]">{label}</span>
-              <Toggle
-                active={!!event.sections[key]}
-                onChange={() => updateSection({ [key]: !event.sections[key] })}
-              />
+              <Toggle active={!!event.sections[key]} onChange={() => sec({ [key]: !event.sections[key] })} />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Text fields */}
+      {/* Infos pratiques */}
       <div className="space-y-4">
+        <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56]">Infos pratiques (affichées sur la page)</p>
         <div>
-          <label className="block text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-2">
-            Dress code
-          </label>
-          <input
-            value={event.sections.dressCode}
-            onChange={e => updateSection({ dressCode: e.target.value })}
-            placeholder="Ex: Tenue de soirée, couleurs claires..."
-            className={inputClass}
-            style={inputStyle}
-          />
+          <label className="block text-[10px] text-[#9B7A56] mb-1.5">Dress code</label>
+          <input value={event.sections.dressCode} onChange={e => sec({ dressCode: e.target.value })}
+            placeholder="Ex: Tenue de soirée, couleurs claires…" className={inp} style={inputStyle} />
         </div>
         <div>
-          <label className="block text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-2">
-            Parking / Accès
-          </label>
-          <textarea
-            value={event.sections.parking}
-            onChange={e => updateSection({ parking: e.target.value })}
-            placeholder="Informations parking, navette, transport..."
-            rows={2}
-            className={`${inputClass} resize-none`}
-            style={inputStyle}
-          />
+          <label className="block text-[10px] text-[#9B7A56] mb-1.5">Parking / Accès</label>
+          <textarea value={event.sections.parking} onChange={e => sec({ parking: e.target.value })}
+            placeholder="Navette, parking, plan…" rows={2} className={`${inp} resize-none`} style={inputStyle} />
         </div>
         <div>
-          <label className="block text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-2">
-            WiFi / Mot de passe
-          </label>
-          <input
-            value={event.sections.wifi}
-            onChange={e => updateSection({ wifi: e.target.value })}
-            placeholder="Réseau: SalleFetes — Mdp: mariage2024"
-            className={inputClass}
-            style={inputStyle}
-          />
+          <label className="block text-[10px] text-[#9B7A56] mb-1.5">WiFi</label>
+          <input value={event.sections.wifi} onChange={e => sec({ wifi: e.target.value })}
+            placeholder="Réseau: SalleFetes — Mdp: 2025" className={inp} style={inputStyle} />
+        </div>
+        <div>
+          <label className="block text-[10px] text-[#9B7A56] mb-1.5">Lien Google Maps (optionnel)</label>
+          <input value={event.sections.mapsUrl} onChange={e => sec({ mapsUrl: e.target.value })}
+            placeholder="https://maps.google.com/…" className={inp} style={inputStyle} />
         </div>
       </div>
 
@@ -153,33 +109,19 @@ export default function StepSections({ event, update, markComplete }: Props) {
       {event.sections.programme && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56]">Programme de la journée</p>
-            <button
-              onClick={addProgrammeItem}
-              className="flex items-center gap-1.5 text-[11px] font-medium text-[#B85C28] hover:underline"
-            >
-              <Plus size={11} />
-              Ajouter
+            <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56]">Programme</p>
+            <button onClick={addP} className="flex items-center gap-1 text-[11px] text-[#B85C28] font-medium hover:underline">
+              <Plus size={11} /> Ajouter
             </button>
           </div>
           <div className="space-y-2">
             {event.programme.map(item => (
               <div key={item.id} className="flex gap-2 items-start">
-                <input
-                  value={item.time}
-                  onChange={e => updateProgramme(item.id, { time: e.target.value })}
-                  placeholder="18:00"
-                  className="w-20 px-2 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] text-center focus:outline-none"
-                  style={inputStyle}
-                />
-                <input
-                  value={item.title}
-                  onChange={e => updateProgramme(item.id, { title: e.target.value })}
-                  placeholder="Titre (ex: Cocktail)"
-                  className={`flex-1 ${inputClass}`}
-                  style={inputStyle}
-                />
-                <button onClick={() => removeProgramme(item.id)} className="p-2 text-[#9B7A56] hover:text-red-500">
+                <input value={item.time} onChange={e => updP(item.id, { time: e.target.value })}
+                  placeholder="18:00" className="w-20 px-2 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] text-center focus:outline-none" style={inputStyle} />
+                <input value={item.title} onChange={e => updP(item.id, { title: e.target.value })}
+                  placeholder="Cocktail, Cérémonie…" className={`flex-1 ${inp}`} style={inputStyle} />
+                <button onClick={() => delP(item.id)} className="p-2 text-[#9B7A56] hover:text-red-400 transition-colors">
                   <Trash2 size={12} />
                 </button>
               </div>
@@ -193,51 +135,33 @@ export default function StepSections({ event, update, markComplete }: Props) {
         <div>
           <div className="flex items-center justify-between mb-3">
             <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56]">Menu</p>
-            <button
-              onClick={addMenuSection}
-              className="flex items-center gap-1.5 text-[11px] font-medium text-[#B85C28] hover:underline"
-            >
-              <Plus size={11} />
-              Section
+            <button onClick={addSection} className="flex items-center gap-1 text-[11px] text-[#B85C28] font-medium hover:underline">
+              <Plus size={11} /> Section
             </button>
           </div>
           <div className="space-y-4">
             {event.menu.map(section => (
               <div key={section.id} className="rounded-xl border bg-white p-4" style={{ borderColor: 'rgba(26,15,8,0.08)' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <input
-                    value={section.label}
-                    onChange={e => updateMenuSection(section.id, e.target.value)}
-                    placeholder="Entrées"
-                    className="flex-1 px-3 py-1.5 text-[12px] font-medium rounded-lg border bg-[#FDFCF9] focus:outline-none"
-                    style={inputStyle}
-                  />
-                  <button onClick={() => removeMenuSection(section.id)} className="p-1.5 text-[#9B7A56] hover:text-red-500">
+                <div className="flex gap-2 mb-3">
+                  <input value={section.label} onChange={e => updSection(section.id, e.target.value)}
+                    placeholder="Entrées" className={`flex-1 ${inp} font-medium`} style={inputStyle} />
+                  <button onClick={() => delSection(section.id)} className="p-1.5 text-[#9B7A56] hover:text-red-400 transition-colors">
                     <Trash2 size={12} />
                   </button>
                 </div>
                 <div className="space-y-1.5">
                   {section.items.map(item => (
                     <div key={item.id} className="flex gap-2">
-                      <input
-                        value={item.name}
-                        onChange={e => updateMenuItem(section.id, item.id, e.target.value)}
-                        placeholder="Plat..."
-                        className={`flex-1 ${inputClass}`}
-                        style={inputStyle}
-                      />
-                      <button onClick={() => removeMenuItem(section.id, item.id)} className="p-2 text-[#9B7A56] hover:text-red-500">
+                      <input value={item.name} onChange={e => updItem(section.id, item.id, e.target.value)}
+                        placeholder="Plat…" className={`flex-1 ${inp}`} style={inputStyle} />
+                      <button onClick={() => delItem(section.id, item.id)} className="p-2 text-[#9B7A56] hover:text-red-400 transition-colors">
                         <Trash2 size={12} />
                       </button>
                     </div>
                   ))}
                 </div>
-                <button
-                  onClick={() => addMenuItem(section.id)}
-                  className="mt-2 flex items-center gap-1 text-[11px] text-[#9B7A56] hover:text-[#B85C28] transition-colors"
-                >
-                  <Plus size={11} />
-                  Ajouter un plat
+                <button onClick={() => addItem(section.id)} className="mt-2 flex items-center gap-1 text-[11px] text-[#9B7A56] hover:text-[#B85C28] transition-colors">
+                  <Plus size={11} /> Ajouter un plat
                 </button>
               </div>
             ))}

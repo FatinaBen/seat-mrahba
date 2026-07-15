@@ -6,11 +6,10 @@ import { useAdmin } from '@/lib/admin/store';
 import { Event, BuilderStepKey, BUILDER_STEPS_DEFAULT } from '@/lib/admin/types';
 import {
   CheckCircle2, Circle, ChevronLeft, ChevronRight, Eye, EyeOff, ArrowLeft,
-  Info, Sparkles, Users, LayoutGrid, Palette, List, ImageIcon, QrCode, Rocket,
+  Info, Users, LayoutGrid, Palette, List, ImageIcon, QrCode, Rocket,
 } from 'lucide-react';
 
 import StepGeneral from './steps/StepGeneral';
-import StepFormula from './steps/StepFormula';
 import StepGuests from './steps/StepGuests';
 import StepSeating from './steps/StepSeating';
 import StepDesign from './steps/StepDesign';
@@ -21,12 +20,18 @@ import StepPublish from './steps/StepPublish';
 import PhonePreview from './PhonePreview';
 
 const STEP_ICONS: Record<BuilderStepKey, React.ElementType> = {
-  general: Info, formula: Sparkles, guests: Users, seating: LayoutGrid,
-  design: Palette, sections: List, gallery: ImageIcon, qrcode: QrCode, publish: Rocket,
+  general: Info,
+  guests: Users,
+  seating: LayoutGrid,
+  design: Palette,
+  sections: List,
+  gallery: ImageIcon,
+  qrcode: QrCode,
+  publish: Rocket,
 };
 
 const STEPS: BuilderStepKey[] = [
-  'general', 'formula', 'guests', 'seating', 'design', 'sections', 'gallery', 'qrcode', 'publish',
+  'general', 'guests', 'seating', 'design', 'sections', 'gallery', 'qrcode', 'publish',
 ];
 
 interface Props { event: Event }
@@ -64,7 +69,6 @@ export default function EventWizard({ event }: Props) {
     const props = { event, update, markComplete };
     switch (currentKey) {
       case 'general':  return <StepGeneral {...props} />;
-      case 'formula':  return <StepFormula {...props} />;
       case 'guests':   return <StepGuests {...props} />;
       case 'seating':  return <StepSeating {...props} />;
       case 'design':   return <StepDesign {...props} />;
@@ -77,9 +81,9 @@ export default function EventWizard({ event }: Props) {
 
   return (
     <div className="flex h-full">
-      {/* Left — Checklist sidebar */}
+      {/* Left — Checklist */}
       <aside
-        className="w-60 flex-shrink-0 flex flex-col border-r overflow-y-auto"
+        className="w-56 flex-shrink-0 flex flex-col border-r overflow-y-auto"
         style={{ background: '#FDFCF9', borderColor: 'rgba(26,15,8,0.07)' }}
       >
         <div className="px-4 pt-4 pb-3 border-b" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
@@ -128,60 +132,58 @@ export default function EventWizard({ event }: Props) {
       {/* Center — Step content */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Step header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-white" style={{ borderColor: 'rgba(26,15,8,0.06)' }}>
+        <div className="flex items-center justify-between px-6 py-3.5 border-b bg-white" style={{ borderColor: 'rgba(26,15,8,0.06)' }}>
           <div>
             <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-[#9B7A56]">
-              Étape {currentIndex + 1} / {STEPS.length}
+              {currentIndex + 1} / {STEPS.length}
             </p>
-            <h2 className="text-[15px] font-semibold text-[#1A0F08] mt-0.5" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[15px] font-semibold text-[#1A0F08]" style={{ fontFamily: 'Playfair Display, serif' }}>
               {BUILDER_STEPS_DEFAULT[currentIndex].label}
             </h2>
           </div>
           <div className="flex items-center gap-2">
-            {/* Toggle live preview */}
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border text-[11px] font-medium transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-medium transition-all"
               style={showPreview
                 ? { borderColor: '#B85C28', color: '#B85C28', background: 'rgba(184,92,40,0.06)' }
                 : { borderColor: 'rgba(26,15,8,0.1)', color: '#5A3C1E' }
               }
             >
-              {showPreview ? <EyeOff size={13} /> : <Eye size={13} />}
-              Aperçu live
+              {showPreview ? <EyeOff size={12} /> : <Eye size={12} />}
+              Aperçu
             </button>
             <button
               onClick={goPrev}
               disabled={currentIndex === 0}
-              className="p-2 rounded-lg border transition-colors disabled:opacity-30 hover:bg-[rgba(26,15,8,0.04)]"
+              className="p-1.5 rounded-lg border transition-colors disabled:opacity-30 hover:bg-[rgba(26,15,8,0.04)]"
               style={{ borderColor: 'rgba(26,15,8,0.1)' }}
             >
-              <ChevronLeft size={14} className="text-[#5A3C1E]" />
+              <ChevronLeft size={13} className="text-[#5A3C1E]" />
             </button>
             <button
               onClick={goNext}
               disabled={currentIndex === STEPS.length - 1}
-              className="p-2 rounded-lg border transition-colors disabled:opacity-30 hover:bg-[rgba(26,15,8,0.04)]"
+              className="p-1.5 rounded-lg border transition-colors disabled:opacity-30 hover:bg-[rgba(26,15,8,0.04)]"
               style={{ borderColor: 'rgba(26,15,8,0.1)' }}
             >
-              <ChevronRight size={14} className="text-[#5A3C1E]" />
+              <ChevronRight size={13} className="text-[#5A3C1E]" />
             </button>
           </div>
         </div>
 
-        {/* Step body */}
         <div className="flex-1 overflow-y-auto">
           {renderStep()}
         </div>
       </div>
 
-      {/* Right — Live preview panel */}
+      {/* Right — Live preview */}
       {showPreview && (
         <aside
-          className="w-[360px] flex-shrink-0 border-l overflow-y-auto flex flex-col items-center py-8 px-4"
-          style={{ background: '#F0EDE9', borderColor: 'rgba(26,15,8,0.07)' }}
+          className="w-[340px] flex-shrink-0 border-l overflow-y-auto flex flex-col items-center py-8 px-4"
+          style={{ background: '#EDE9E4', borderColor: 'rgba(26,15,8,0.07)' }}
         >
-          <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#9B7A56] mb-6">
+          <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#9B7A56] mb-5">
             Aperçu temps réel
           </p>
           <PhonePreview event={event} />

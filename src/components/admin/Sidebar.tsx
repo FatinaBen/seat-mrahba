@@ -4,24 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard, CalendarDays, PlusCircle, Users, LayoutGrid,
-  Palette, UtensilsCrossed, Clock, ImageIcon, QrCode, Printer,
+  LayoutDashboard, CalendarDays, PlusCircle,
   Settings, ChevronLeft, ChevronRight, ExternalLink,
 } from 'lucide-react';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard',        href: '/admin' },
-  { icon: CalendarDays,    label: 'Mes événements',   href: '/admin/events' },
+  { icon: CalendarDays,    label: 'Événements',       href: '/admin/events' },
   { icon: PlusCircle,      label: 'Nouvel événement', href: '/admin/events/new', accent: true },
-  { divider: true },
-  { icon: Users,           label: 'Invités',          href: '/admin/invites' },
-  { icon: LayoutGrid,      label: 'Plan de table',    href: '/admin/tables' },
-  { icon: Palette,         label: 'Design',           href: '/admin/design' },
-  { icon: UtensilsCrossed, label: 'Menu',             href: '/admin/menu' },
-  { icon: Clock,           label: 'Programme',        href: '/admin/programme' },
-  { icon: ImageIcon,       label: 'Galerie',          href: '/admin/galerie' },
-  { icon: QrCode,          label: 'QR Code',          href: '/admin/qrcode' },
-  { icon: Printer,         label: 'Impression',       href: '/admin/impression' },
   { divider: true },
   { icon: Settings,        label: 'Paramètres',       href: '/admin/settings' },
 ];

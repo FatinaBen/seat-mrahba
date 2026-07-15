@@ -14,7 +14,7 @@ export type BorderRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
 // ─── Builder Steps ──────────────────────────────────────────────────────────
 export type BuilderStepKey =
-  | 'general' | 'formula' | 'guests' | 'seating'
+  | 'general' | 'guests' | 'seating'
   | 'design' | 'sections' | 'gallery' | 'qrcode' | 'publish';
 
 export interface BuilderStep {
@@ -121,15 +121,14 @@ export interface Event {
 
 // ─── Defaults ───────────────────────────────────────────────────────────────
 export const BUILDER_STEPS_DEFAULT: BuilderStep[] = [
-  { key: 'general',  label: 'Informations générales', completed: false },
-  { key: 'formula',  label: 'Formule',                completed: false },
-  { key: 'guests',   label: 'Invités',                completed: false },
-  { key: 'seating',  label: 'Plan de table',          completed: false },
-  { key: 'design',   label: 'Personnalisation',        completed: false },
-  { key: 'sections', label: 'Sections & contenus',    completed: false },
-  { key: 'gallery',  label: 'Galerie',                completed: false },
-  { key: 'qrcode',   label: 'QR Code',                completed: false },
-  { key: 'publish',  label: 'Publier',                completed: false },
+  { key: 'general',  label: 'Événement',         completed: false },
+  { key: 'guests',   label: 'Invités',           completed: false },
+  { key: 'seating',  label: 'Plan de table',     completed: false },
+  { key: 'design',   label: 'Apparence',         completed: false },
+  { key: 'sections', label: 'Contenu',           completed: false },
+  { key: 'gallery',  label: 'Galerie',           completed: false },
+  { key: 'qrcode',   label: 'QR Code',           completed: false },
+  { key: 'publish',  label: 'Publier',           completed: false },
 ];
 
 export const THEME_PRESETS: Record<ThemePreset, Omit<Theme, 'heroImage' | 'logo'>> = {
