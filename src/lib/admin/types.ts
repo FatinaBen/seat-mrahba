@@ -1,10 +1,9 @@
-// ─── Core Enums ────────────────────────────────────────────────────────────
+// ─── Core Enums ─────────────────────────────────────────────────────────────
 export type EventType =
   | 'mariage' | 'fiancailles' | 'baby-shower'
   | 'anniversaire' | 'corporate' | 'gala' | 'autre';
 
 export type EventStatus = 'draft' | 'published' | 'past';
-export type Formula = 'start' | 'touch' | 'prestige';
 export type TableType = 'round' | 'rectangle' | 'imperial';
 export type ThemePreset =
   | 'terracotta' | 'minimal' | 'maroc-chic'
@@ -12,10 +11,10 @@ export type ThemePreset =
 export type Typography = 'playfair' | 'inter' | 'cormorant';
 export type BorderRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
-// ─── Builder Steps ──────────────────────────────────────────────────────────
+// ─── Builder Steps (7 étapes back-office) ────────────────────────────────────
 export type BuilderStepKey =
   | 'general' | 'guests' | 'seating'
-  | 'design' | 'sections' | 'gallery' | 'qrcode' | 'publish';
+  | 'design' | 'sections' | 'preview' | 'publish';
 
 export interface BuilderStep {
   key: BuilderStepKey;
@@ -23,7 +22,7 @@ export interface BuilderStep {
   completed: boolean;
 }
 
-// ─── Guest ──────────────────────────────────────────────────────────────────
+// ─── Guest ───────────────────────────────────────────────────────────────────
 export interface Guest {
   id: string;
   firstName: string;
@@ -36,7 +35,7 @@ export interface Guest {
   notes: string;
 }
 
-// ─── Table ──────────────────────────────────────────────────────────────────
+// ─── Table ───────────────────────────────────────────────────────────────────
 export interface Table {
   id: string;
   name: string;
@@ -46,7 +45,7 @@ export interface Table {
   guestIds: string[];
 }
 
-// ─── Theme ──────────────────────────────────────────────────────────────────
+// ─── Theme ───────────────────────────────────────────────────────────────────
 export interface Theme {
   preset: ThemePreset;
   primaryColor: string;
@@ -56,9 +55,10 @@ export interface Theme {
   borderRadius: BorderRadius;
   heroImage: string;
   logo: string;
+  pattern: string; // 'none' | 'zellige' | 'dots' | 'lines' | 'arabesque'
 }
 
-// ─── Menu ───────────────────────────────────────────────────────────────────
+// ─── Menu ────────────────────────────────────────────────────────────────────
 export interface MenuItem {
   id: string;
   name: string;
@@ -70,7 +70,7 @@ export interface MenuSection {
   items: MenuItem[];
 }
 
-// ─── Programme ──────────────────────────────────────────────────────────────
+// ─── Programme ───────────────────────────────────────────────────────────────
 export interface ProgrammeItem {
   id: string;
   time: string;
@@ -78,21 +78,15 @@ export interface ProgrammeItem {
   description: string;
 }
 
-// ─── Sections ───────────────────────────────────────────────────────────────
+// ─── Sections (ce qui est affiché sur le site invité) ────────────────────────
 export interface Sections {
   seatingPlan: boolean;
   menu: boolean;
   programme: boolean;
   gallery: boolean;
-  dressCode: string;
-  parking: string;
-  mapsUrl: string;
-  contact: boolean;
-  wifi: string;
-  socialMedia: boolean;
 }
 
-// ─── Event ──────────────────────────────────────────────────────────────────
+// ─── Event ───────────────────────────────────────────────────────────────────
 export interface Event {
   id: string;
   name: string;
@@ -101,11 +95,8 @@ export interface Event {
   time: string;
   venue: string;
   address: string;
-  phone: string;
-  email: string;
   organizers: string;
   guestCount: number;
-  formula: Formula;
   status: EventStatus;
   guests: Guest[];
   tables: Table[];
@@ -113,25 +104,24 @@ export interface Event {
   sections: Sections;
   menu: MenuSection[];
   programme: ProgrammeItem[];
-  gallery: string[];
+  gallery: string[]; // photos uploadées par les invités
   builderSteps: BuilderStep[];
   createdAt: string;
   updatedAt: string;
 }
 
-// ─── Defaults ───────────────────────────────────────────────────────────────
+// ─── Defaults ────────────────────────────────────────────────────────────────
 export const BUILDER_STEPS_DEFAULT: BuilderStep[] = [
-  { key: 'general',  label: 'Événement',         completed: false },
-  { key: 'guests',   label: 'Invités',           completed: false },
-  { key: 'seating',  label: 'Plan de table',     completed: false },
-  { key: 'design',   label: 'Apparence',         completed: false },
-  { key: 'sections', label: 'Contenu',           completed: false },
-  { key: 'gallery',  label: 'Galerie',           completed: false },
-  { key: 'qrcode',   label: 'QR Code',           completed: false },
-  { key: 'publish',  label: 'Publier',           completed: false },
+  { key: 'general',  label: 'Informations',   completed: false },
+  { key: 'guests',   label: 'Invités',        completed: false },
+  { key: 'seating',  label: 'Plan de table',  completed: false },
+  { key: 'design',   label: 'Design',         completed: false },
+  { key: 'sections', label: 'Contenu',        completed: false },
+  { key: 'preview',  label: 'Aperçu',         completed: false },
+  { key: 'publish',  label: 'Publier',        completed: false },
 ];
 
-export const THEME_PRESETS: Record<ThemePreset, Omit<Theme, 'heroImage' | 'logo'>> = {
+export const THEME_PRESETS: Record<ThemePreset, Omit<Theme, 'heroImage' | 'logo' | 'pattern'>> = {
   terracotta: {
     preset: 'terracotta', primaryColor: '#B85C28', secondaryColor: '#8A7235',
     buttonColor: '#B85C28', typography: 'playfair', borderRadius: 'lg',
@@ -155,21 +145,6 @@ export const THEME_PRESETS: Record<ThemePreset, Omit<Theme, 'heroImage' | 'logo'
   corporate: {
     preset: 'corporate', primaryColor: '#1E3A5F', secondaryColor: '#4A7FB5',
     buttonColor: '#1E3A5F', typography: 'inter', borderRadius: 'md',
-  },
-};
-
-export const FORMULA_FEATURES: Record<Formula, { name: string; features: string[] }> = {
-  start: {
-    name: 'Zine Start',
-    features: ['QR code personnalisé', 'Plan de table', 'Page web dédiée', 'Accès illimité le jour J', 'Support email'],
-  },
-  touch: {
-    name: 'Zine Touch',
-    features: ['Tout Start inclus', 'Programme de la journée', 'Menu personnalisé', 'Informations pratiques', 'Galerie photos', 'Support prioritaire'],
-  },
-  prestige: {
-    name: 'Zine Prestige',
-    features: ['Tout Touch inclus', 'Design entièrement personnalisé', 'Animations & effets', 'Messages par table', 'QR codes multiples', 'Modifications illimitées', 'Accompagnement dédié'],
   },
 };
 

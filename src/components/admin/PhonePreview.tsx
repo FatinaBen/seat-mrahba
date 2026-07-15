@@ -151,13 +151,6 @@ export default function PhonePreview({ event }: Props) {
               </div>
             )}
 
-            {/* Dress code */}
-            {event.sections.dressCode && (
-              <div className="p-3 text-center text-[11px] text-gray-600 italic" style={{ background: `${primary}08`, borderRadius }}>
-                👗 {event.sections.dressCode}
-              </div>
-            )}
-
             {/* CTA */}
             <button
               className="w-full py-3 text-[13px] font-medium text-white text-center"
