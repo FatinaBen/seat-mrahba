@@ -38,6 +38,7 @@ export function createDefaultEvent(overrides: Partial<Event> = {}): Event {
       gallery: false,
     },
     menu: [],
+    menuImage: '',
     programme: [],
     gallery: [],
     builderSteps: BUILDER_STEPS_DEFAULT.map(s => ({ ...s })),

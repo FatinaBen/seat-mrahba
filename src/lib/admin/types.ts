@@ -103,6 +103,7 @@ export interface Event {
   theme: Theme;
   sections: Sections;
   menu: MenuSection[];
+  menuImage: string; // visuel Canva importé
   programme: ProgrammeItem[];
   gallery: string[]; // photos uploadées par les invités
   builderSteps: BuilderStep[];
