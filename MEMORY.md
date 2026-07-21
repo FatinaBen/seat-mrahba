@@ -182,7 +182,7 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
 > À compléter à chaque session de travail importante sur Claude Code.
 > Format : date, ce qui a été fait, décisions prises, points en suspens.
 
-### Session initiale — Cadrage produit
+### [Date à compléter] — Session de cadrage initial
 - Définition complète du concept, des formules, du parcours invité et de la
   structure du dashboard
 - Décision : menu/programme en PDF uploadé, pas en texte généré
@@ -200,16 +200,3 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
   léger), pas de motif zellige/moucharabieh en fond principal
 - Décision : police de titre = Cormorant Garamond, texte courant = sans-serif sobre
 - À faire : rédiger un skill design/UX premium pour Claude Code
-
-### 21/07 — Refonte complète dashboard + site invité
-- Refonte architecture : dashboard 7 étapes (Informations, Invités, Plan de table,
-  Design, Contenu, Aperçu, Publier)
-- Site invité refondu : hero plein écran animé, scroll vertical naturel, sections
-  espacées, plan de table avec recherche prénom, galerie collaborative
-- StepDesign : ajout upload image de couverture + logo, thèmes avec description,
-  aperçu typographie visuel
-- StepSections : toggles avec icône + description, menu = import image Canva
-- Ajout champ menuImage sur Event
-- Footer Seat & Mrahba avec tagline + liens
-- Note : menu/programme encore en image (PNG/JPG) — migration vers PDF viewer
-  à faire (décision MEMORY.md section 4)
