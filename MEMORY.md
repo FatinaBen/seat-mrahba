@@ -167,6 +167,9 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
 - **Polices** : titre en **Cormorant Garamond**, texte courant en **sans-serif
   sobre** (à choisir parmi les options déjà disponibles type Inter/Jost — pas de
   police unique appliquée à tout le site).
+- **Décision** : l'exigence de design premium s'applique au site vitrine et au
+  mini-site invité uniquement — le dashboard admin doit rester pratique et
+  fonctionnel, pas d'exigence esthétique dessus.
 
 ## 6. Points volontairement non traités pour l'instant
 - Modifications du site vitrine : à faire, mais pas encore listées (à ajouter ici
@@ -199,4 +202,7 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
 - Décision : fond par défaut (sans photo) = texture simple (grain/papier/tissu
   léger), pas de motif zellige/moucharabieh en fond principal
 - Décision : police de titre = Cormorant Garamond, texte courant = sans-serif sobre
+- Décision : l'exigence de design premium s'applique au site vitrine et au
+  mini-site invité uniquement — le dashboard admin doit rester pratique et
+  fonctionnel, pas d'exigence esthétique dessus
 - À faire : rédiger un skill design/UX premium pour Claude Code
