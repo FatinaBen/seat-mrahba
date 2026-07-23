@@ -6,6 +6,7 @@ import { Check } from 'lucide-react';
 
 const plans = [
   {
+    key: 'essentiel',
     name: 'Essentiel',
     price: '149€',
     priceSub: 'à partir de',
@@ -21,6 +22,7 @@ const plans = [
     highlighted: false,
   },
   {
+    key: 'premium',
     name: 'Premium',
     price: '249€',
     priceSub: 'à partir de',
@@ -39,6 +41,7 @@ const plans = [
     highlighted: true,
   },
   {
+    key: 'signature',
     name: 'Signature',
     price: 'Sur devis',
     priceSub: 'formule',
@@ -76,8 +79,8 @@ export default function Pricing() {
             Nos offres
           </p>
           <h2
-            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+            className="text-[2.2rem] sm:text-4xl md:text-5xl text-[#1A0F08] mb-5 leading-tight"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Choisissez votre formule
           </h2>
@@ -87,82 +90,94 @@ export default function Pricing() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 32 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: i * 0.12 }}
-              className={`relative rounded-2xl flex flex-col ${
-                plan.highlighted
-                  ? 'shadow-2xl'
-                  : 'bg-white shadow-sm hover:shadow-md transition-shadow'
-              }`}
-              style={plan.highlighted
-                ? { background: 'linear-gradient(150deg, #B85C28, #9A4E1E)' }
-                : { border: '1px solid rgba(232,196,154,0.2)' }
-              }
-            >
-              {plan.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#8A7235] text-white text-[10px] font-medium px-4 py-1 rounded-full tracking-widest uppercase whitespace-nowrap">
-                  {plan.badge}
-                </div>
-              )}
+          {plans.map((plan, i) => {
+            const isSignature = plan.key === 'signature';
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 32 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: i * 0.12 }}
+                className="relative rounded-2xl flex flex-col"
+                style={plan.highlighted
+                  ? { background: 'linear-gradient(150deg, #B85C28, #9A4E1E)', boxShadow: '0 20px 60px rgba(184,92,40,0.3)' }
+                  : isSignature
+                  ? { background: '#1A0F08', border: '1px solid rgba(232,196,154,0.15)', boxShadow: '0 8px 32px rgba(26,15,8,0.25)' }
+                  : { background: 'white', border: '1px solid rgba(232,196,154,0.2)', boxShadow: '0 2px 16px rgba(184,92,40,0.05)' }
+                }
+              >
+                {plan.badge && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#8A7235] text-white text-[10px] font-medium px-4 py-1 rounded-full tracking-widest uppercase whitespace-nowrap">
+                    {plan.badge}
+                  </div>
+                )}
+                {isSignature && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-medium px-4 py-1 rounded-full tracking-widest uppercase whitespace-nowrap"
+                    style={{ background: 'rgba(232,196,154,0.12)', color: '#E8C49A', border: '1px solid rgba(232,196,154,0.2)' }}>
+                    Sur mesure
+                  </div>
+                )}
 
-              <div className="p-7 lg:p-8 flex flex-col flex-1">
-                <div className="mb-6">
-                  <h3
-                    className={`text-xl font-semibold mb-1.5 ${plan.highlighted ? 'text-white' : 'text-[#1A0F08]'}`}
-                    style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+                <div className="p-7 lg:p-8 flex flex-col flex-1">
+                  <div className="mb-6">
+                    <h3
+                      className="mb-1.5"
+                      style={{
+                        fontFamily: 'Playfair Display, Georgia, serif',
+                        fontWeight: 400,
+                        fontSize: '1.2rem',
+                        color: plan.highlighted ? 'white' : isSignature ? '#E8C49A' : '#1A0F08',
+                      }}
+                    >
+                      {plan.name}
+                    </h3>
+                    <p className="text-[13px]" style={{ color: plan.highlighted ? 'rgba(255,255,255,0.65)' : isSignature ? 'rgba(232,196,154,0.5)' : '#9B7A56' }}>
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  <div className="mb-6 pb-6" style={{ borderBottom: `1px solid ${plan.highlighted ? 'rgba(255,255,255,0.15)' : isSignature ? 'rgba(232,196,154,0.12)' : 'rgba(232,196,154,0.4)'}` }}>
+                    <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: plan.highlighted ? 'rgba(255,255,255,0.5)' : isSignature ? 'rgba(232,196,154,0.45)' : '#8A7235' }}>
+                      {plan.priceSub}
+                    </p>
+                    <p
+                      className="text-3xl leading-none"
+                      style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, color: plan.highlighted ? 'white' : isSignature ? '#E8C49A' : '#B85C28' }}
+                    >
+                      {plan.price}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {plan.features.map((feature, j) => (
+                      <li key={j} className="flex items-start gap-3">
+                        <div className="w-4 h-4 mt-[2px] flex-shrink-0 rounded-full flex items-center justify-center"
+                          style={{ background: plan.highlighted ? 'rgba(255,255,255,0.15)' : isSignature ? 'rgba(232,196,154,0.1)' : 'rgba(138,114,53,0.1)' }}>
+                          <Check className="w-2.5 h-2.5" style={{ color: plan.highlighted ? 'white' : isSignature ? '#E8C49A' : '#8A7235' }} strokeWidth={2.5} />
+                        </div>
+                        <span className="text-[13.5px] leading-snug" style={{ color: plan.highlighted ? 'rgba(255,255,255,0.85)' : isSignature ? 'rgba(232,196,154,0.7)' : '#5A3C1E' }}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a
+                    href="#contact"
+                    className="mt-auto block text-center py-3.5 px-6 rounded-full text-[13.5px] font-medium transition-all active:scale-[0.97]"
+                    style={plan.highlighted
+                      ? { background: 'white', color: '#B85C28' }
+                      : isSignature
+                      ? { background: 'rgba(232,196,154,0.1)', color: '#E8C49A', border: '1px solid rgba(232,196,154,0.2)' }
+                      : { background: '#B85C28', color: 'white' }
+                    }
                   >
-                    {plan.name}
-                  </h3>
-                  <p className={`text-[13px] ${plan.highlighted ? 'text-white/65' : 'text-[#9B7A56]'}`}>
-                    {plan.description}
-                  </p>
+                    {plan.cta}
+                  </a>
                 </div>
-
-                <div className={`mb-6 pb-6 border-b ${plan.highlighted ? 'border-white/15' : 'border-[#E8C49A]/40'}`}>
-                  <p className={`text-[10px] uppercase tracking-wider mb-1 ${plan.highlighted ? 'text-white/50' : 'text-[#8A7235]'}`}>
-                    {plan.priceSub}
-                  </p>
-                  <p
-                    className={`text-3xl font-bold leading-none ${plan.highlighted ? 'text-white' : 'text-[#B85C28]'}`}
-                    style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
-                  >
-                    {plan.price}
-                  </p>
-                </div>
-
-                <ul className="space-y-3 mb-8 flex-1">
-                  {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-start gap-3">
-                      <div className={`w-4 h-4 mt-[2px] flex-shrink-0 rounded-full flex items-center justify-center ${
-                        plan.highlighted ? 'bg-white/15' : 'bg-[#8A7235]/10'
-                      }`}>
-                        <Check className={`w-2.5 h-2.5 ${plan.highlighted ? 'text-white' : 'text-[#8A7235]'}`} strokeWidth={2.5} />
-                      </div>
-                      <span className={`text-[13.5px] leading-snug ${plan.highlighted ? 'text-white/85' : 'text-[#5A3C1E]'}`}>
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <a
-                  href="#contact"
-                  className={`mt-auto block text-center py-3.5 px-6 rounded-full text-[13.5px] font-medium transition-all active:scale-[0.97] ${
-                    plan.highlighted
-                      ? 'bg-white text-[#B85C28] hover:bg-[#F8F4EF]'
-                      : 'text-white hover:opacity-90'
-                  }`}
-                  style={!plan.highlighted ? { background: '#B85C28' } : {}}
-                >
-                  {plan.cta}
-                </a>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.p

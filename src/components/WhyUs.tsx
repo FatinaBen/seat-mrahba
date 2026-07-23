@@ -47,8 +47,8 @@ export default function WhyUs() {
           </p>
 
           <blockquote
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8 max-w-3xl mx-auto"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+            className="text-3xl sm:text-4xl md:text-5xl text-white leading-tight mb-8 max-w-3xl mx-auto"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Les grands moments méritent une{' '}
             <em className="text-[#E8C49A] not-italic italic">attention</em>{' '}

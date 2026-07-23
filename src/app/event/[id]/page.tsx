@@ -254,7 +254,7 @@ function SeatingSection({ event, primary }: { event: Event; primary: string }) {
 
         {result && result !== 'not-found' && (
           <div className="mt-8 text-center py-10 px-6 rounded-3xl"
-            style={{ background: `${primary}08`, border: `1px solid ${primary}18` }}>
+            style={{ background: `${primary}08`, border: `1px solid ${primary}18`, animation: 'fadeUp 0.5s ease both' }}>
             <p className="text-[10px] uppercase tracking-widest mb-1" style={{ color: '#9B7A56' }}>Bonjour</p>
             <p className="text-2xl font-semibold mb-6"
               style={{ color: primary, fontFamily: TITLE_FONT }}>

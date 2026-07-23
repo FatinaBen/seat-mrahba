@@ -76,43 +76,73 @@ export default function About() {
           variants={container}
           initial="hidden"
           animate={cardsInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start"
         >
           {features.map((feature, i) => {
             const Icon = feature.icon;
+            const isCenter = i === 1;
             return (
               <motion.div
                 key={i}
                 variants={fade}
-                className="group bg-white rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 cursor-default"
-                style={{
-                  border: '1px solid rgba(232,196,154,0.2)',
-                  boxShadow: '0 2px 24px rgba(184,92,40,0.06)',
-                }}
+                className="group rounded-2xl transition-all duration-300 cursor-default"
+                style={isCenter
+                  ? {
+                      background: '#1A0F08',
+                      padding: '2.5rem 2rem',
+                      boxShadow: '0 8px 40px rgba(26,15,8,0.18)',
+                    }
+                  : i === 0
+                  ? {
+                      background: 'white',
+                      padding: '2rem',
+                      border: '1px solid rgba(232,196,154,0.25)',
+                      boxShadow: '0 2px 16px rgba(184,92,40,0.05)',
+                      borderTop: '3px solid #E8C49A',
+                    }
+                  : {
+                      background: 'white',
+                      padding: '2rem',
+                      border: '1px solid rgba(232,196,154,0.25)',
+                      boxShadow: '0 2px 16px rgba(184,92,40,0.05)',
+                      borderLeft: '3px solid rgba(184,92,40,0.25)',
+                    }
+                }
               >
                 {/* Icon */}
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300"
-                  style={{ background: 'rgba(184,92,40,0.08)' }}
+                  className="flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-300"
+                  style={{
+                    width: isCenter ? 52 : 44,
+                    height: isCenter ? 52 : 44,
+                    borderRadius: 14,
+                    background: isCenter ? 'rgba(232,196,154,0.12)' : 'rgba(184,92,40,0.08)',
+                  }}
                 >
-                  <Icon size={22} color="#B85C28" strokeWidth={1.5} />
+                  <Icon size={isCenter ? 24 : 20} color={isCenter ? '#E8C49A' : '#B85C28'} strokeWidth={1.5} />
                 </div>
 
                 <h3
-                  className="text-lg font-semibold text-[#1A0F08] mb-3"
-                  style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+                  className="mb-3"
+                  style={{
+                    fontFamily: 'Playfair Display, Georgia, serif',
+                    fontWeight: 400,
+                    fontSize: isCenter ? '1.2rem' : '1.05rem',
+                    color: isCenter ? '#E8C49A' : '#1A0F08',
+                  }}
                 >
                   {feature.title}
                 </h3>
-                <p className="text-[14px] leading-relaxed text-[#9B7A56]">
+                <p style={{ fontSize: 14, lineHeight: 1.7, color: isCenter ? 'rgba(232,196,154,0.6)' : '#9B7A56' }}>
                   {feature.description}
                 </p>
 
-                {/* Hover underline */}
-                <div
-                  className="mt-6 h-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: 'linear-gradient(to right, #B85C28, #8A7235)' }}
-                />
+                {!isCenter && (
+                  <div
+                    className="mt-5 h-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'linear-gradient(to right, #B85C28, #8A7235)' }}
+                  />
+                )}
               </motion.div>
             );
           })}
