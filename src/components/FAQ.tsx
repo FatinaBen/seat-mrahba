@@ -52,7 +52,7 @@ export default function FAQ() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Vous avez des questions ?
           </h2>
@@ -126,7 +126,7 @@ export default function FAQ() {
           </p>
           <h3
             className="text-xl font-semibold text-white mb-4"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Nous sommes là pour vous répondre
           </h3>

@@ -48,8 +48,8 @@ export default function Hero() {
             {/* H1 */}
             <motion.h1
               variants={item}
-              className="text-[2.8rem] sm:text-5xl lg:text-[3.6rem] xl:text-[4rem] font-bold leading-[1.08] tracking-tight text-[#1A0F08]"
-              style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+              className="text-[2.8rem] sm:text-5xl lg:text-[3.6rem] xl:text-[4rem] leading-[1.08] text-[#1A0F08]"
+              style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
             >
               Le QR code qui{' '}
               <em className="not-italic italic text-[#8A7235]">accueille</em>{' '}
@@ -152,7 +152,7 @@ export default function Hero() {
                   <div className="mx-3 rounded-xl px-4 py-3.5 mb-3 text-center"
                     style={{ background: 'linear-gradient(135deg, #B85C28, #9A4E1E)' }}>
                     <div className="text-[8px] text-white/60 mb-0.5 tracking-widest uppercase">Mariage</div>
-                    <div className="text-[15px] font-bold text-white leading-tight" style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}>
+                    <div className="text-[15px] font-bold text-white leading-tight" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
                       Sarah & Yassine
                     </div>
                     <div className="text-[9px] text-white/70 mt-1">15 Juin 2025 · Marrakech</div>

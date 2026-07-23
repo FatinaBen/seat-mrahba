@@ -8,12 +8,12 @@ const STORAGE_KEY = 'seat-mrahba-admin-events';
 const PHOTOS_KEY = (id: string) => `seat-mrahba-photos-${id}`;
 
 const FONT_MAP: Record<string, string> = {
-  playfair: '"Cormorant Garamond", "Times New Roman", serif',
+  playfair: '"Playfair Display", Georgia, serif',
   inter: 'Inter, system-ui, sans-serif',
-  cormorant: '"Cormorant Garamond", "Times New Roman", serif',
+  cormorant: '"Playfair Display", Georgia, serif',
 };
 
-const TITLE_FONT = '"Cormorant Garamond", "Times New Roman", serif';
+const TITLE_FONT = '"Playfair Display", Georgia, serif';
 const BODY_FONT  = 'Inter, system-ui, sans-serif';
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E")`;
@@ -111,7 +111,7 @@ function GuestSite({ event }: { event: Event }) {
   return (
     <div style={{ fontFamily: BODY_FONT, background: '#FAFAF8', color: '#1A0F08' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
         @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
@@ -176,8 +176,9 @@ function Hero({ event, primary, font }: { event: Event; primary: string; font: s
         className="anim-title text-white leading-tight"
         style={{
           fontFamily: TITLE_FONT,
-          fontSize: 'clamp(2rem, 8vw, 3.25rem)',
-          fontWeight: 600,
+          fontSize: 'clamp(2.2rem, 9vw, 3.5rem)',
+          fontWeight: 400,
+          letterSpacing: '0.01em',
           textShadow: '0 2px 24px rgba(0,0,0,0.35)',
           maxWidth: 560,
         }}

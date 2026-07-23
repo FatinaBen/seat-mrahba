@@ -43,7 +43,7 @@ export default function Testimonials() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Ce que nous vous promettons
           </h2>
@@ -75,7 +75,7 @@ export default function Testimonials() {
                 </div>
                 <h3
                   className="text-lg font-semibold text-[#1A0F08] mb-3"
-                  style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                  style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
                 >
                   {e.title}
                 </h3>

@@ -50,7 +50,7 @@ export default function Contact() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Parlons de votre événement
           </h2>
@@ -74,7 +74,7 @@ export default function Contact() {
             >
               <h3
                 className="text-xl font-semibold mb-7 text-white"
-                style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
               >
                 Restons en contact
               </h3>
@@ -109,7 +109,7 @@ export default function Contact() {
               style={{ background: 'linear-gradient(135deg, #B85C28, #8A7235)' }}
             >
               <p className="text-white/60 text-lg mb-3">✦</p>
-              <p className="font-semibold text-[17px] mb-2" style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}>
+              <p className="font-semibold text-[17px] mb-2" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
                 Devis gratuit & sans engagement
               </p>
               <p className="text-white/65 text-[13px] leading-relaxed">
@@ -133,7 +133,7 @@ export default function Contact() {
                 <CheckCircle className="w-14 h-14 text-[#8A7235] mb-6" strokeWidth={1.5} />
                 <h3
                   className="text-2xl font-semibold text-[#1A0F08] mb-4"
-                  style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                  style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
                 >
                   Message envoyé !
                 </h3>

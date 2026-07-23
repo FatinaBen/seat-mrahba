@@ -48,7 +48,7 @@ export default function WhyUs() {
 
           <blockquote
             className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8 max-w-3xl mx-auto"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Les grands moments méritent une{' '}
             <em className="text-[#E8C49A] not-italic italic">attention</em>{' '}
@@ -79,7 +79,7 @@ export default function WhyUs() {
               </div>
               <h3
                 className="text-xl font-semibold text-[#E8C49A] mb-3"
-                style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
               >
                 {v.label}
               </h3>

@@ -154,7 +154,7 @@ export default function Demo() {
           </span>
           <h2
             className="text-[2rem] sm:text-4xl md:text-5xl font-bold text-[#2C1A0E] mb-5 leading-tight"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Vivez l&apos;expérience en direct
           </h2>
@@ -216,7 +216,7 @@ export default function Demo() {
               <div className="bg-[#FBF6F0] rounded-[2.4rem] overflow-hidden h-[580px] flex flex-col">
                 <div className="bg-[#2C1A0E] px-6 pt-8 pb-5 text-center">
                   <p className="text-[#ECC49D] text-xs tracking-widest uppercase font-light mb-1">✦ Seat & Mrahba ✦</p>
-                  <h3 className="text-white text-xl font-bold" style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}>
+                  <h3 className="text-white text-xl font-bold" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
                     Sarah & Yassine
                   </h3>
                   <p className="text-[#C5B691] text-xs mt-1">15 Juin 2025 • Marrakech</p>

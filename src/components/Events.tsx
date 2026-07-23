@@ -56,7 +56,7 @@ export default function Events() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
           >
             Pour chaque célébration
           </h2>
@@ -81,7 +81,7 @@ export default function Events() {
               <div className="text-3xl mb-5">{event.emoji}</div>
               <h3
                 className="text-[17px] font-semibold text-[#1A0F08] mb-2"
-                style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
               >
                 {event.title}
               </h3>

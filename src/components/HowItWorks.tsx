@@ -51,8 +51,8 @@ export default function HowItWorks() {
             Processus
           </p>
           <h2
-            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+            className="text-[2.2rem] sm:text-4xl md:text-5xl text-[#1A0F08] mb-5 leading-tight"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Comment ça fonctionne ?
           </h2>
@@ -88,7 +88,7 @@ export default function HowItWorks() {
               >
                 <span
                   className="text-xl font-bold text-[#B85C28]"
-                  style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                  style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
                 >
                   {step.number}
                 </span>
@@ -96,7 +96,7 @@ export default function HowItWorks() {
 
               <h3
                 className="text-lg font-semibold text-[#1A0F08] mb-3"
-                style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
               >
                 {step.title}
               </h3>

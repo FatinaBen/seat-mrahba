@@ -60,7 +60,7 @@ export default function Navbar() {
               </svg>
               <span
                 className="text-[19px] font-bold"
-                style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif', color: '#8A7235' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', color: '#8A7235' }}
               >
                 Seat & Mrahba
               </span>

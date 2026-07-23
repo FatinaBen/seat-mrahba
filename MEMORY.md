@@ -164,9 +164,11 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
   papier ou tissu subtil. Pas de motif géométrique zellige/moucharabieh en fond
   par défaut (réservé à des éléments décoratifs ponctuels/discrets si besoin,
   pas au fond principal).
-- **Polices** : titre en **Cormorant Garamond**, texte courant en **sans-serif
-  sobre** (à choisir parmi les options déjà disponibles type Inter/Jost — pas de
-  police unique appliquée à tout le site).
+- **Polices (décision finale — 23/07)** : titre en **Playfair Display, version
+  light/fine (weight 300–400), grande taille, letter-spacing aéré** — texte
+  courant en **Inter** (sans-serif sobre). Jamais une seule police pour tout le
+  site. Cormorant Garamond testé et écarté : Playfair Display fin retenu comme
+  plus adapté au positionnement mariage/événementiel chaleureux.
 - **Décision** : l'exigence de design premium s'applique au site vitrine et au
   mini-site invité uniquement — le dashboard admin doit rester pratique et
   fonctionnel, pas d'exigence esthétique dessus.
@@ -201,7 +203,7 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
   uniquement sans texture, une seule police pour tout, arrondis = détail secondaire)
 - Décision : fond par défaut (sans photo) = texture simple (grain/papier/tissu
   léger), pas de motif zellige/moucharabieh en fond principal
-- Décision : police de titre = Cormorant Garamond, texte courant = sans-serif sobre
+- Décision initiale : Cormorant Garamond → révisée le 23/07 : Playfair Display fin (weight 300–400, grande taille, letter-spacing aéré) retenu comme police de titre, Inter pour le corps
 - Décision : l'exigence de design premium s'applique au site vitrine et au
   mini-site invité uniquement — le dashboard admin doit rester pratique et
   fonctionnel, pas d'exigence esthétique dessus
