@@ -8,10 +8,15 @@ const STORAGE_KEY = 'seat-mrahba-admin-events';
 const PHOTOS_KEY = (id: string) => `seat-mrahba-photos-${id}`;
 
 const FONT_MAP: Record<string, string> = {
-  playfair: '"Playfair Display", Georgia, serif',
+  playfair: '"Cormorant Garamond", "Times New Roman", serif',
   inter: 'Inter, system-ui, sans-serif',
   cormorant: '"Cormorant Garamond", "Times New Roman", serif',
 };
+
+const TITLE_FONT = '"Cormorant Garamond", "Times New Roman", serif';
+const BODY_FONT  = 'Inter, system-ui, sans-serif';
+
+const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E")`;
 
 function loadEvent(id: string): Event | null {
   try {
@@ -104,9 +109,9 @@ function GuestSite({ event }: { event: Event }) {
   const font = FONT_MAP[event.theme.typography] || FONT_MAP.playfair;
 
   return (
-    <div style={{ fontFamily: font, background: '#FAFAF8', color: '#1A0F08' }}>
+    <div style={{ fontFamily: BODY_FONT, background: '#FAFAF8', color: '#1A0F08' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
         @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
@@ -143,9 +148,13 @@ function GuestSite({ event }: { event: Event }) {
 // ─── Hero ──────────────────────────────────────────────────────────────────────
 function Hero({ event, primary, font }: { event: Event; primary: string; font: string }) {
   const hasCover = !!event.theme.heroImage;
+  const darkened = darken(primary, 30);
+
+  // With cover: theme-tinted overlay (top: primary ~16%) → warm dark (bottom: 72%)
+  // Without cover: themed gradient + SVG grain stacked on top
   const bg = hasCover
-    ? `linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%), url(${event.theme.heroImage}) center/cover no-repeat`
-    : `linear-gradient(160deg, ${primary}ee 0%, ${darken(primary, 30)}cc 55%, #1A0F08 100%)`;
+    ? `linear-gradient(to bottom, ${primary}28 0%, rgba(26,15,8,0.72) 100%), url(${event.theme.heroImage}) center/cover no-repeat`
+    : `${GRAIN}, linear-gradient(160deg, ${primary}ee 0%, ${darkened}cc 55%, #1A0F08 100%)`;
 
   return (
     <section
@@ -166,7 +175,7 @@ function Hero({ event, primary, font }: { event: Event; primary: string; font: s
       <h1
         className="anim-title text-white leading-tight"
         style={{
-          fontFamily: font,
+          fontFamily: TITLE_FONT,
           fontSize: 'clamp(2rem, 8vw, 3.25rem)',
           fontWeight: 600,
           textShadow: '0 2px 24px rgba(0,0,0,0.35)',
@@ -210,7 +219,7 @@ function SeatingSection({ event, primary }: { event: Event; primary: string }) {
         <p className="text-[10px] uppercase tracking-[0.3em] mb-3 text-center" style={{ color: primary }}>
           Plan de table
         </p>
-        <h2 className="text-2xl font-semibold text-center mb-2" style={{ fontFamily: 'Playfair Display, serif', color: '#1A0F08' }}>
+        <h2 className="text-2xl font-semibold text-center mb-2" style={{ fontFamily: TITLE_FONT, color: '#1A0F08' }}>
           Votre place
         </h2>
         <p className="text-sm text-center mb-10" style={{ color: '#9B7A56' }}>
@@ -247,13 +256,13 @@ function SeatingSection({ event, primary }: { event: Event; primary: string }) {
             style={{ background: `${primary}08`, border: `1px solid ${primary}18` }}>
             <p className="text-[10px] uppercase tracking-widest mb-1" style={{ color: '#9B7A56' }}>Bonjour</p>
             <p className="text-2xl font-semibold mb-6"
-              style={{ color: primary, fontFamily: 'Playfair Display, serif' }}>
+              style={{ color: primary, fontFamily: TITLE_FONT }}>
               {[result.guest.firstName, result.guest.lastName].filter(Boolean).join(' ')}
             </p>
             {result.table ? (
               <>
                 <p className="text-[10px] uppercase tracking-widest mb-2" style={{ color: '#9B7A56' }}>Vous êtes à la</p>
-                <p className="text-4xl font-bold" style={{ fontFamily: 'Playfair Display, serif', color: '#1A0F08' }}>
+                <p className="text-4xl font-bold" style={{ fontFamily: TITLE_FONT, color: '#1A0F08' }}>
                   {result.table.name}
                 </p>
                 {result.guest.seat && (
@@ -279,13 +288,13 @@ function SeatingSection({ event, primary }: { event: Event; primary: string }) {
 // ─── Programme ─────────────────────────────────────────────────────────────────
 function ProgrammeSection({ event, primary }: { event: Event; primary: string }) {
   return (
-    <section className="px-6" style={{ background: '#F4F1ED', padding: '6rem 1.5rem' }}>
+    <section className="px-6" style={{ background: `${GRAIN}, #F4F1ED`, padding: '6rem 1.5rem' }}>
       <div style={{ maxWidth: 360, margin: '0 auto' }}>
         <p className="text-[10px] uppercase tracking-[0.3em] mb-3 text-center" style={{ color: primary }}>
           Programme
         </p>
         <h2 className="text-2xl font-semibold text-center mb-12"
-          style={{ fontFamily: 'Playfair Display, serif', color: '#1A0F08' }}>
+          style={{ fontFamily: TITLE_FONT, color: '#1A0F08' }}>
           Le déroulé de la journée
         </h2>
 
@@ -325,7 +334,7 @@ function MenuSection({ event, primary }: { event: Event; primary: string }) {
           Menu
         </p>
         <h2 className="text-2xl font-semibold text-center mb-10"
-          style={{ fontFamily: 'Playfair Display, serif', color: '#1A0F08' }}>
+          style={{ fontFamily: TITLE_FONT, color: '#1A0F08' }}>
           Au programme ce soir
         </h2>
 
@@ -395,13 +404,13 @@ function GallerySection({ eventId, primary }: { eventId: string; primary: string
   }
 
   return (
-    <section style={{ background: '#F4F1ED', padding: '6rem 1.25rem' }}>
+    <section style={{ background: `${GRAIN}, #F4F1ED`, padding: '6rem 1.25rem' }}>
       <div style={{ maxWidth: 400, margin: '0 auto' }}>
         <p className="text-[10px] uppercase tracking-[0.3em] mb-3 text-center" style={{ color: primary }}>
           Galerie
         </p>
         <h2 className="text-2xl font-semibold text-center mb-2"
-          style={{ fontFamily: 'Playfair Display, serif', color: '#1A0F08' }}>
+          style={{ fontFamily: TITLE_FONT, color: '#1A0F08' }}>
           Revivez les plus beaux moments
         </h2>
         <p className="text-sm text-center mb-8" style={{ color: '#9B7A56' }}>

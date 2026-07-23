@@ -52,7 +52,7 @@ export default function HowItWorks() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
           >
             Comment ça fonctionne ?
           </h2>
@@ -88,7 +88,7 @@ export default function HowItWorks() {
               >
                 <span
                   className="text-xl font-bold text-[#B85C28]"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
+                  style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
                 >
                   {step.number}
                 </span>
@@ -96,7 +96,7 @@ export default function HowItWorks() {
 
               <h3
                 className="text-lg font-semibold text-[#1A0F08] mb-3"
-                style={{ fontFamily: 'Playfair Display, serif' }}
+                style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
               >
                 {step.title}
               </h3>

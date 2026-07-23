@@ -8,6 +8,8 @@ const easeOut: Easing = 'easeOut';
 const container: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.14 } } };
 const item: Variants = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } };
 
+const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`;
+
 export default function Hero() {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
@@ -18,7 +20,7 @@ export default function Hero() {
     <section
       id="hero"
       className="relative min-h-screen flex items-center overflow-hidden pt-[68px] md:pt-[80px]"
-      style={{ background: '#F8F4EF' }}
+      style={{ background: `${GRAIN}, #F8F4EF` }}
     >
       {/* Soft ambient glow */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.08]"
@@ -47,7 +49,7 @@ export default function Hero() {
             <motion.h1
               variants={item}
               className="text-[2.8rem] sm:text-5xl lg:text-[3.6rem] xl:text-[4rem] font-bold leading-[1.08] tracking-tight text-[#1A0F08]"
-              style={{ fontFamily: 'Playfair Display, serif' }}
+              style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
             >
               Le QR code qui{' '}
               <em className="not-italic italic text-[#8A7235]">accueille</em>{' '}
@@ -150,7 +152,7 @@ export default function Hero() {
                   <div className="mx-3 rounded-xl px-4 py-3.5 mb-3 text-center"
                     style={{ background: 'linear-gradient(135deg, #B85C28, #9A4E1E)' }}>
                     <div className="text-[8px] text-white/60 mb-0.5 tracking-widest uppercase">Mariage</div>
-                    <div className="text-[15px] font-bold text-white leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    <div className="text-[15px] font-bold text-white leading-tight" style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}>
                       Sarah & Yassine
                     </div>
                     <div className="text-[9px] text-white/70 mt-1">15 Juin 2025 · Marrakech</div>

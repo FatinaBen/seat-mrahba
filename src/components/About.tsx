@@ -52,7 +52,7 @@ export default function About() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-6 leading-tight"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
           >
             L&apos;hospitalité marocaine,<br className="hidden sm:block" />
             réinventée à l&apos;ère digitale
@@ -100,7 +100,7 @@ export default function About() {
 
                 <h3
                   className="text-lg font-semibold text-[#1A0F08] mb-3"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
+                  style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
                 >
                   {feature.title}
                 </h3>
@@ -127,7 +127,7 @@ export default function About() {
         >
           <blockquote
             className="text-xl sm:text-2xl font-medium italic text-[#8A7235] max-w-2xl mx-auto leading-relaxed"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
           >
             &ldquo;Chaque invité mérite d&apos;être accueilli avec attention, même avant d&apos;entrer dans la salle.&rdquo;
           </blockquote>

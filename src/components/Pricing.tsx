@@ -77,7 +77,7 @@ export default function Pricing() {
           </p>
           <h2
             className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
           >
             Choisissez votre formule
           </h2>
@@ -113,7 +113,7 @@ export default function Pricing() {
                 <div className="mb-6">
                   <h3
                     className={`text-xl font-semibold mb-1.5 ${plan.highlighted ? 'text-white' : 'text-[#1A0F08]'}`}
-                    style={{ fontFamily: 'Playfair Display, serif' }}
+                    style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
                   >
                     {plan.name}
                   </h3>
@@ -128,7 +128,7 @@ export default function Pricing() {
                   </p>
                   <p
                     className={`text-3xl font-bold leading-none ${plan.highlighted ? 'text-white' : 'text-[#B85C28]'}`}
-                    style={{ fontFamily: 'Playfair Display, serif' }}
+                    style={{ fontFamily: 'Cormorant Garamond, Times New Roman, serif' }}
                   >
                     {plan.price}
                   </p>
