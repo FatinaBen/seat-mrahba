@@ -18,19 +18,33 @@ le mini-site final + le QR code correspondant.
 
 ## 2. Formules commerciales
 
-**Formule 1 — Essentielle**
-- Mini-site événement personnalisé
-- Plan de table digitalisé
+**Formule Essentielle**
+- QR Code personnalisé
+- Page web personnalisée
+- Plan de table interactif
+(Ne pas inclure : support par mail, accès illimité le jour J — jugés sans valeur
+commerciale réelle, retirés de la présentation)
 
-**Formule 2 — Complète**
-Tout ce qu'il y a dans la Formule 1, plus :
-- Menu (document PDF designé)
-- Programme / déroulé (document PDF designé)
-- Galerie photo partagée (upload par les invités)
+**Formule Premium**
+Tout ce qu'il y a dans l'Essentielle, plus :
+- Menu personnalisé
+- Programme personnalisé (si le client en souhaite un — optionnel selon événement)
+- Galerie photo
+(Ne pas inclure : informations pratiques, carte et localisation, support
+prioritaire — jugés non pertinents, retirés de la présentation)
+Le site vitrine doit mettre en avant la personnalisation avancée (design
+entièrement personnalisé, expérience plus immersive) comme argument de valeur
+de cette formule par rapport à l'Essentielle.
+
+**Il n'y a que 2 formules commerciales** (pas de 3ème formule "Signature" — décision
+prise le 23/07 : supprimée du site vitrine)
 
 **Option transversale (disponible sur les deux formules)**
-- Personnalisation du support physique du QR code (carton, panneau, etc.)
+- Personnalisation du support physique du QR code (plexiglas, bois, acrylique,
+  métal, autres supports sur mesure)
 - Toujours facturée séparément, sur devis
+- Présentée sur le site vitrine comme une section dédiée ("Supports QR Code
+  personnalisés"), pas comme une formule à part
 
 ## 3. Parcours invité (mini-site)
 
@@ -164,14 +178,54 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
   papier ou tissu subtil. Pas de motif géométrique zellige/moucharabieh en fond
   par défaut (réservé à des éléments décoratifs ponctuels/discrets si besoin,
   pas au fond principal).
-- **Polices (décision finale — 23/07)** : titre en **Playfair Display, version
-  light/fine (weight 300–400), grande taille, letter-spacing aéré** — texte
-  courant en **Inter** (sans-serif sobre). Jamais une seule police pour tout le
-  site. Cormorant Garamond testé et écarté : Playfair Display fin retenu comme
-  plus adapté au positionnement mariage/événementiel chaleureux.
-- **Décision** : l'exigence de design premium s'applique au site vitrine et au
-  mini-site invité uniquement — le dashboard admin doit rester pratique et
-  fonctionnel, pas d'exigence esthétique dessus.
+- **Polices** : titre en **Cormorant Garamond**, texte courant en **sans-serif
+  sobre** (à choisir parmi les options déjà disponibles type Inter/Jost — pas de
+  police unique appliquée à tout le site).
+
+## 5quater. Site vitrine — Hero et démonstration (session 23/07)
+
+Décisions fermes après revue du site vitrine actuel :
+
+**Hero (première section)**
+- Supprimer tout mockup de téléphone/application avec emojis — donne une
+  impression "application mobile" alors que ce n'est pas le positionnement
+  du produit
+- Remplacer par un visuel premium : QR code élégant, support de QR code
+  (plexiglas/bois/papier haut de gamme), visuel de mariage raffiné, ou
+  composition qui montre l'expérience sans passer par un téléphone
+- Objectif : le visiteur doit comprendre immédiatement qu'il s'agit d'un QR
+  code pour événements, pas d'une application
+
+**Section démonstration ("Vivez l'expérience en direct")**
+- Supprimer entièrement la section "Infos" (adresse, heure, contact,
+  localisation) et ses textes — inutile car l'invité obtient ces infos
+  ailleurs le jour J (le QR est scanné à l'entrée, il connaît déjà le lieu)
+- Éviter tout mockup téléphone si possible ; si conservé, il doit reprendre
+  exactement la palette du site (pas de cadre noir, pas de marron sur marron,
+  bonne lisibilité)
+- Nouvelle démonstration doit suivre le parcours réel dans cet ordre :
+  1. Écran d'accueil avec titre + date, introduction élégante
+  2. Champ de recherche nom/prénom
+  3. Résultat : visuel de salle stylé (pas besoin d'un plan complet réaliste),
+     "Vous êtes installé à la Table n°X" avec le numéro mis en couleur, plus
+     une indication de zone (gauche/droite de la salle)
+  4. Menu : exemple élégant (entrée/plat/dessert soigné)
+  5. Programme : absent de cet exemple de démo (mais reste une option
+     disponible pour de vrais clients dans la Formule Premium)
+  6. Galerie : conservée, avec un texte d'accroche du type "Partagez les plus
+     beaux moments de cette soirée"
+
+**Reste du site vitrine — sections à garder sans modification**
+L'hospitalité marocaine réinventée à l'ère digitale / Comment ça fonctionne /
+Pour chaque célébration / Les grands moments méritent une attention aux
+détails / Ce que nous vous promettons / Formulaire de contact (les
+coordonnées email/WhatsApp du formulaire seront mises à jour plus tard, ne
+pas y toucher pour l'instant)
+
+**Ligne directrice générale (à rappeler à chaque session touchant le site
+vitrine ou le mini-site) :** éviter tout effet "application mobile", interface
+gadget, ou emoji. Le rendu doit rester sobre, luxueux, minimaliste, cohérent
+avec un service haut de gamme dédié aux mariages/événements élégants.
 
 ## 6. Points volontairement non traités pour l'instant
 - Modifications du site vitrine : à faire, mais pas encore listées (à ajouter ici
@@ -203,8 +257,23 @@ Invités, Plan de table, Design, Contenu, Aperçu, Publier) :
   uniquement sans texture, une seule police pour tout, arrondis = détail secondaire)
 - Décision : fond par défaut (sans photo) = texture simple (grain/papier/tissu
   léger), pas de motif zellige/moucharabieh en fond principal
-- Décision initiale : Cormorant Garamond → révisée le 23/07 : Playfair Display fin (weight 300–400, grande taille, letter-spacing aéré) retenu comme police de titre, Inter pour le corps
+- Décision : police de titre = **Playfair Display (version fine/light, grande
+  taille, aérée)**, texte courant = sans-serif sobre. Choix fait après comparaison
+  visuelle de 3 directions (Didot/Bodoni classique, Playfair Display fin,
+  Cormorant retravaillé) — Playfair Display fin retenu comme le plus adapté au
+  positionnement mariage/événementiel chaleureux (Didot jugé trop froid/couture)
 - Décision : l'exigence de design premium s'applique au site vitrine et au
   mini-site invité uniquement — le dashboard admin doit rester pratique et
   fonctionnel, pas d'exigence esthétique dessus
 - À faire : rédiger un skill design/UX premium pour Claude Code
+
+### 23/07 — Refonte du contenu du site vitrine
+- Diagnostic design appliqué : police titre remplacée par Playfair Display
+  fine/aérée, corrections de contraste (titres illisibles sur fond sombre)
+  et d'ordre visuel (titre → ligne décorative → texte)
+- Brief complet de refonte de contenu rédigé par l'utilisateur : suppression
+  du mockup téléphone/app dans le Hero, refonte de la démo d'expérience
+  (suppression section Infos, parcours réel avec plan de table stylé),
+  simplification des formules (suppression de la 3ème formule "Signature",
+  listes de fonctionnalités précisées pour Essentielle/Premium)
+- Ligne directrice ajoutée : éviter tout effet "application mobile"/gadget/emoji
