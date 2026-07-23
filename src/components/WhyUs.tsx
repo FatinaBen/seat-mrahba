@@ -47,8 +47,8 @@ export default function WhyUs() {
           </p>
 
           <blockquote
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8 max-w-3xl mx-auto"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            className="text-3xl sm:text-4xl md:text-5xl text-white leading-tight mb-8 max-w-3xl mx-auto"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Les grands moments méritent une{' '}
             <em className="text-[#E8C49A] not-italic italic">attention</em>{' '}
@@ -72,18 +72,18 @@ export default function WhyUs() {
               transition={{ duration: 0.65, delay: i * 0.14 }}
               className="text-center px-4"
             >
+              <h3
+                className="text-xl mb-4"
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, color: 'white' }}
+              >
+                {v.label}
+              </h3>
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="h-px w-6 bg-[#E8C49A]/30" />
                 <span className="text-[#CF9068] text-[10px]">✦</span>
                 <div className="h-px w-6 bg-[#E8C49A]/30" />
               </div>
-              <h3
-                className="text-xl font-semibold text-[#E8C49A] mb-3"
-                style={{ fontFamily: 'Playfair Display, serif' }}
-              >
-                {v.label}
-              </h3>
-              <p className="text-[14px] text-white/50 leading-relaxed">
+              <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 {v.description}
               </p>
             </motion.div>

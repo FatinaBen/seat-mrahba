@@ -62,12 +62,17 @@ un des éléments suivants :
   fond principal
 
 ### 3. Hiérarchie typographique réelle
-- **Décidé : titre en Cormorant Garamond, texte courant en sans-serif sobre**
-  (type Inter/Jost — à choisir parmi les options déjà disponibles dans le
-  dashboard, mais toujours une police différente du titre)
-- Ne jamais appliquer une seule police à tous les niveaux de texte
+- **Décidé : titre en Playfair Display, version light/fine (font-weight 300–400),
+  grande taille, espacement des lettres légèrement augmenté** — texte courant en
+  sans-serif sobre (Inter). Deux polices distinctes toujours, jamais une seule.
+- Le traitement compte autant que le choix de police : grande taille + graisse fine
+  + letter-spacing aéré sur les labels/surtitres (ex. "CÉRÉMONIE DE MARIAGE" en
+  tracking large) — c'est cette combinaison qui crée la sensation de luxe.
+- Éviter le weight par défaut (700/bold) sur les titres : préférer 300 ou 400 avec
+  une taille plus grande plutôt que 700 avec une taille ordinaire.
+- Ne jamais appliquer une seule police à tous les niveaux de texte.
 - Respecter une échelle de tailles cohérente (titre principal / sous-titre / corps
-  de texte / mentions légères), pas des tailles arbitraires
+  de texte / mentions légères), pas des tailles arbitraires.
 
 ### 4. Rythme et espacement
 - Espacements généreux entre les sections (le mini-site ne doit jamais paraître

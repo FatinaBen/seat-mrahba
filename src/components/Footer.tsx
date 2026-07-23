@@ -39,7 +39,7 @@ export default function Footer() {
               </svg>
               <span
                 className="text-lg font-bold"
-                style={{ fontFamily: 'Playfair Display, serif', color: '#E8C49A' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', color: '#E8C49A' }}
               >
                 Seat & Mrahba
               </span>

@@ -42,8 +42,8 @@ export default function Testimonials() {
             Nos engagements
           </p>
           <h2
-            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            className="text-[2.2rem] sm:text-4xl md:text-5xl text-[#1A0F08] mb-5 leading-tight"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Ce que nous vous promettons
           </h2>
@@ -55,27 +55,33 @@ export default function Testimonials() {
         <div className="grid md:grid-cols-3 gap-6">
           {engagements.map((e, i) => {
             const Icon = e.icon;
+            const nums = ['01', '02', '03'];
             return (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 24 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: i * 0.14 }}
-                className="group text-center p-8 rounded-2xl transition-all duration-300"
+                className="group relative p-8 rounded-2xl transition-all duration-300"
                 style={{
                   border: '1px solid rgba(232,196,154,0.2)',
                   boxShadow: '0 2px 24px rgba(184,92,40,0.05)',
+                  background: i === 1 ? '#FAFAF8' : 'white',
                 }}
               >
+                <span className="absolute top-6 right-7 font-mono"
+                  style={{ fontSize: 11, color: 'rgba(138,114,53,0.3)', letterSpacing: '0.05em' }}>
+                  {nums[i]}
+                </span>
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-6"
-                  style={{ background: 'rgba(138,114,53,0.08)' }}
+                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300"
+                  style={{ background: i === 1 ? 'rgba(184,92,40,0.1)' : 'rgba(138,114,53,0.08)' }}
                 >
-                  <Icon size={20} color="#8A7235" strokeWidth={1.5} />
+                  <Icon size={19} color={i === 1 ? '#B85C28' : '#8A7235'} strokeWidth={1.5} />
                 </div>
                 <h3
-                  className="text-lg font-semibold text-[#1A0F08] mb-3"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
+                  className="text-[#1A0F08] mb-3"
+                  style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, fontSize: '1.05rem' }}
                 >
                   {e.title}
                 </h3>
