@@ -51,8 +51,8 @@ export default function FAQ() {
             Questions fréquentes
           </p>
           <h2
-            className="text-[2.2rem] sm:text-4xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+            className="text-[2.2rem] sm:text-4xl text-[#1A0F08] mb-5 leading-tight"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Vous avez des questions ?
           </h2>
@@ -126,7 +126,7 @@ export default function FAQ() {
           </p>
           <h3
             className="text-xl font-semibold text-white mb-4"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Nous sommes là pour vous répondre
           </h3>

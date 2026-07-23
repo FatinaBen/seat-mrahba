@@ -55,8 +55,8 @@ export default function Events() {
             Événements
           </p>
           <h2
-            className="text-[2.2rem] sm:text-4xl md:text-5xl font-bold text-[#1A0F08] mb-5 leading-tight"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+            className="text-[2.2rem] sm:text-4xl md:text-5xl text-[#1A0F08] mb-5 leading-tight"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Pour chaque célébration
           </h2>
@@ -81,7 +81,7 @@ export default function Events() {
               <div className="text-3xl mb-5">{event.emoji}</div>
               <h3
                 className="text-[17px] font-semibold text-[#1A0F08] mb-2"
-                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
               >
                 {event.title}
               </h3>
