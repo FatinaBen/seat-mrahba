@@ -10,6 +10,62 @@ const item: Variants = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`;
 
+/* Inline SVG QR-code pattern — decorative only, not scannable */
+const QR_CELLS = (() => {
+  const pattern = [
+    [1,1,1,1,1,1,1,0,1,0,0,1,0,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1,0,0,1,1,0,1,1,0,0,0,0,0,0,1],
+    [1,0,1,1,1,0,1,0,1,0,1,1,0,1,0,1,1,1,0,0,1],
+    [1,0,1,1,1,0,1,0,0,1,0,0,1,1,0,1,1,1,0,0,1],
+    [1,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,1,1,0,0,1],
+    [1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],
+    [1,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1,0,1,1,0,1],
+    [0,1,0,0,1,0,0,0,1,0,0,1,0,1,0,0,1,1,0,1,0],
+    [1,1,0,1,0,0,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1],
+    [0,0,1,0,1,1,0,1,0,1,0,1,0,0,0,1,0,1,0,0,0],
+    [1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,1,0,1,1],
+    [0,0,0,0,0,0,0,0,1,1,0,1,0,1,0,1,0,0,1,0,0],
+    [1,1,1,1,1,1,1,0,0,0,1,0,1,0,1,1,0,1,0,0,1],
+    [1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,1,1,0,1,1,0],
+    [1,0,1,1,1,0,1,0,0,1,1,0,1,0,0,0,1,1,0,0,1],
+    [1,0,1,1,1,0,1,0,1,0,1,1,0,1,1,0,0,1,0,1,0],
+    [1,0,1,1,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,0,1],
+    [1,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,0,1,1,0],
+    [1,1,1,1,1,1,1,1,0,1,0,1,1,0,1,1,0,1,0,0,1],
+  ];
+  return pattern;
+})();
+
+function QrCode() {
+  const size = 21;
+  const cell = 8;
+  return (
+    <svg
+      width={size * cell}
+      height={size * cell}
+      viewBox={`0 0 ${size * cell} ${size * cell}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {QR_CELLS.map((row, r) =>
+        row.map((val, c) =>
+          val ? (
+            <rect
+              key={`${r}-${c}`}
+              x={c * cell}
+              y={r * cell}
+              width={cell}
+              height={cell}
+              fill="#1A0F08"
+            />
+          ) : null
+        )
+      )}
+    </svg>
+  );
+}
+
 export default function Hero() {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
@@ -91,7 +147,7 @@ export default function Hero() {
               </button>
             </motion.div>
 
-            {/* Trust signals — honest, no fake numbers */}
+            {/* Trust signals */}
             <motion.div variants={item} className="flex flex-wrap items-center gap-6 pt-2">
               {[
                 { icon: '✦', text: 'Devis gratuit & sans engagement' },
@@ -106,7 +162,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right: Phone mockup */}
+          {/* Right: QR code visual */}
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -114,106 +170,111 @@ export default function Hero() {
             className="flex justify-center lg:justify-end"
           >
             <div className="relative">
-              {/* Soft glow behind phone */}
+              {/* Soft glow behind card */}
               <div
-                className="absolute inset-0 rounded-[3rem] blur-3xl opacity-20 scale-[0.9] pointer-events-none"
+                className="absolute inset-0 rounded-[2rem] blur-3xl opacity-20 scale-[0.85] pointer-events-none"
                 style={{ background: 'linear-gradient(135deg, #E8C49A, #B85C28)' }}
               />
 
-              {/* Phone frame */}
+              {/* QR card — support plexiglas / papier haut de gamme */}
               <div
-                className="relative w-[248px] sm:w-[264px] h-[504px] sm:h-[528px] rounded-[2.8rem] p-[7px]"
+                className="relative w-[300px] sm:w-[320px] rounded-[1.6rem] overflow-hidden"
                 style={{
-                  background: 'linear-gradient(160deg, #1e1e1e, #2a2a2a)',
-                  boxShadow: '0 40px 80px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.07)',
+                  background: 'white',
+                  boxShadow: '0 32px 72px rgba(26,15,8,0.14), 0 2px 8px rgba(26,15,8,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+                  border: '1px solid rgba(232,196,154,0.25)',
                 }}
               >
-                <div className="absolute top-[10px] left-1/2 -translate-x-1/2 w-[88px] h-[22px] bg-[#111] rounded-full z-10" />
-                <div className="absolute -left-[3px] top-[90px] w-[3px] h-7 bg-[#2a2a2a] rounded-l-full" />
-                <div className="absolute -left-[3px] top-[130px] w-[3px] h-10 bg-[#2a2a2a] rounded-l-full" />
-                <div className="absolute -right-[3px] top-[108px] w-[3px] h-12 bg-[#2a2a2a] rounded-r-full" />
+                {/* Card header */}
+                <div
+                  className="px-8 pt-8 pb-6 text-center"
+                  style={{ background: 'linear-gradient(160deg, #F8F4EF, #F0E8DC)' }}
+                >
+                  <p className="text-[10px] font-medium tracking-[0.4em] uppercase text-[#8A7235] mb-3">
+                    Seat & Mrahba
+                  </p>
+                  <p
+                    className="text-[1.5rem] leading-tight text-[#1A0F08] mb-1"
+                    style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400 }}
+                  >
+                    Sarah & Yassine
+                  </p>
+                  <p className="text-[12px] text-[#9B7A56]">15 Juin 2025 · Marrakech</p>
 
-                {/* Screen content */}
-                <div className="w-full h-full rounded-[2.4rem] overflow-hidden bg-[#F8F4EF]">
-                  <div className="h-9 px-5 flex items-end justify-between pb-1.5 bg-[#F8F4EF]">
-                    <span className="text-[9px] font-semibold text-[#1A0F08]">9:41</span>
-                    <div className="flex items-center gap-1">
-                      <div className="flex gap-[2px] items-end">
-                        {[3, 5, 7, 9].map((h, i) => (
-                          <div key={i} className="w-[2px] rounded-sm bg-[#1A0F08]" style={{ height: h }} />
-                        ))}
-                      </div>
-                      <div className="w-4 h-[10px] rounded-sm border border-[#1A0F08] relative ml-0.5">
-                        <div className="absolute left-[2px] top-[2px] bottom-[2px] w-[55%] rounded-sm bg-[#1A0F08]" />
-                      </div>
-                    </div>
+                  {/* Thin divider */}
+                  <div className="flex items-center justify-center gap-3 mt-4">
+                    <div className="h-px w-8 bg-[#E8C49A]" />
+                    <span className="text-[#CF9068] text-[10px]">✦</span>
+                    <div className="h-px w-8 bg-[#E8C49A]" />
                   </div>
+                </div>
 
-                  <div className="mx-3 rounded-xl px-4 py-3.5 mb-3 text-center"
-                    style={{ background: 'linear-gradient(135deg, #B85C28, #9A4E1E)' }}>
-                    <div className="text-[8px] text-white/60 mb-0.5 tracking-widest uppercase">Mariage</div>
-                    <div className="text-[15px] font-bold text-white leading-tight" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
-                      Sarah & Yassine
-                    </div>
-                    <div className="text-[9px] text-white/70 mt-1">15 Juin 2025 · Marrakech</div>
-                    <div className="mt-2 flex justify-center items-center gap-2">
-                      <div className="h-px w-7 bg-white/25" />
-                      <span className="text-white/40 text-[8px]">✦</span>
-                      <div className="h-px w-7 bg-white/25" />
-                    </div>
+                {/* QR code area */}
+                <div className="px-8 py-6 flex flex-col items-center bg-white">
+                  <div
+                    className="p-4 rounded-xl"
+                    style={{
+                      background: '#FDFCFB',
+                      border: '1px solid rgba(232,196,154,0.3)',
+                      boxShadow: '0 2px 12px rgba(26,15,8,0.05)',
+                    }}
+                  >
+                    <QrCode />
                   </div>
+                  <p className="text-[11px] text-[#9B7A56] mt-4 tracking-wide text-center">
+                    Scanner pour accéder à votre espace
+                  </p>
+                </div>
 
-                  <div className="px-3 grid grid-cols-4 gap-2 mb-3">
-                    {[
-                      { icon: '📋', label: 'Programme' },
-                      { icon: '🪑', label: 'Ma table' },
-                      { icon: '🍽️', label: 'Menu' },
-                      { icon: '📸', label: 'Galerie' },
-                    ].map((it) => (
-                      <div key={it.label} className="flex flex-col items-center gap-1">
-                        <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center text-base shadow-sm bg-white border border-[#E8C49A]/50">
-                          {it.icon}
-                        </div>
-                        <span className="text-[8px] text-[#5A3C1E] font-medium text-center leading-tight">{it.label}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mx-3 rounded-xl p-3 mb-2 bg-white border border-[#E8C49A]/40">
-                    <div className="text-[9px] font-semibold text-[#8A7235] mb-1.5 uppercase tracking-wider">Votre table</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white flex-shrink-0" style={{ background: '#B85C28' }}>7</div>
-                      <div>
-                        <div className="text-[10px] font-semibold text-[#1A0F08]">Table des Amis</div>
-                        <div className="text-[8px] text-[#9B7A56]">Salle principale · Place A3</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mx-3 rounded-xl p-3" style={{ background: '#F0E8DC' }}>
-                    <div className="text-[9px] font-semibold text-[#8A7235] mb-1 uppercase tracking-wider">Prochain moment</div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">💍</span>
-                      <div>
-                        <div className="text-[10px] font-semibold text-[#1A0F08]">Cérémonie</div>
-                        <div className="text-[8px] text-[#9B7A56]">16h00 · Palais Bahia</div>
-                      </div>
-                    </div>
+                {/* Card footer */}
+                <div
+                  className="px-8 pb-7 pt-0 text-center"
+                  style={{ background: 'white' }}
+                >
+                  <div
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+                    style={{ background: 'rgba(138,114,53,0.08)', border: '1px solid rgba(138,114,53,0.15)' }}
+                  >
+                    <span className="text-[#8A7235] text-[10px]">✦</span>
+                    <span className="text-[11px] text-[#8A7235] font-medium tracking-wide">
+                      Plan de table · Menu · Galerie
+                    </span>
+                    <span className="text-[#8A7235] text-[10px]">✦</span>
                   </div>
                 </div>
               </div>
 
-              {/* Floating badge — hidden on small mobile */}
+              {/* Floating badge */}
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 3.2, repeat: Infinity, ease: easeInOut }}
-                className="absolute -right-4 sm:-right-10 top-16 bg-white rounded-2xl shadow-xl p-3 border border-[#E8C49A]/30 hidden sm:block"
+                className="absolute -right-4 sm:-right-10 top-10 bg-white rounded-2xl shadow-xl p-3 border border-[#E8C49A]/30 hidden sm:block"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-[#8A7235]/10 flex items-center justify-center text-sm">✦</div>
+                  <div className="w-8 h-8 rounded-xl bg-[#B85C28]/10 flex items-center justify-center">
+                    <span className="text-[#B85C28] text-sm font-medium" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>1</span>
+                  </div>
                   <div>
                     <div className="text-[10px] font-semibold text-[#1A0F08] whitespace-nowrap">1 scan</div>
-                    <div className="text-[9px] text-[#9B7A56]">Tout en accès</div>
+                    <div className="text-[9px] text-[#9B7A56]">Toutes les infos</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Bottom-left material badge */}
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: easeInOut, delay: 1 }}
+                className="absolute -left-4 sm:-left-8 bottom-16 bg-[#1A0F08] rounded-2xl shadow-xl p-3 hidden sm:block"
+                style={{ border: '1px solid rgba(232,196,154,0.15)' }}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-[#E8C49A]/10 flex items-center justify-center">
+                    <span className="text-[#E8C49A] text-xs">◈</span>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-medium text-[#E8C49A] whitespace-nowrap">Support plexiglas</div>
+                    <div className="text-[9px] text-[#9B7A56]">Gravé sur mesure</div>
                   </div>
                 </div>
               </motion.div>
