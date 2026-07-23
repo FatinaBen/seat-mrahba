@@ -128,12 +128,12 @@ export default function About() {
                     fontFamily: 'Playfair Display, Georgia, serif',
                     fontWeight: 400,
                     fontSize: isCenter ? '1.2rem' : '1.05rem',
-                    color: isCenter ? '#E8C49A' : '#1A0F08',
+                    color: isCenter ? 'white' : '#1A0F08',
                   }}
                 >
                   {feature.title}
                 </h3>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: isCenter ? 'rgba(232,196,154,0.6)' : '#9B7A56' }}>
+                <p style={{ fontSize: 14, lineHeight: 1.7, color: isCenter ? 'rgba(255,255,255,0.55)' : '#9B7A56' }}>
                   {feature.description}
                 </p>
 

@@ -78,12 +78,12 @@ export default function WhyUs() {
                 <div className="h-px w-6 bg-[#E8C49A]/30" />
               </div>
               <h3
-                className="text-xl font-semibold text-[#E8C49A] mb-3"
-                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+                className="text-xl mb-3"
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, color: 'white' }}
               >
                 {v.label}
               </h3>
-              <p className="text-[14px] text-white/50 leading-relaxed">
+              <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 {v.description}
               </p>
             </motion.div>
