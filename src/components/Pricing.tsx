@@ -37,39 +37,28 @@ const plans = [
 
 const supports = [
   {
-    name: 'Plexiglas',
-    desc: 'Élégant & moderne',
-    gradient: 'linear-gradient(135deg, #D6E8F0 0%, #A8C8D8 40%, #7AAFC4 100%)',
-    accent: '#4A8FA8',
-    detail: 'Transparent ou teinté',
+    name: 'Miroir gravé',
+    desc: 'Élégant & raffiné',
+    detail: 'Encadrement doré, gravure vinyle',
+    img: '/supports/miroir.jpg',
   },
   {
-    name: 'Bois',
-    desc: 'Chaleureux & naturel',
-    gradient: 'linear-gradient(135deg, #C8A882 0%, #9E7B52 40%, #7A5C36 100%)',
-    accent: '#5C3D1E',
-    detail: 'Chêne, noyer, hêtre',
+    name: 'Chevalet papier',
+    desc: 'Intemporel & romantique',
+    detail: 'Impression haute qualité sur chevalet bois',
+    img: '/supports/chevalet.jpg',
   },
   {
-    name: 'Acrylique',
-    desc: 'Raffiné & léger',
-    gradient: 'linear-gradient(135deg, #F0EBE3 0%, #D4C9BA 40%, #B8A99A 100%)',
-    accent: '#7A6855',
-    detail: 'Doré ou argenté',
+    name: 'Totem tissu',
+    desc: 'Grand format & impactant',
+    detail: 'Impression textile, structure légère',
+    img: '/supports/banner.jpg',
   },
   {
-    name: 'Métal',
-    desc: 'Luxueux & durable',
-    gradient: 'linear-gradient(135deg, #C8C8C8 0%, #A0A0A0 40%, #787878 100%)',
-    accent: '#3A3A3A',
-    detail: 'Laiton, aluminium, acier',
-  },
-  {
-    name: 'Sur mesure',
-    desc: 'Selon vos souhaits',
-    gradient: 'linear-gradient(135deg, #E8C49A 0%, #CF9068 40%, #B85C28 100%)',
-    accent: '#6B2E0A',
-    detail: 'Combinaisons & gravures',
+    name: 'Panneau acrylique',
+    desc: 'Moderne & luxueux',
+    detail: 'Acrylique blanc, finition premium',
+    img: '/supports/engagement.jpg',
   },
 ];
 
@@ -79,68 +68,61 @@ function SupportCarousel() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setCurrent((c) => (c + 1) % supports.length), 3200);
+    const id = setInterval(() => setCurrent((c) => (c + 1) % supports.length), 4000);
     return () => clearInterval(id);
   }, []);
 
   const s = supports[current];
 
   return (
-    <div className="relative w-full max-w-[340px] mx-auto">
-      {/* Main card */}
-      <div className="relative rounded-2xl overflow-hidden" style={{ height: 340 }}>
+    <div className="relative w-full max-w-[360px] mx-auto">
+      {/* Main photo card */}
+      <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: 420 }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="absolute inset-0 flex flex-col justify-end"
-            style={{ background: s.gradient }}
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            className="absolute inset-0"
           >
-            {/* Material texture overlay */}
-            <div className="absolute inset-0 opacity-10"
-              style={{ background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23t)' opacity='1'/%3E%3C/svg%3E")` }} />
+            {/* Photo */}
+            <img
+              src={s.img}
+              alt={s.name}
+              className="w-full h-full object-cover"
+            />
+            {/* Gradient overlay for legibility */}
+            <div className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(10,5,2,0.72) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)' }} />
 
-            {/* Simulated QR support object */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                {/* Card stand */}
-                <div className="w-[120px] h-[150px] rounded-xl flex flex-col items-center justify-center gap-2"
-                  style={{
-                    background: 'rgba(255,255,255,0.18)',
-                    border: '1px solid rgba(255,255,255,0.35)',
-                    backdropFilter: 'blur(8px)',
-                    boxShadow: '0 16px 40px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4)',
-                  }}>
-                  {/* Mini QR pattern */}
-                  <div className="grid gap-[1.5px]" style={{ gridTemplateColumns: 'repeat(7,1fr)' }}>
-                    {[1,1,1,1,1,1,1, 1,0,0,0,0,0,1, 1,0,1,1,1,0,1, 1,0,1,0,1,0,1, 1,0,1,1,1,0,1, 1,0,0,0,0,0,1, 1,1,1,1,1,1,1].map((v, i) => (
-                      <div key={i} className="w-[6px] h-[6px] rounded-[1px]"
-                        style={{ background: v ? 'rgba(0,0,0,0.7)' : 'transparent' }} />
-                    ))}
-                  </div>
-                  <p className="text-[8px] font-medium mt-1" style={{ color: 'rgba(0,0,0,0.5)', letterSpacing: '0.1em' }}>
-                    SEAT & MRAHBA
-                  </p>
-                </div>
-                {/* Shadow below */}
-                <div className="w-[100px] h-[6px] mx-auto rounded-full mt-1 blur-sm opacity-30"
-                  style={{ background: s.accent }} />
-              </div>
-            </div>
-
-            {/* Bottom info */}
-            <div className="relative p-5" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%)' }}>
-              <p className="text-white text-[18px] leading-tight mb-0.5"
+            {/* Bottom caption */}
+            <div className="absolute bottom-0 left-0 right-0 p-5">
+              <p className="text-white text-[19px] leading-tight mb-1"
                 style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400 }}>
                 {s.name}
               </p>
-              <p className="text-white/70 text-[12px]">{s.detail}</p>
+              <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.65)' }}>{s.detail}</p>
             </div>
           </motion.div>
         </AnimatePresence>
+
+        {/* Arrow buttons */}
+        <button
+          onClick={() => setCurrent((c) => (c - 1 + supports.length) % supports.length)}
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+          style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.2)' }}
+        >
+          <span className="text-white text-sm">‹</span>
+        </button>
+        <button
+          onClick={() => setCurrent((c) => (c + 1) % supports.length)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+          style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.2)' }}
+        >
+          <span className="text-white text-sm">›</span>
+        </button>
       </div>
 
       {/* Dots */}
@@ -149,30 +131,32 @@ function SupportCarousel() {
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className="transition-all duration-200"
+            className="transition-all duration-300"
             style={{
-              width: i === current ? 20 : 6,
+              width: i === current ? 24 : 6,
               height: 6,
               borderRadius: 3,
-              background: i === current ? '#E8C49A' : 'rgba(232,196,154,0.3)',
+              background: i === current ? '#E8C49A' : 'rgba(232,196,154,0.25)',
             }}
           />
         ))}
       </div>
 
-      {/* Labels row */}
-      <div className="flex justify-center gap-3 mt-4 flex-wrap">
+      {/* Thumbnail strip */}
+      <div className="flex gap-2 mt-4 justify-center">
         {supports.map((s2, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className="text-[11px] transition-all px-3 py-1 rounded-full"
-            style={i === current
-              ? { background: 'rgba(232,196,154,0.15)', color: '#E8C49A', border: '1px solid rgba(232,196,154,0.3)' }
-              : { color: 'rgba(255,255,255,0.4)', border: '1px solid transparent' }
-            }
+            className="relative rounded-lg overflow-hidden flex-shrink-0 transition-all duration-200"
+            style={{
+              width: 64, height: 52,
+              outline: i === current ? '2px solid #E8C49A' : '2px solid transparent',
+              outlineOffset: 2,
+              opacity: i === current ? 1 : 0.55,
+            }}
           >
-            {s2.name}
+            <img src={s2.img} alt={s2.name} className="w-full h-full object-cover" />
           </button>
         ))}
       </div>
@@ -337,11 +321,11 @@ export default function Pricing() {
 
               <div className="space-y-3 mb-10">
                 {[
-                  { name: 'Plexiglas', desc: 'Transparent ou teinté — élégant & moderne' },
-                  { name: 'Bois', desc: 'Chêne, noyer, hêtre — chaleureux & naturel' },
-                  { name: 'Acrylique', desc: 'Doré ou argenté — raffiné & léger' },
-                  { name: 'Métal', desc: 'Laiton, aluminium — luxueux & durable' },
-                  { name: 'Sur mesure', desc: 'Combinaisons & gravures selon vos souhaits' },
+                  { name: 'Miroir gravé', desc: 'Encadrement doré, gravure vinyle — élégant & raffiné' },
+                  { name: 'Chevalet papier', desc: 'Impression haute qualité sur chevalet bois' },
+                  { name: 'Totem tissu', desc: 'Grand format, structure légère — fort impact visuel' },
+                  { name: 'Panneau acrylique', desc: 'Finition premium, blanc ou transparent' },
+                  { name: 'Sur mesure', desc: 'Tout autre support selon vos souhaits, sur devis' },
                 ].map((item, i) => (
                   <motion.div
                     key={i}
