@@ -55,7 +55,7 @@ export default function Contact() {
             Parlons de votre événement
           </h2>
           <p className="text-base text-[#9B7A56] max-w-md mx-auto leading-relaxed">
-            Partagez votre projet. Nous vous répondrons sous 24h avec une proposition personnalisée.
+            Nous vous répondrons sous 24h avec une proposition personnalisée.
           </p>
         </motion.div>
 
@@ -80,8 +80,8 @@ export default function Contact() {
               </h3>
               <div className="space-y-5">
                 {[
-                  { icon: Mail, label: 'Email', value: 'bonjour@seat-mrahba.com' },
-                  { icon: Phone, label: 'WhatsApp', value: '+212 6 00 00 00 00' },
+                  { icon: Mail, label: 'Email', value: 'contact@seat-mrahba.com' },
+                  { icon: Phone, label: 'WhatsApp', value: '+212 6 69 09 00 00' },
                   { icon: Share2, label: 'Instagram', value: '@seat.mrahba' },
                 ].map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex items-center gap-4">
