@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Event, Table, TableType, Guest } from '@/lib/admin/types';
 import { createDefaultTable } from '@/lib/admin/utils';
-import { CheckCircle2, Plus, Trash2, Wand2, GripVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, Plus, Trash2, Wand2, GripVertical, ChevronDown, ChevronUp, X, ImageIcon } from 'lucide-react';
 
 interface Props {
   event: Event;
@@ -21,6 +21,16 @@ export default function StepSeating({ event, update, markComplete }: Props) {
   const isDone = event.builderSteps.find(s => s.key === 'seating')?.completed;
   const [expanded, setExpanded] = useState<string | null>(null);
   const [dragGuest, setDragGuest] = useState<string | null>(null);
+  const planFileRef = useRef<HTMLInputElement>(null);
+
+  function handlePlanImage(files: FileList | null) {
+    const file = files?.[0];
+    if (!file) return;
+    if (!['image/png', 'image/jpeg'].includes(file.type)) return;
+    const reader = new FileReader();
+    reader.onload = e => update({ seatingImage: e.target?.result as string });
+    reader.readAsDataURL(file);
+  }
 
   function addTable() {
     const t = createDefaultTable(event.tables.length + 1);
@@ -270,6 +280,40 @@ export default function StepSeating({ event, update, markComplete }: Props) {
           })}
         </div>
       )}
+
+      {/* Visuel Canva optionnel du plan de table (en plus du plan généré, jamais à la place) */}
+      <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
+        <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1">Visuel du plan de table (optionnel)</p>
+        <p className="text-[11px] text-[#9B7A56] mb-3">
+          Vous pouvez ajouter un visuel Canva du plan de salle en complément du plan généré ci-dessus. La recherche invité continue
+          de fonctionner grâce à l&apos;Excel, avec ou sans ce visuel.
+        </p>
+        {event.seatingImage ? (
+          <div className="relative rounded-2xl overflow-hidden border max-w-sm" style={{ borderColor: 'rgba(26,15,8,0.1)' }}>
+            <img src={event.seatingImage} alt="Plan de table" className="w-full object-contain" style={{ maxHeight: 240, background: '#F4F1ED' }} />
+            <button
+              onClick={() => update({ seatingImage: '' })}
+              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 flex items-center justify-center">
+              <X size={12} className="text-white" />
+            </button>
+            <button
+              onClick={() => planFileRef.current?.click()}
+              className="absolute bottom-2 right-2 px-3 py-1.5 rounded-lg bg-black/50 text-white text-[11px]">
+              Remplacer
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => planFileRef.current?.click()}
+            className="w-full max-w-sm h-28 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-colors hover:border-[#B85C28]"
+            style={{ borderColor: 'rgba(26,15,8,0.12)', background: 'white' }}>
+            <ImageIcon size={18} className="text-[#C4A882]" />
+            <p className="text-[12px] text-[#9B7A56]">Importer un visuel Canva du plan (PNG, JPG)</p>
+          </button>
+        )}
+        <input ref={planFileRef} type="file" accept="image/png,image/jpeg" className="hidden"
+          onChange={e => handlePlanImage(e.target.files)} />
+      </div>
 
       <div className="pt-6 border-t mt-6" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
         <button

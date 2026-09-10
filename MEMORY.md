@@ -298,3 +298,57 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   laissée strictement inchangée : elle détaille déjà en profondeur la prestation
   "Personnalisation des supports QR" listée dans Mrahba+, pas besoin de dupliquer
 - Fichier modifié : `src/components/Pricing.tsx` uniquement (section id="offres")
+
+### 10/09 — Restructuration du dashboard admin (parcours en 8 étapes)
+- Contexte : le dashboard existait déjà comme wizard à étapes (`EventWizard.tsx` +
+  `StepXxx.tsx`), très proche de la nouvelle structure demandée — adapté, pas
+  reconstruit.
+- **Bug corrigé (le plus important) : le plan de table ne se reliait pas à
+  l'Excel.** Après import, `guest.tableId` recevait le numéro brut de la colonne
+  Excel (ex. "7"), alors que les `Table.id` sont des identifiants générés
+  aléatoirement — la recherche invité ne trouvait donc jamais la bonne table sans
+  placement manuel. Ajout de `linkGuestsToTables()` (`src/lib/admin/utils.ts`) qui
+  crée/relie automatiquement les tables à partir des numéros présents dans
+  l'Excel, appelée depuis `StepGuests.applyImport()`.
+- **Second bug corrigé (trouvé en testant le premier) : la détection automatique
+  des colonnes confondait "Nom" et "Prénom".** `detectField()` comparait dans les
+  deux sens (`alias.includes(header)`), et l'alias "prénom" contient littéralement
+  la sous-chaîne "nom" → la colonne Nom était captée par le champ Prénom, laissant
+  `lastName` vide. Corrigé avec une passe de correspondance exacte en priorité,
+  puis correspondance partielle dans un seul sens (en-tête ⊇ alias).
+- Nouveau champ `Event.welcomeMessage` (message d'accueil éditable dans
+  "Informations", affiché sous le titre du Hero quand aucun visuel Canva n'est
+  importé).
+- Nouvelle étape **Page d'accueil** (`StepHome.tsx`) : import PNG/JPG dédié pour le
+  visuel Canva de l'écran d'accueil (déplacé hors de l'étape Design). Sur le site
+  invité, ce visuel est maintenant affiché en entier (`object-fit: contain`),
+  sans recadrage ni overlay de texte — décision qui **remplace** celle du 17/07
+  ("image = fond global avec overlay") *spécifiquement pour ce visuel* : le Canva
+  importé est un design fini, on ne superpose plus de texte généré dessus.
+- **Programme** converti du mode texte libre vers le même principe que **Menu** :
+  toggle + import PNG/JPG (`programmeImage`) + aperçu + remplacement, avec la
+  saisie texte existante conservée comme option de secours si aucun visuel n'est
+  importé (rien de supprimé).
+- **Plan de table** : ajout d'un import optionnel de visuel Canva (`seatingImage`),
+  strictement additif — la recherche continue de fonctionner via l'Excel avec ou
+  sans ce visuel.
+- **QR Code** devient sa propre étape (`StepQRCode.tsx`, ex-`StepPublish.tsx`,
+  logique inchangée : génération, téléchargement PNG, lien, publication).
+- **Aperçu du site** (`PhonePreview.tsx`) : l'ancien mockup avait divergé du vrai
+  site (il affichait Date/Lieu que le site public n'a jamais affichés, pas de
+  vraie recherche). Remplacé par un iframe du vrai `/event/[id]` (avec
+  `?preview=1` pour voir un événement non publié) dans un cadre téléphone —
+  aperçu garanti identique et interactif, plus de double maintenance.
+- Nouvel ordre des 10 étapes : Informations → Page d'accueil → Invités → Plan de
+  table → Menu → Programme → QR Code → Aperçu du site → Galerie → Personnalisation.
+  Les 8 premières correspondent exactement au parcours demandé ; Galerie et
+  Personnalisation (couleurs/typo) existaient déjà et fonctionnent, donc conservées
+  en bonus plutôt que supprimées (à trancher si l'utilisatrice préfère les retirer).
+- Testé de bout en bout avec Playwright : création événement → import Excel (Excel
+  fourni en exemple dans la demande) → tables auto-créées → QR généré → aperçu
+  iframe → recherche "Fatima" sur le site public → résultat "Table 7" correct.
+- Fichiers modifiés : `src/lib/admin/types.ts`, `utils.ts`, `EventWizard.tsx`,
+  `PhonePreview.tsx`, `StepGeneral.tsx`, `StepGuests.tsx`, `StepSeating.tsx`,
+  `StepSections.tsx` (réduit à Galerie), `StepDesign.tsx` (cover retiré),
+  `src/app/event/[id]/page.tsx`. Nouveaux : `StepHome.tsx`, `StepMenu.tsx`,
+  `StepProgramme.tsx`, `StepQRCode.tsx` (remplace `StepPublish.tsx`).

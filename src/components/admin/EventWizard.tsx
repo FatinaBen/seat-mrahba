@@ -6,29 +6,38 @@ import { useAdmin } from '@/lib/admin/store';
 import { Event, BuilderStepKey, BUILDER_STEPS_DEFAULT } from '@/lib/admin/types';
 import {
   CheckCircle2, Circle, ChevronLeft, ChevronRight, ArrowLeft,
-  Info, Users, LayoutGrid, Palette, List, Eye, Rocket,
+  Info, Image as ImageIcon, Users, LayoutGrid, UtensilsCrossed,
+  CalendarDays, QrCode, Eye, Camera, Palette,
 } from 'lucide-react';
 
 import StepGeneral from './steps/StepGeneral';
+import StepHome from './steps/StepHome';
 import StepGuests from './steps/StepGuests';
 import StepSeating from './steps/StepSeating';
-import StepDesign from './steps/StepDesign';
-import StepSections from './steps/StepSections';
+import StepMenu from './steps/StepMenu';
+import StepProgramme from './steps/StepProgramme';
+import StepQRCode from './steps/StepQRCode';
 import StepPreview from './steps/StepPreview';
-import StepPublish from './steps/StepPublish';
+import StepSections from './steps/StepSections';
+import StepDesign from './steps/StepDesign';
 
 const STEP_ICONS: Record<BuilderStepKey, React.ElementType> = {
   general: Info,
+  home: ImageIcon,
   guests: Users,
   seating: LayoutGrid,
-  design: Palette,
-  sections: List,
+  menu: UtensilsCrossed,
+  programme: CalendarDays,
+  qrcode: QrCode,
   preview: Eye,
-  publish: Rocket,
+  gallery: Camera,
+  design: Palette,
 };
 
+// 1-8 : parcours principal. 9-10 : fonctionnalités existantes conservées en bonus.
 const STEPS: BuilderStepKey[] = [
-  'general', 'guests', 'seating', 'design', 'sections', 'preview', 'publish',
+  'general', 'home', 'guests', 'seating', 'menu', 'programme', 'qrcode', 'preview',
+  'gallery', 'design',
 ];
 
 interface Props { event: Event }
@@ -65,13 +74,16 @@ export default function EventWizard({ event }: Props) {
   function renderStep() {
     const props = { event, update, markComplete };
     switch (currentKey) {
-      case 'general':  return <StepGeneral {...props} />;
-      case 'guests':   return <StepGuests {...props} />;
-      case 'seating':  return <StepSeating {...props} />;
-      case 'design':   return <StepDesign {...props} />;
-      case 'sections': return <StepSections {...props} />;
-      case 'preview':  return <StepPreview {...props} />;
-      case 'publish':  return <StepPublish {...props} publishEvent={() => publishEvent(event.id)} />;
+      case 'general':   return <StepGeneral {...props} />;
+      case 'home':      return <StepHome {...props} />;
+      case 'guests':    return <StepGuests {...props} />;
+      case 'seating':   return <StepSeating {...props} />;
+      case 'menu':      return <StepMenu {...props} />;
+      case 'programme': return <StepProgramme {...props} />;
+      case 'qrcode':    return <StepQRCode {...props} publishEvent={() => publishEvent(event.id)} />;
+      case 'preview':   return <StepPreview {...props} />;
+      case 'gallery':   return <StepSections {...props} />;
+      case 'design':    return <StepDesign {...props} />;
     }
   }
 
