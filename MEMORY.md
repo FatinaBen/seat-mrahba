@@ -277,3 +277,24 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   simplification des formules (suppression de la 3ème formule "Signature",
   listes de fonctionnalités précisées pour Essentielle/Premium)
 - Ligne directrice ajoutée : éviter tout effet "application mobile"/gadget/emoji
+
+### 10/09 — Simplification de l'offre commerciale (section Formules/Tarifs)
+- Décision : suppression du système à 2 formules (Essentielle / Premium). Nouvelle
+  structure à une seule offre à prix fixe : **Formule Mrahba, 690 DH**, incluant
+  tout ce qui était auparavant réparti entre les deux formules (mini-site, page
+  d'accueil personnalisée, import Excel, recherche invité, plan de table digital,
+  QR code, support QR standard, mise en ligne, accompagnement) — prix unique, pas
+  de variation selon le nombre d'invités
+- Ajout d'un second bloc **Mrahba+** ("Personnalisez votre expérience") juste en
+  dessous, présentant les prestations additionnelles à la carte, toutes **sur
+  devis**, sans prix affiché individuellement : personnalisation graphique avancée,
+  menu digital, programme de la soirée, menu + programme combinés, personnalisation
+  des supports QR, demande personnalisée. CTA "Demander un devis" vers #contact
+- Volontairement pas de prix par prestation Mrahba+ (juste une mention "Tarif sur
+  devis" globale) pour éviter l'effet "on facture chaque fonctionnalité"
+- Noms bannis pour l'offre : "Formule 1/2/3", "Basic/Premium/Gold" — remplacés par
+  "Formule Mrahba" et "Mrahba+"
+- Section "Supports QR Code" (id="supports", juste après, avec carrousel photos)
+  laissée strictement inchangée : elle détaille déjà en profondeur la prestation
+  "Personnalisation des supports QR" listée dans Mrahba+, pas besoin de dupliquer
+- Fichier modifié : `src/components/Pricing.tsx` uniquement (section id="offres")

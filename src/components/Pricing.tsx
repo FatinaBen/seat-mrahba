@@ -2,36 +2,51 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Palette, UtensilsCrossed, CalendarDays, Layers, Printer, Sparkles } from 'lucide-react';
 
-const plans = [
+const included = [
+  'Mini-site personnalisé pour votre événement',
+  "Page d'accueil personnalisée",
+  'Import du fichier Excel de vos invités',
+  "Recherche de l'invité par prénom et nom",
+  'Attribution et affichage automatique de la table',
+  'Plan de table digital',
+  "QR code de l'événement",
+  'Support QR imprimé standard',
+  'Mise en ligne du site',
+  'Accompagnement Seat & Mrahba',
+];
+
+const extras = [
   {
-    name: 'Essentielle',
-    price: '149€',
-    priceSub: 'à partir de',
-    description: 'Une expérience simple et élégante',
-    features: [
-      'QR code personnalisé',
-      'Page web personnalisée',
-      'Plan de table interactif',
-    ],
-    cta: 'Demander un devis',
-    highlighted: false,
+    icon: Palette,
+    title: 'Personnalisation graphique avancée',
+    desc: "Un design plus poussé de l'univers visuel de votre événement — page d'accueil et éléments graphiques sur mesure.",
   },
   {
-    name: 'Premium',
-    price: '249€',
-    priceSub: 'à partir de',
-    description: 'Design entièrement personnalisé, expérience immersive',
-    badge: 'Le plus choisi',
-    features: [
-      "Tout ce qu'il y a dans l'Essentielle",
-      'Menu personnalisé',
-      'Programme personnalisé (optionnel)',
-      'Galerie photo partagée',
-    ],
-    cta: 'Demander un devis',
-    highlighted: true,
+    icon: UtensilsCrossed,
+    title: 'Menu digital',
+    desc: 'Création et intégration d’un menu personnalisé dans votre mini-site.',
+  },
+  {
+    icon: CalendarDays,
+    title: 'Programme de la soirée',
+    desc: 'Création et intégration du programme de votre événement.',
+  },
+  {
+    icon: Layers,
+    title: 'Menu & Programme',
+    desc: 'La possibilité de combiner les deux, pour une expérience complète.',
+  },
+  {
+    icon: Printer,
+    title: 'Personnalisation des supports QR',
+    desc: "Le support imprimé à l'image de votre mariage : design sur mesure et impression selon vos besoins.",
+  },
+  {
+    icon: Sparkles,
+    title: 'Demande personnalisée',
+    desc: 'Une envie particulière ? Parlons-en.',
   },
 ];
 
@@ -190,99 +205,143 @@ export default function Pricing() {
               className="text-[2.2rem] sm:text-4xl md:text-5xl text-[#1A0F08] mb-5 leading-tight"
               style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
             >
-              Choisissez votre formule
+              Simple, élégante, complète
             </h2>
-            <p className="text-base text-[#9B7A56] max-w-sm mx-auto leading-relaxed">
-              Deux formules pensées pour chaque événement et chaque vision.
+            <p className="text-base text-[#9B7A56] max-w-md mx-auto leading-relaxed">
+              Une formule à 690 DH pour tout l&apos;essentiel de votre plan de table digital.
+              Vous ajoutez ensuite uniquement ce qui vous ressemble, avec Mrahba+.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {plans.map((plan, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 32 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: i * 0.14 }}
-                className="relative rounded-2xl flex flex-col"
-                style={plan.highlighted
-                  ? { background: 'linear-gradient(150deg, #B85C28, #9A4E1E)', boxShadow: '0 20px 60px rgba(184,92,40,0.3)' }
-                  : { background: 'white', border: '1px solid rgba(232,196,154,0.25)', boxShadow: '0 2px 16px rgba(184,92,40,0.06)' }
-                }
+          {/* Formule Mrahba — offre unique */}
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="relative rounded-2xl max-w-xl mx-auto"
+            style={{ background: 'linear-gradient(150deg, #B85C28, #9A4E1E)', boxShadow: '0 20px 60px rgba(184,92,40,0.3)' }}
+          >
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#8A7235] text-white text-[10px] font-medium px-4 py-1 rounded-full tracking-widest uppercase whitespace-nowrap">
+              L&apos;offre complète
+            </div>
+
+            <div className="p-8 sm:p-10 flex flex-col">
+              <h3
+                className="mb-1"
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, fontSize: '1.6rem', color: 'white' }}
               >
-                {plan.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#8A7235] text-white text-[10px] font-medium px-4 py-1 rounded-full tracking-widest uppercase whitespace-nowrap">
-                    {plan.badge}
-                  </div>
-                )}
+                Formule Mrahba
+              </h3>
 
-                <div className="p-7 lg:p-8 flex flex-col flex-1">
-                  <div className="mb-6">
-                    <h3
-                      className="mb-1.5"
-                      style={{
-                        fontFamily: 'Playfair Display, Georgia, serif',
-                        fontWeight: 400,
-                        fontSize: '1.3rem',
-                        color: plan.highlighted ? 'white' : '#1A0F08',
-                      }}
-                    >
-                      {plan.name}
-                    </h3>
-                    <p className="text-[13px]" style={{ color: plan.highlighted ? 'rgba(255,255,255,0.65)' : '#9B7A56' }}>
-                      {plan.description}
-                    </p>
-                  </div>
+              <div className="mb-7 pb-7" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+                <p
+                  className="text-4xl sm:text-5xl leading-none mt-3 mb-3"
+                  style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, color: 'white' }}
+                >
+                  690 DH
+                </p>
+                <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                  Tout ce qu&apos;il faut pour offrir à vos invités une expérience simple, élégante et personnalisée.
+                </p>
+                <p className="text-[11.5px] mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  Prix unique, quel que soit le nombre d&apos;invités.
+                </p>
+              </div>
 
-                  <div className="mb-6 pb-6" style={{ borderBottom: `1px solid ${plan.highlighted ? 'rgba(255,255,255,0.15)' : 'rgba(232,196,154,0.4)'}` }}>
-                    <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: plan.highlighted ? 'rgba(255,255,255,0.5)' : '#8A7235' }}>
-                      {plan.priceSub}
-                    </p>
-                    <p
-                      className="text-3xl leading-none"
-                      style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, color: plan.highlighted ? 'white' : '#B85C28' }}
-                    >
-                      {plan.price}
-                    </p>
-                  </div>
+              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-9">
+                {included.map((feature, j) => (
+                  <li key={j} className="flex items-start gap-3">
+                    <div className="w-4 h-4 mt-[2px] flex-shrink-0 rounded-full flex items-center justify-center"
+                      style={{ background: 'rgba(255,255,255,0.15)' }}>
+                      <Check className="w-2.5 h-2.5 text-white" strokeWidth={2.5} />
+                    </div>
+                    <span className="text-[13.5px] leading-snug" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
 
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {plan.features.map((feature, j) => (
-                      <li key={j} className="flex items-start gap-3">
-                        <div className="w-4 h-4 mt-[2px] flex-shrink-0 rounded-full flex items-center justify-center"
-                          style={{ background: plan.highlighted ? 'rgba(255,255,255,0.15)' : 'rgba(138,114,53,0.1)' }}>
-                          <Check className="w-2.5 h-2.5" style={{ color: plan.highlighted ? 'white' : '#8A7235' }} strokeWidth={2.5} />
-                        </div>
-                        <span className="text-[13.5px] leading-snug" style={{ color: plan.highlighted ? 'rgba(255,255,255,0.85)' : '#5A3C1E' }}>
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <a
-                    href="#contact"
-                    className="mt-auto block text-center py-3.5 px-6 rounded-full text-[13.5px] font-medium transition-all active:scale-[0.97]"
-                    style={plan.highlighted
-                      ? { background: 'white', color: '#B85C28' }
-                      : { background: '#B85C28', color: 'white' }
-                    }
-                  >
-                    {plan.cta}
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              <a
+                href="#contact"
+                className="block text-center py-3.5 px-6 rounded-full text-[13.5px] font-medium transition-all active:scale-[0.97]"
+                style={{ background: 'white', color: '#B85C28' }}
+              >
+                Demander un devis
+              </a>
+            </div>
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-center text-[12px] text-[#9B7A56] mt-10"
+            className="text-center text-[12px] text-[#9B7A56] mt-10 mb-24"
           >
             ✦ Devis gratuit & sans engagement · Réponse sous 24h
           </motion.p>
+
+          {/* Mrahba+ — prestations à ajouter selon les envies */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="rounded-3xl p-7 sm:p-10"
+            style={{ background: '#FBF5EC', border: '1px solid rgba(232,196,154,0.4)' }}
+          >
+            <div className="text-center mb-10">
+              <p className="text-[11px] font-medium tracking-[0.35em] uppercase text-[#B85C28] mb-4">
+                Mrahba+
+              </p>
+              <h3
+                className="text-[1.7rem] sm:text-3xl text-[#1A0F08] mb-4 leading-tight"
+                style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: 400, letterSpacing: '-0.01em' }}
+              >
+                Personnalisez votre expérience
+              </h3>
+              <p className="text-[14.5px] text-[#9B7A56] max-w-lg mx-auto leading-relaxed">
+                La Formule Mrahba est votre base, complète et prête à l&apos;emploi. Vous pouvez ensuite
+                la faire évoluer, selon vos envies, avec les prestations suivantes.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4 mb-9">
+              {extras.map((extra, i) => {
+                const Icon = extra.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.25 + i * 0.06 }}
+                    className="flex items-start gap-4 p-5 rounded-2xl"
+                    style={{ background: 'white', border: '1px solid rgba(232,196,154,0.35)' }}
+                  >
+                    <div className="w-9 h-9 flex-shrink-0 rounded-full flex items-center justify-center"
+                      style={{ background: 'rgba(138,114,53,0.1)' }}>
+                      <Icon className="w-4 h-4 text-[#8A7235]" strokeWidth={1.75} />
+                    </div>
+                    <div>
+                      <p className="text-[14px] font-medium text-[#1A0F08] mb-1">{extra.title}</p>
+                      <p className="text-[13px] leading-snug text-[#9B7A56]">{extra.desc}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <div className="text-center">
+              <p className="text-[13px] text-[#8A7235] mb-5">
+                Tarif sur devis, selon vos envies et les besoins de votre événement.
+              </p>
+              <a
+                href="#contact"
+                className="inline-block px-8 py-3.5 rounded-full text-[13.5px] font-medium text-white bg-[#B85C28] hover:opacity-90 active:scale-[0.97] transition-all"
+              >
+                Demander un devis
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
