@@ -81,6 +81,15 @@ export default function StepGeneral({ event, update, markComplete }: Props) {
           placeholder="Ex: Amine & Nadia" className={inp} style={s} onFocus={focus} onBlur={blur} />
       )}
 
+      {field('Message d\'accueil',
+        <textarea value={event.welcomeMessage} onChange={e => update({ welcomeMessage: e.target.value })}
+          placeholder="Ex: Bienvenue à notre mariage ! Nous sommes heureux de vous accueillir." rows={3}
+          className={`${inp} resize-none`} style={s} onFocus={focus} onBlur={blur} />
+      )}
+      <p className="text-[11px] text-[#9B7A56] -mt-3">
+        Affiché sur l&apos;écran d&apos;accueil du site invité, sous le titre.
+      </p>
+
       {field('Nombre d\'invités',
         <div className="flex items-center gap-3">
           <input type="number" min={0}

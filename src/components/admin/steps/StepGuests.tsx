@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { Event, Guest } from '@/lib/admin/types';
-import { generateId, createDefaultGuest } from '@/lib/admin/utils';
+import { Event, Guest, Table } from '@/lib/admin/types';
+import { generateId, createDefaultGuest, linkGuestsToTables } from '@/lib/admin/utils';
 import { CheckCircle2, UserPlus, Trash2, Upload, ChevronDown, ChevronUp, X, Check, AlertCircle } from 'lucide-react';
 
 interface Props {
@@ -25,8 +25,15 @@ const GUEST_FIELDS: { key: keyof Guest; label: string; aliases: string[] }[] = [
 
 function detectField(header: string): keyof Guest | null {
   const h = header.toLowerCase().trim();
+  // Correspondance exacte d'abord (fiable) : évite par ex. "Nom" d'être capté par
+  // l'alias "prénom", qui contient littéralement la sous-chaîne "nom".
   for (const field of GUEST_FIELDS) {
-    if (field.aliases.some(alias => h.includes(alias) || alias.includes(h))) return field.key;
+    if (field.aliases.includes(h)) return field.key;
+  }
+  // Puis correspondance partielle, uniquement dans le sens en-tête ⊇ alias
+  // (ex: "Prénom(s)" contient l'alias "prénom") — jamais l'inverse.
+  for (const field of GUEST_FIELDS) {
+    if (field.aliases.some(alias => h.includes(alias))) return field.key;
   }
   return null;
 }
@@ -116,7 +123,10 @@ export default function StepGuests({ event, update, markComplete }: Props) {
       });
       return g;
     });
-    update({ guests: [...event.guests, ...newGuests] });
+    // Crée/relie automatiquement les tables à partir des numéros de la colonne "Table"
+    // de l'Excel, pour que la recherche invité fonctionne dès l'import.
+    const { tables, guests: linkedNewGuests } = linkGuestsToTables(event.tables, newGuests);
+    update({ tables, guests: [...event.guests, ...linkedNewGuests] });
     setImportState({ step: 'done', headers: [], rows: [], mapping: {}, error: null });
   }
 
@@ -251,6 +261,7 @@ export default function StepGuests({ event, update, markComplete }: Props) {
       ) : importState.step === 'idle' && (
         <GuestList
           guests={event.guests}
+          tables={event.tables}
           editing={editing}
           setEditing={setEditing}
           updateGuest={updateGuest}
@@ -414,13 +425,16 @@ function ImportPreviewPanel({
 }
 
 // ── Guest list ───────────────────────────────────────────────────────────────
-function GuestList({ guests, editing, setEditing, updateGuest, removeGuest }: {
+function GuestList({ guests, tables, editing, setEditing, updateGuest, removeGuest }: {
   guests: Guest[];
+  tables: Table[];
   editing: string | null;
   setEditing: (id: string | null) => void;
   updateGuest: (id: string, patch: Partial<Guest>) => void;
   removeGuest: (id: string) => void;
 }) {
+  const tableLabel = (tableId: string) => tables.find(t => t.id === tableId)?.name || '';
+
   return (
     <div className="space-y-2">
       {guests.map(guest => (
@@ -441,7 +455,7 @@ function GuestList({ guests, editing, setEditing, updateGuest, removeGuest }: {
                 {[guest.firstName, guest.lastName].filter(Boolean).join(' ') || <span className="text-[#9B7A56] italic">Sans nom</span>}
               </p>
               <p className="text-[11px] text-[#9B7A56] truncate">
-                {[guest.tableId && `Table ${guest.tableId}`, guest.menu].filter(Boolean).join(' · ') || guest.phone || guest.email || ''}
+                {[tableLabel(guest.tableId), guest.menu].filter(Boolean).join(' · ') || guest.phone || guest.email || ''}
               </p>
             </div>
             {editing === guest.id ? <ChevronUp size={13} className="text-[#9B7A56]" /> : <ChevronDown size={13} className="text-[#9B7A56]" />}
@@ -455,18 +469,38 @@ function GuestList({ guests, editing, setEditing, updateGuest, removeGuest }: {
 
           {editing === guest.id && (
             <div className="px-4 pb-4 border-t grid grid-cols-2 gap-3" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
-              {GUEST_FIELDS.map(({ key, label, aliases }) => (
-                <div key={key} className="mt-3">
-                  <label className="block text-[10px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1.5">{label}</label>
-                  <input
-                    value={(guest as unknown as Record<string, string>)[key] || ''}
-                    onChange={e => updateGuest(guest.id, { [key]: e.target.value })}
-                    placeholder={aliases[0]}
-                    className="w-full px-3 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] focus:outline-none"
-                    style={{ borderColor: 'rgba(26,15,8,0.1)', color: '#1A0F08' }}
-                  />
-                </div>
-              ))}
+              {GUEST_FIELDS.map(({ key, label, aliases }) => {
+                if (key === 'tableId') {
+                  return (
+                    <div key={key} className="mt-3">
+                      <label className="block text-[10px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1.5">{label}</label>
+                      <select
+                        value={guest.tableId || ''}
+                        onChange={e => updateGuest(guest.id, { tableId: e.target.value })}
+                        className="w-full px-3 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] focus:outline-none"
+                        style={{ borderColor: 'rgba(26,15,8,0.1)', color: '#1A0F08' }}
+                      >
+                        <option value="">— Non assigné —</option>
+                        {tables.map(t => (
+                          <option key={t.id} value={t.id}>{t.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                }
+                return (
+                  <div key={key} className="mt-3">
+                    <label className="block text-[10px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1.5">{label}</label>
+                    <input
+                      value={(guest as unknown as Record<string, string>)[key] || ''}
+                      onChange={e => updateGuest(guest.id, { [key]: e.target.value })}
+                      placeholder={aliases[0]}
+                      className="w-full px-3 py-2 text-[12px] rounded-lg border bg-[#FDFCF9] focus:outline-none"
+                      style={{ borderColor: 'rgba(26,15,8,0.1)', color: '#1A0F08' }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

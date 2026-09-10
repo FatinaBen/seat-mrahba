@@ -45,7 +45,6 @@ function updateTheme(event: Event, update: (u: Partial<Event>) => void, patch: P
 
 export default function StepDesign({ event, update, markComplete }: Props) {
   const isDone = event.builderSteps.find(s => s.key === 'design')?.completed;
-  const coverRef = useRef<HTMLInputElement>(null);
   const logoRef  = useRef<HTMLInputElement>(null);
 
   function applyPreset(key: ThemePreset) {
@@ -58,11 +57,6 @@ export default function StepDesign({ event, update, markComplete }: Props) {
     reader.readAsDataURL(file);
   }
 
-  function handleCover(files: FileList | null) {
-    if (!files?.[0]) return;
-    readImage(files[0], url => updateTheme(event, update, { heroImage: url }));
-  }
-
   function handleLogo(files: FileList | null) {
     if (!files?.[0]) return;
     readImage(files[0], url => updateTheme(event, update, { logo: url }));
@@ -73,39 +67,10 @@ export default function StepDesign({ event, update, markComplete }: Props) {
   return (
     <div className="max-w-2xl mx-auto px-8 py-8 space-y-10">
 
-      {/* ── Image de couverture ── */}
-      <div>
-        <p className={label}>Image de couverture</p>
-        <p className="text-[11px] text-[#9B7A56] mb-3 -mt-2">
-          Cette image sera affichée en plein écran sur le site invité.
-        </p>
-        {event.theme.heroImage ? (
-          <div className="relative rounded-2xl overflow-hidden" style={{ height: 160 }}>
-            <img src={event.theme.heroImage} alt="cover" className="w-full h-full object-cover" />
-            <button
-              onClick={() => updateTheme(event, update, { heroImage: '' })}
-              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 flex items-center justify-center">
-              <X size={12} className="text-white" />
-            </button>
-            <button
-              onClick={() => coverRef.current?.click()}
-              className="absolute bottom-2 right-2 px-3 py-1.5 rounded-lg bg-black/50 text-white text-[11px]">
-              Changer
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => coverRef.current?.click()}
-            className="w-full h-36 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-colors hover:border-[#B85C28]"
-            style={{ borderColor: 'rgba(26,15,8,0.12)', background: 'white' }}>
-            <Upload size={20} className="text-[#C4A882]" />
-            <p className="text-[12px] text-[#9B7A56]">Importer une image de couverture</p>
-            <p className="text-[10px] text-[#C4A882]">JPG, PNG, WebP — recommandé 1200×800 px</p>
-          </button>
-        )}
-        <input ref={coverRef} type="file" accept="image/*" className="hidden"
-          onChange={e => handleCover(e.target.files)} />
-      </div>
+      <p className="text-[11px] text-[#9B7A56] -mt-2">
+        Le visuel de la page d&apos;accueil s&apos;importe désormais depuis l&apos;étape
+        « Page d&apos;accueil ». Cette étape sert à affiner les couleurs, la typographie et le logo.
+      </p>
 
       {/* ── Logo ── */}
       <div>

@@ -16,6 +16,7 @@ export function createDefaultEvent(overrides: Partial<Event> = {}): Event {
     venue: '',
     address: '',
     organizers: '',
+    welcomeMessage: '',
     guestCount: 0,
     status: 'draft',
     guests: [],
@@ -40,6 +41,8 @@ export function createDefaultEvent(overrides: Partial<Event> = {}): Event {
     menu: [],
     menuImage: '',
     programme: [],
+    programmeImage: '',
+    seatingImage: '',
     gallery: [],
     builderSteps: BUILDER_STEPS_DEFAULT.map(s => ({ ...s })),
     createdAt: new Date().toISOString(),
@@ -54,6 +57,32 @@ export function createDefaultGuest(): Guest {
 
 export function createDefaultTable(number: number): Table {
   return { id: generateId(), name: `Table ${number}`, number, type: 'round', capacity: 8, guestIds: [] };
+}
+
+// Réconcilie les numéros de table bruts venant d'un import Excel (ex: "7", "Table 7")
+// avec les vraies Tables de l'événement : crée les tables manquantes et réécrit
+// guest.tableId pour pointer vers le vrai Table.id, afin que la recherche invité
+// et le plan de table fonctionnent immédiatement après l'import — sans placement manuel.
+export function linkGuestsToTables(existingTables: Table[], importedGuests: Guest[]): { tables: Table[]; guests: Guest[] } {
+  const tables = [...existingTables];
+  const findByNumber = (num: number) => tables.find(t => t.number === num);
+
+  const guests = importedGuests.map(g => {
+    const raw = (g.tableId || '').trim();
+    if (!raw) return g;
+    const match = raw.match(/\d+/); // "7", "Table 7", "N°7"… → 7
+    if (!match) return g; // valeur non numérique : laissée telle quelle, à corriger manuellement
+    const num = parseInt(match[0], 10);
+    let table = findByNumber(num);
+    if (!table) {
+      table = createDefaultTable(num);
+      tables.push(table);
+    }
+    return { ...g, tableId: table.id };
+  });
+
+  tables.sort((a, b) => a.number - b.number);
+  return { tables, guests };
 }
 
 export function markStepComplete(event: Event, key: BuilderStepKey): Event {

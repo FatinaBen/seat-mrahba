@@ -71,16 +71,18 @@ function typeLabel(type: string): string {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-export default function GuestPage({ params }: { params: Promise<{ id: string }> }) {
+export default function GuestPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ preview?: string }> }) {
   const { id } = use(params);
+  const { preview } = use(searchParams);
+  const isPreview = preview === '1'; // depuis le dashboard : voir le site avant publication
   const [event, setEvent] = useState<Event | null | 'not-found' | 'not-published'>(null);
 
   useEffect(() => {
     const e = loadEvent(id);
     if (!e) setEvent('not-found');
-    else if (e.status !== 'published') setEvent('not-published');
+    else if (e.status !== 'published' && !isPreview) setEvent('not-published');
     else setEvent(e);
-  }, [id]);
+  }, [id, isPreview]);
 
   if (event === null) return (
     <Screen><p className="text-sm text-white/50">Chargement…</p></Screen>
@@ -128,7 +130,7 @@ function GuestSite({ event }: { event: Event }) {
         <SeatingSection event={event} primary={primary} />
       )}
 
-      {event.sections.programme && event.programme.length > 0 && (
+      {event.sections.programme && (event.programmeImage || event.programme.length > 0) && (
         <ProgrammeSection event={event} primary={primary} />
       )}
 
@@ -146,20 +148,39 @@ function GuestSite({ event }: { event: Event }) {
 }
 
 // ─── Hero ──────────────────────────────────────────────────────────────────────
+// Avec visuel Canva importé (page d'accueil) : l'image est affichée en entier,
+// sans recadrage ni déformation (object-fit: contain) — c'est un design fini,
+// on ne superpose pas de texte généré par-dessus.
+// Sans visuel : écran d'accueil généré (dégradé + grain), avec titre auto et
+// message d'accueil éditable dans le dashboard.
 function Hero({ event, primary, font }: { event: Event; primary: string; font: string }) {
   const hasCover = !!event.theme.heroImage;
-  const darkened = darken(primary, 30);
 
-  // With cover: theme-tinted overlay (top: primary ~16%) → warm dark (bottom: 72%)
-  // Without cover: themed gradient + SVG grain stacked on top
-  const bg = hasCover
-    ? `linear-gradient(to bottom, ${primary}28 0%, rgba(26,15,8,0.72) 100%), url(${event.theme.heroImage}) center/cover no-repeat`
-    : `${GRAIN}, linear-gradient(160deg, ${primary}ee 0%, ${darkened}cc 55%, #1A0F08 100%)`;
+  if (hasCover) {
+    return (
+      <section
+        className="relative flex items-center justify-center"
+        style={{ minHeight: '100svh', background: '#1A0F08' }}
+      >
+        <img
+          src={event.theme.heroImage}
+          alt={heroTitle(event)}
+          className="w-full h-full"
+          style={{ objectFit: 'contain', maxHeight: '100svh' }}
+        />
+        <div className="anim-scroll absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <div className="bounce"><ChevronDown size={18} className="text-white/50" /></div>
+        </div>
+      </section>
+    );
+  }
+
+  const darkened = darken(primary, 30);
 
   return (
     <section
       className="relative flex flex-col items-center justify-center text-center px-8"
-      style={{ minHeight: '100svh', background: bg }}
+      style={{ minHeight: '100svh', background: `${GRAIN}, linear-gradient(160deg, ${primary}ee 0%, ${darkened}cc 55%, #1A0F08 100%)` }}
     >
       {event.theme.logo ? (
         <div className="anim-tag mb-6">
@@ -186,7 +207,9 @@ function Hero({ event, primary, font }: { event: Event; primary: string; font: s
         {heroTitle(event)}
       </h1>
 
-      {event.name && event.organizers && (
+      {event.welcomeMessage ? (
+        <p className="anim-sub text-white/70 text-sm mt-5 max-w-sm leading-relaxed">{event.welcomeMessage}</p>
+      ) : event.name && event.organizers && (
         <p className="anim-sub text-white/45 text-sm mt-4 tracking-wide">{event.name}</p>
       )}
 
@@ -281,6 +304,19 @@ function SeatingSection({ event, primary }: { event: Event; primary: string }) {
             )}
           </div>
         )}
+
+        {event.seatingImage && (
+          <div className="mt-10">
+            <p className="text-[10px] uppercase tracking-widest mb-3 text-center" style={{ color: '#9B7A56' }}>
+              Plan de salle
+            </p>
+            <img
+              src={event.seatingImage}
+              alt="Plan de table"
+              style={{ width: '100%', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', display: 'block', objectFit: 'contain' }}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
@@ -299,28 +335,36 @@ function ProgrammeSection({ event, primary }: { event: Event; primary: string })
           Le déroulé de la journée
         </h2>
 
-        <div className="relative">
-          <div className="absolute top-2 bottom-2"
-            style={{ left: 52, width: 1, background: `${primary}20` }} />
-          <div className="space-y-8">
-            {event.programme.map(item => (
-              <div key={item.id} className="flex gap-5 items-start">
-                <span className="text-xs font-medium flex-shrink-0 pt-0.5"
-                  style={{ width: 40, textAlign: 'right', color: primary }}>
-                  {item.time}
-                </span>
-                <div className="flex-shrink-0 w-3 h-3 rounded-full mt-0.5 z-10"
-                  style={{ background: primary, boxShadow: `0 0 0 3px ${primary}20` }} />
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: '#1A0F08' }}>{item.title}</p>
-                  {item.description && (
-                    <p className="text-xs mt-0.5" style={{ color: '#9B7A56' }}>{item.description}</p>
-                  )}
+        {event.programmeImage ? (
+          <img
+            src={event.programmeImage}
+            alt="Programme"
+            style={{ width: '100%', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', display: 'block' }}
+          />
+        ) : (
+          <div className="relative">
+            <div className="absolute top-2 bottom-2"
+              style={{ left: 52, width: 1, background: `${primary}20` }} />
+            <div className="space-y-8">
+              {event.programme.map(item => (
+                <div key={item.id} className="flex gap-5 items-start">
+                  <span className="text-xs font-medium flex-shrink-0 pt-0.5"
+                    style={{ width: 40, textAlign: 'right', color: primary }}>
+                    {item.time}
+                  </span>
+                  <div className="flex-shrink-0 w-3 h-3 rounded-full mt-0.5 z-10"
+                    style={{ background: primary, boxShadow: `0 0 0 3px ${primary}20` }} />
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#1A0F08' }}>{item.title}</p>
+                    {item.description && (
+                      <p className="text-xs mt-0.5" style={{ color: '#9B7A56' }}>{item.description}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

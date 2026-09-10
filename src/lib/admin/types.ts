@@ -11,10 +11,13 @@ export type ThemePreset =
 export type Typography = 'playfair' | 'inter' | 'cormorant';
 export type BorderRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
-// ─── Builder Steps (7 étapes back-office) ────────────────────────────────────
+// ─── Builder Steps (étapes back-office) ───────────────────────────────────────
+// 1-8 : parcours principal demandé. 9-10 : fonctionnalités existantes conservées
+// mais non prioritaires dans le nouveau parcours (galerie, personnalisation avancée).
 export type BuilderStepKey =
-  | 'general' | 'guests' | 'seating'
-  | 'design' | 'sections' | 'preview' | 'publish';
+  | 'general' | 'home' | 'guests' | 'seating'
+  | 'menu' | 'programme' | 'qrcode' | 'preview'
+  | 'gallery' | 'design';
 
 export interface BuilderStep {
   key: BuilderStepKey;
@@ -96,6 +99,7 @@ export interface Event {
   venue: string;
   address: string;
   organizers: string;
+  welcomeMessage: string; // message d'accueil affiché sur le site invité
   guestCount: number;
   status: EventStatus;
   guests: Guest[];
@@ -105,6 +109,8 @@ export interface Event {
   menu: MenuSection[];
   menuImage: string; // visuel Canva importé
   programme: ProgrammeItem[];
+  programmeImage: string; // visuel Canva importé (prioritaire sur `programme`)
+  seatingImage: string; // visuel Canva optionnel du plan de table (en plus du plan généré)
   gallery: string[]; // photos uploadées par les invités
   builderSteps: BuilderStep[];
   createdAt: string;
@@ -113,13 +119,16 @@ export interface Event {
 
 // ─── Defaults ────────────────────────────────────────────────────────────────
 export const BUILDER_STEPS_DEFAULT: BuilderStep[] = [
-  { key: 'general',  label: 'Informations',   completed: false },
-  { key: 'guests',   label: 'Invités',        completed: false },
-  { key: 'seating',  label: 'Plan de table',  completed: false },
-  { key: 'design',   label: 'Design',         completed: false },
-  { key: 'sections', label: 'Contenu',        completed: false },
-  { key: 'preview',  label: 'Aperçu',         completed: false },
-  { key: 'publish',  label: 'Publier',        completed: false },
+  { key: 'general',   label: 'Informations',    completed: false },
+  { key: 'home',      label: 'Page d’accueil', completed: false },
+  { key: 'guests',    label: 'Invités',         completed: false },
+  { key: 'seating',   label: 'Plan de table',   completed: false },
+  { key: 'menu',      label: 'Menu',            completed: false },
+  { key: 'programme', label: 'Programme',       completed: false },
+  { key: 'qrcode',    label: 'QR Code',         completed: false },
+  { key: 'preview',   label: 'Aperçu du site',  completed: false },
+  { key: 'gallery',   label: 'Galerie',         completed: false },
+  { key: 'design',    label: 'Personnalisation', completed: false },
 ];
 
 export const THEME_PRESETS: Record<ThemePreset, Omit<Theme, 'heroImage' | 'logo' | 'pattern'>> = {
