@@ -7,9 +7,6 @@ import { Check, Palette, UtensilsCrossed, CalendarDays, Layers, Printer, Sparkle
 const included = [
   'Mini-site personnalisé pour votre événement',
   "Page d'accueil personnalisée",
-  'Import du fichier Excel de vos invités',
-  "Recherche de l'invité par prénom et nom",
-  'Attribution et affichage automatique de la table',
   'Plan de table digital',
   "QR code de l'événement",
   'Support QR imprimé standard',
