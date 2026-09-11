@@ -430,3 +430,64 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
 - Fichiers modifiés : `utils.ts` (nouvelle fonction + capacité auto),
   `StepGuests.tsx` (détection + nouveau panneau d'aperçu `GroupedImportPreviewPanel`,
   lecture des lignes brutes en plus des lignes-objets pour XLSX et CSV).
+
+### 11/09 — Corrections page d'accueil invité + refonte Personnalisation
+- **(1) Doublon de titre corrigé** : le champ "Nom de l'événement" (étape
+  Informations, purement interne) s'affichait en sous-titre dupliqué sous le
+  vrai titre du Hero, sur le site public. Supprimé du rendu public. Un nouveau
+  champ dédié et toujours guest-facing, `displayTitle` ("Titre affiché aux
+  invités", étape Page d'accueil), est désormais l'unique source du titre
+  visible — y compris dans l'onglet navigateur (`document.title`). Le nom
+  interne ne fuite plus nulle part côté invité.
+- **(2) Texte du CTA de scroll dynamique** : "DÉCOUVREZ VOTRE ÉVÉNEMENT"
+  (point de vue organisateur, adressé à l'invité) remplacé par un texte
+  adapté au point de vue invité et au type d'événement (`event.type`,
+  nouveau champ ajouté avec sélecteur dans l'étape Informations — ex.
+  Mariage → "Découvrez notre mariage", Anniversaire → "Découvrez la fête",
+  Générique → "Découvrez l'événement"), via `CTA_TEXT_DEFAULTS`. Reste
+  surchargeable manuellement (`event.ctaText`).
+- **(3) Refonte complète de la Personnalisation (`StepDesign.tsx`)** :
+  - Bug corrigé : sélectionner un thème réécrivait toutes les valeurs
+    personnalisées déjà saisies par le client. Séparation stricte
+    thème (valeurs par défaut, `THEME_PRESETS`) / personnalisation
+    (overrides qui persistent, `event.theme`) : un clic sur un thème ne
+    fait plus que préremplir les champs custom via `updateTheme()`; les
+    inputs lisent/écrivent toujours `event.theme`, jamais l'objet preset
+    original. Une fois qu'une valeur est touchée manuellement, elle ne
+    peut plus être écrasée que par un nouveau clic explicite sur un thème
+    ou par "Réinitialiser au thème".
+  - Nouvelle structure : Logo (placement Header/Hero/Filigrane +
+    opacité/taille si filigrane) → Fond du site (couleur unie OU image
+    uploadée + overlay clair/sombre réglable) → Thème de couleurs (presets
+    inchangés, sert uniquement à préremplir) → Couleurs personnalisées
+    (Principale/Secondaire/Boutons + nouveaux : Texte des boutons,
+    Titres/Texte courant) → Typographie scindée en deux sélecteurs (Police
+    des titres / Police du texte courant), élargie à 6 polices groupées
+    par style (Élégante, Moderne, Manuscrite) via `FONT_OPTIONS` → Arrondis
+    (inchangé) → Réinitialiser au thème / Enregistrer comme preset
+    personnalisé réutilisable (persisté à part dans le localStorage).
+    Aperçu en direct (`PhonePreview`, iframe débouncée) conservé et
+    synchronisé avec ces réglages.
+  - Chargement des polices Google passé d'un `@import` dans un `<style>`
+    injecté au runtime à une balise `<link rel="stylesheet" precedence="…">`
+    (hissée dans `<head>` par React 19) — mécanisme standard, plus fiable
+    pour le préchargement navigateur. Non vérifiable visuellement dans cet
+    environnement de test (le navigateur Playwright sandboxé n'a pas accès
+    sortant à `fonts.googleapis.com` — `net::ERR_CONNECTION_RESET` côté
+    proxy réseau du sandbox, confirmé identique avant/après ce changement
+    et sur une requête `<link>` standard ; `curl` depuis la même machine
+    atteint le même hôte sans problème). Fonctionnera normalement en
+    production (Vercel, navigateurs réels sans ce proxy).
+  - Bug pré-existant découvert et corrigé au passage : le titre du Hero
+    s'affichait en noir au lieu de blanc à cause d'une règle CSS globale
+    non "layered" (`h1{color:var(--deep)}` dans `globals.css`) qui prime
+    sur les classes utilitaires Tailwind (`.text-white`) à cause de l'ordre
+    des cascade layers, indépendamment de la spécificité. Corrigé par un
+    style inline explicite sur le `<h1>` du Hero (les styles inline priment
+    toujours).
+  - Fichiers modifiés : `types.ts` (nouveaux champs Theme/Event, presets
+    étendus, `FONT_OPTIONS`, `CTA_TEXT_DEFAULTS`), `utils.ts` (defaults),
+    `StepGeneral.tsx` (type d'événement + CTA), `StepHome.tsx`
+    (`displayTitle`), `StepDesign.tsx` (refonte complète), `PhonePreview.tsx`
+    (inchangé fonctionnellement), `event/[id]/page.tsx` (rendu public :
+    titre, CTA, styles calculés par thème, logo/fond/overlay, polices).

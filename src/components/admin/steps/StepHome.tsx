@@ -36,6 +36,24 @@ export default function StepHome({ event, update, markComplete }: Props) {
         L&apos;image est affichée telle quelle, sans recadrage ni déformation.
       </p>
 
+      <div className="mb-8">
+        <label className="block text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-2">
+          Titre affiché aux invités
+        </label>
+        <input
+          value={event.displayTitle}
+          onChange={e => update({ displayTitle: e.target.value })}
+          placeholder="Ex: Mariage de Lina & Kamil"
+          className="w-full px-4 py-3 text-[13px] rounded-xl border bg-white focus:outline-none transition-colors"
+          style={{ borderColor: 'rgba(26,15,8,0.12)', color: '#1A0F08' }}
+        />
+        <p className="text-[11px] text-[#9B7A56] mt-2">
+          C&apos;est le seul titre que voient les invités — distinct du « Nom de l&apos;événement » (interne, étape
+          Informations). Utilisé uniquement si aucun visuel n&apos;est importé ci-dessous (le visuel Canva contient déjà
+          son propre titre).
+        </p>
+      </div>
+
       <div className="flex gap-8 items-start flex-wrap">
         {/* Import / preview */}
         <div className="flex-1 min-w-[260px]">
