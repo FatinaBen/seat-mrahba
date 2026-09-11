@@ -17,10 +17,10 @@ export default function StepPreview({ event, markComplete }: Props) {
     : `/event/${event.id}`;
 
   return (
-    <div className="flex gap-8 px-8 py-8 max-w-4xl mx-auto">
+    <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-8 py-6 sm:py-8 max-w-4xl mx-auto">
 
       {/* Left — info */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 order-2 lg:order-1">
         <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1">Aperçu</p>
         <h3 className="text-[17px] font-semibold text-[#1A0F08] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
           Voici ce que verront les invités
@@ -57,7 +57,7 @@ export default function StepPreview({ event, markComplete }: Props) {
       </div>
 
       {/* Right — phone */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 order-1 lg:order-2 flex justify-center lg:block">
         <PhonePreview event={event} />
       </div>
     </div>

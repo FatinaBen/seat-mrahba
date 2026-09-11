@@ -29,7 +29,7 @@ export default function StepHome({ event, update, markComplete }: Props) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-8 py-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
       <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1">Page d&apos;accueil</p>
       <p className="text-[12px] text-[#9B7A56] mb-6">
         Importez le design Canva créé pour l&apos;écran d&apos;accueil du site invité (format vertical 1080 × 1920 px).

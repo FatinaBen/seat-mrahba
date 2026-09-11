@@ -16,11 +16,11 @@ export default function PhonePreview({ event }: Props) {
     : `/event/${event.id}?preview=1`;
 
   return (
-    <div className="relative" style={{ width: 320 }}>
+    <div className="relative w-full" style={{ maxWidth: 320 }}>
       {/* Phone shell */}
       <div
-        className="relative rounded-[44px] border-[8px] border-[#1A0F08] shadow-2xl overflow-hidden"
-        style={{ height: 680, background: '#fff' }}
+        className="relative rounded-[44px] border-[8px] border-[#1A0F08] shadow-2xl overflow-hidden w-full"
+        style={{ height: 'min(680px, 78vh)', background: '#fff' }}
       >
         {/* Notch */}
         <div

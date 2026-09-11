@@ -127,7 +127,7 @@ export default function EventsPage() {
         >
           {/* Table header */}
           <div
-            className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-4 px-6 py-3 border-b text-[11px] font-medium tracking-wide uppercase text-[#9B7A56]"
+            className="grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 sm:gap-4 px-4 sm:px-6 py-3 border-b text-[11px] font-medium tracking-wide uppercase text-[#9B7A56]"
             style={{ borderColor: 'rgba(26,15,8,0.06)' }}
           >
             <span>Type</span>
@@ -146,7 +146,7 @@ export default function EventsPage() {
               return (
                 <div
                   key={event.id}
-                  className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-4 items-center px-6 py-3.5 hover:bg-[rgba(26,15,8,0.01)] transition-colors"
+                  className="grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 sm:gap-4 items-center px-4 sm:px-6 py-3.5 hover:bg-[rgba(26,15,8,0.01)] transition-colors"
                 >
                   {/* Type dot */}
                   <div

@@ -31,7 +31,7 @@ export default function StepGeneral({ event, update, markComplete }: Props) {
   const blur  = (e: React.FocusEvent<HTMLInputElement>) => (e.target.style.borderColor = 'rgba(26,15,8,0.12)');
 
   return (
-    <div className="max-w-xl mx-auto px-8 py-8 space-y-5">
+    <div className="max-w-xl mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-5">
 
       <p className="text-[12px] text-[#9B7A56] -mt-1 mb-1">
         Sert uniquement à identifier et trier l&apos;événement dans ton dashboard — rien de tout ça n&apos;apparaît

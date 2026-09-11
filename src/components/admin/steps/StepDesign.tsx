@@ -65,7 +65,7 @@ export default function StepDesign({ event, update, markComplete }: Props) {
   const label = 'block text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-3';
 
   return (
-    <div className="max-w-2xl mx-auto px-8 py-8 space-y-10">
+    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-10">
 
       <p className="text-[11px] text-[#9B7A56] -mt-2">
         Le visuel de la page d&apos;accueil s&apos;importe désormais depuis l&apos;étape

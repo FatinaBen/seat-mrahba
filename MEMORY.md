@@ -352,3 +352,42 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   `StepSections.tsx` (réduit à Galerie), `StepDesign.tsx` (cover retiré),
   `src/app/event/[id]/page.tsx`. Nouveaux : `StepHome.tsx`, `StepMenu.tsx`,
   `StepProgramme.tsx`, `StepQRCode.tsx` (remplace `StepPublish.tsx`).
+
+### 11/09 — Dashboard admin utilisable sur mobile
+- Contexte : le dashboard avait deux colonnes latérales à largeur fixe (menu
+  principal ~220px + liste d'étapes du wizard ~224px) qui ne se repliaient
+  jamais sur petit écran → débordement horizontal, contenu coupé (visible sur
+  capture d'écran envoyée par l'utilisatrice).
+- Menu principal (`Sidebar.tsx`) : devient un tiroir plein écran sur mobile
+  (`<lg`), ouvert via un bouton hamburger dans une nouvelle barre mobile
+  (`AdminShell.tsx`, composant client qui porte le state — `admin/layout.tsx`
+  reste un composant serveur pour l'export `metadata`). Comportement desktop
+  (colonne fixe repliable) inchangé.
+- Liste d'étapes du wizard (`EventWizard.tsx`) : la colonne fixe devient
+  `hidden lg:flex`. Sur mobile, une barre compacte (retour + nom + progression)
+  ouvre/ferme la même liste en menu déroulant plutôt qu'une colonne permanente.
+- **Bug trouvé en testant (lié à l'usage mobile) : recharger directement sur
+  `/admin/events/[id]` rebondissait vers la liste des événements.** Le garde-fou
+  "si événement introuvable → rediriger" se déclenchait avant que le
+  `localStorage` ait fini d'être lu par `AdminProvider` (course entre deux
+  `useEffect`). Sur mobile, les rechargements de page sont beaucoup plus
+  fréquents (changement d'appli, gestion mémoire du navigateur) donc ce bug y
+  est particulièrement gênant. Corrigé en ajoutant un flag `hydrated` au store
+  (`store.tsx`), et en attendant ce flag avant de rediriger, dans
+  `admin/events/[id]/page.tsx` et `admin/events/[id]/preview/page.tsx`.
+- `PhonePreview.tsx` (cadre iframe) : largeur passée de fixe (320px) à
+  responsive (`w-full`, max 320px) pour tenir sur tout écran.
+- Ajustements ponctuels de mise en page mobile dans tous les `StepXxx.tsx`
+  (paddings, `flex-wrap` sur les barres d'actions et la ligne de table du plan
+  de table, grilles à une colonne) et dans `admin/events/page.tsx` (la liste
+  d'événements passe à 3 colonnes visibles au lieu de 6 sur mobile — Date/
+  Invités/Statut restent visibles à partir de `sm:`, ce qui laisse la place au
+  nom de l'événement au lieu de le tronquer à 2 caractères).
+- Testé à 390px de large (taille iPhone) sur tout le parcours (dashboard,
+  liste, les 10 étapes, tiroir de menu, menu déroulant d'étapes) avec
+  Playwright : aucun débordement horizontal détecté (`scrollWidth ===
+  clientWidth` sur chaque écran).
+- Fichiers modifiés : `Sidebar.tsx`, `EventWizard.tsx`, `PhonePreview.tsx`,
+  `store.tsx`, `admin/layout.tsx`, `admin/events/page.tsx`,
+  `admin/events/[id]/page.tsx`, `admin/events/[id]/preview/page.tsx`, tous les
+  `StepXxx.tsx`. Nouveau : `AdminShell.tsx`.

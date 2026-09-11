@@ -42,7 +42,7 @@ export default function StepProgramme({ event, update, markComplete }: Props) {
   function delP(id: string) { update({ programme: event.programme.filter(x => x.id !== id) }); }
 
   return (
-    <div className="max-w-3xl mx-auto px-8 py-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
       <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1">Programme</p>
       <p className="text-[12px] text-[#9B7A56] mb-5">
         Section optionnelle. Si elle n&apos;est pas activée, aucune section Programme n&apos;apparaît sur le site invité.

@@ -102,10 +102,10 @@ export default function StepSeating({ event, update, markComplete }: Props) {
   const totalSeats = event.tables.reduce((s, t) => s + t.capacity, 0);
 
   return (
-    <div className="max-w-3xl mx-auto px-8 py-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
 
       {/* Stats + actions */}
-      <div className="flex items-center gap-5 mb-6 p-4 rounded-xl bg-white border" style={{ borderColor: 'rgba(26,15,8,0.08)' }}>
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 mb-6 p-4 rounded-xl bg-white border" style={{ borderColor: 'rgba(26,15,8,0.08)' }}>
         <Stat label="Tables" value={event.tables.length} />
         <Sep />
         <Stat label="Places totales" value={totalSeats} />
@@ -114,7 +114,7 @@ export default function StepSeating({ event, update, markComplete }: Props) {
         <Sep />
         <Stat label="Non placés" value={unassigned.length} highlight={unassigned.length > 0} />
 
-        <div className="ml-auto flex gap-2 flex-wrap justify-end">
+        <div className="w-full sm:w-auto sm:ml-auto flex gap-2 flex-wrap sm:justify-end">
           {event.guests.length > 0 && (
             <button
               onClick={autoGenerateTables}
@@ -200,7 +200,7 @@ export default function StepSeating({ event, update, markComplete }: Props) {
                 onDrop={() => dragGuest && moveGuest(dragGuest, table.id)}
               >
                 {/* Table header */}
-                <div className="flex items-center gap-3 p-4">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 p-4">
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0"
                     style={{ background: isFull ? '#5A7A5A' : '#B85C28' }}
@@ -210,7 +210,7 @@ export default function StepSeating({ event, update, markComplete }: Props) {
                   <input
                     value={table.name}
                     onChange={e => updateTable(table.id, { name: e.target.value })}
-                    className="flex-1 px-2 py-1 text-[13px] font-medium bg-transparent border-b focus:outline-none focus:border-[#B85C28] transition-colors"
+                    className="flex-1 min-w-[110px] px-2 py-1 text-[13px] font-medium bg-transparent border-b focus:outline-none focus:border-[#B85C28] transition-colors"
                     style={{ borderColor: 'transparent', color: '#1A0F08' }}
                     onFocus={e => (e.target.style.borderColor = '#B85C28')}
                     onBlur={e => (e.target.style.borderColor = 'transparent')}

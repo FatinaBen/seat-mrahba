@@ -9,38 +9,40 @@ import { ArrowLeft, Edit3 } from 'lucide-react';
 
 export default function PreviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { getEvent } = useAdmin();
+  const { getEvent, hydrated } = useAdmin();
   const router = useRouter();
   const event = getEvent(id);
 
   useEffect(() => {
-    if (!event) router.replace('/admin/events');
-  }, [event, router]);
+    // Voir la note dans admin/events/[id]/page.tsx : attendre `hydrated` évite
+    // un rebond vers la liste sur rechargement direct (fréquent sur mobile).
+    if (hydrated && !event) router.replace('/admin/events');
+  }, [hydrated, event, router]);
 
   if (!event) return null;
 
   return (
-    <div className="min-h-full p-8" style={{ background: '#F5F2EE' }}>
+    <div className="min-h-full px-4 py-6 sm:p-8" style={{ background: '#F5F2EE' }}>
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => router.push(`/admin/events/${id}`)}
-              className="flex items-center gap-1.5 text-[12px] text-[#9B7A56] hover:text-[#1A0F08] transition-colors"
+              className="flex items-center gap-1.5 text-[12px] text-[#9B7A56] hover:text-[#1A0F08] transition-colors flex-shrink-0"
             >
               <ArrowLeft size={13} />
               Retour
             </button>
-            <div className="w-px h-4 bg-[rgba(26,15,8,0.1)]" />
-            <div>
+            <div className="w-px h-4 bg-[rgba(26,15,8,0.1)] flex-shrink-0" />
+            <div className="min-w-0">
               <p className="text-[11px] text-[#9B7A56]">Aperçu de</p>
-              <h1 className="text-[14px] font-semibold text-[#1A0F08]">{event.name || 'Sans titre'}</h1>
+              <h1 className="text-[14px] font-semibold text-[#1A0F08] truncate">{event.name || 'Sans titre'}</h1>
             </div>
           </div>
           <button
             onClick={() => router.push(`/admin/events/${id}`)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-medium border transition-colors hover:bg-white"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-medium border transition-colors hover:bg-white ml-auto"
             style={{ borderColor: 'rgba(26,15,8,0.12)', color: '#5A3C1E' }}
           >
             <Edit3 size={13} />
