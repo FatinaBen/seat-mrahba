@@ -391,3 +391,42 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   `store.tsx`, `admin/layout.tsx`, `admin/events/page.tsx`,
   `admin/events/[id]/page.tsx`, `admin/events/[id]/preview/page.tsx`, tous les
   `StepXxx.tsx`. Nouveau : `AdminShell.tsx`.
+
+### 11/09 — Import Excel : support du format "groupé par table"
+- Contexte : le fichier Excel réel de l'utilisatrice (`Plan_de_table_exp.xlsx`,
+  fourni) n'est PAS un tableau plat une-ligne-par-invité — c'est le format
+  qu'elle utilise naturellement, probablement le plus courant en pratique :
+  ```
+  Table 1
+  N°   Nom complet
+  1    Maxime Bernard
+  ...
+  (ligne vide)
+  Table 2
+  ...
+  ```
+  Deux colonnes seulement (N° de siège + nom complet), une section par table.
+  L'import existant (pensé pour un tableau plat Prénom/Nom/Table) confondait la
+  ligne "Table 1" avec un en-tête de colonne — résultat inexploitable.
+- Ajout de `parseGroupedByTableRows()` (`utils.ts`) : détecte ce format à partir
+  des lignes brutes de la feuille (tableau de tableaux, pas les objets
+  clé-valeur habituels) et en extrait directement prénom/nom (le nom complet est
+  splitté sur le premier espace) + numéro de table.
+- Détection automatique à l'import : si le format groupé est reconnu, on saute
+  entièrement l'étape de correspondance des colonnes (elle n'a pas de sens ici)
+  et on affiche directement un aperçu ("X tables, Y invités") avant import.
+  Sinon, comportement inchangé (mapping de colonnes classique).
+- Réutilise `linkGuestsToTables()` (déjà existant) pour créer/relier les vraies
+  tables — même logique testée pour le format plat.
+- Petite correction associée : les tables nouvellement créées à l'import
+  prennent désormais la capacité réelle du nombre d'invités qui y sont placés
+  (au lieu d'un défaut fixe de 8), pour éviter un affichage trompeur du type
+  "10/8" quand les tables du fichier font plus de 8 personnes. Ne touche
+  jamais la capacité d'une table déjà existante.
+- Testé de bout en bout avec le fichier réel fourni (20 tables × 10 invités =
+  200 invités) : détection, création des 20 tables à la bonne capacité (10),
+  recherche invité publique correcte ("Zoé Morin" → Table 20, "Maxime Bernard"
+  → Table 1, pas de confusion avec Table 10-19 malgré le préfixe partagé).
+- Fichiers modifiés : `utils.ts` (nouvelle fonction + capacité auto),
+  `StepGuests.tsx` (détection + nouveau panneau d'aperçu `GroupedImportPreviewPanel`,
+  lecture des lignes brutes en plus des lignes-objets pour XLSX et CSV).
