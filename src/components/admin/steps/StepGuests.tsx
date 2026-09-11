@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { Event, Guest, Table } from '@/lib/admin/types';
-import { generateId, createDefaultGuest, linkGuestsToTables } from '@/lib/admin/utils';
+import { generateId, createDefaultGuest, linkGuestsToTables, parseGroupedByTableRows, GroupedGuest } from '@/lib/admin/utils';
 import { CheckCircle2, UserPlus, Trash2, Upload, ChevronDown, ChevronUp, X, Check, AlertCircle } from 'lucide-react';
 
 interface Props {
@@ -39,35 +39,51 @@ function detectField(header: string): keyof Guest | null {
 }
 
 type RawRow = Record<string, string>;
+type RawCell = string | number | null | undefined;
 type ColMapping = Record<string, keyof Guest | '__ignore__'>;
 
 interface ImportState {
-  step: 'idle' | 'mapping' | 'preview' | 'done';
+  step: 'idle' | 'mapping' | 'preview' | 'grouped' | 'done';
   headers: string[];
   rows: RawRow[];
   mapping: ColMapping;
+  groupedGuests: GroupedGuest[];
   error: string | null;
 }
+
+const IMPORT_STATE_IDLE: ImportState = {
+  step: 'idle', headers: [], rows: [], mapping: {}, groupedGuests: [], error: null,
+};
 
 export default function StepGuests({ event, update, markComplete }: Props) {
   const isDone = event.builderSteps.find(s => s.key === 'guests')?.completed;
   const [editing, setEditing] = useState<string | null>(null);
-  const [importState, setImportState] = useState<ImportState>({
-    step: 'idle', headers: [], rows: [], mapping: {}, error: null,
-  });
+  const [importState, setImportState] = useState<ImportState>(IMPORT_STATE_IDLE);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // ── File processing ──────────────────────────────────────────────────────
   async function handleFile(file: File) {
     setImportState(prev => ({ ...prev, error: null }));
     try {
+      let rawRows: RawCell[][] = [];
       let rows: RawRow[] = [];
       if (file.name.endsWith('.csv')) {
-        rows = await parseCSV(file);
+        rawRows = await readCSVRaw(file);
+        rows = rawRowsToKeyedRows(rawRows);
       } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-        rows = await parseXLSX(file);
+        const parsed = await parseXLSX(file);
+        rawRows = parsed.rawRows;
+        rows = parsed.rows;
       } else {
         setImportState(prev => ({ ...prev, error: 'Format non supporté. Utilisez .csv ou .xlsx' }));
+        return;
+      }
+
+      // Détecte d'abord un fichier "groupé par table" (ligne "Table N" + sous-en-tête
+      // + invités, très courant en pratique) — bien plus fréquent que le tableau plat.
+      const grouped = parseGroupedByTableRows(rawRows);
+      if (grouped) {
+        setImportState({ ...IMPORT_STATE_IDLE, step: 'grouped', groupedGuests: grouped });
         return;
       }
 
@@ -82,36 +98,41 @@ export default function StepGuests({ event, update, markComplete }: Props) {
         mapping[h] = detectField(h) ?? '__ignore__';
       });
 
-      setImportState({ step: 'mapping', headers, rows, mapping, error: null });
+      setImportState({ ...IMPORT_STATE_IDLE, step: 'mapping', headers, rows, mapping });
     } catch (e) {
       setImportState(prev => ({ ...prev, error: 'Erreur lors de la lecture du fichier.' }));
     }
   }
 
-  async function parseCSV(file: File): Promise<RawRow[]> {
+  async function readCSVRaw(file: File): Promise<RawCell[][]> {
     const text = await file.text();
     const lines = text.trim().split('\n');
-    if (lines.length < 2) return [];
-    const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
-    return lines.slice(1).filter(Boolean).map(line => {
-      const values = line.split(',').map(v => v.replace(/"/g, '').trim());
+    return lines.map(line => line.split(',').map(v => v.replace(/"/g, '').trim()));
+  }
+
+  function rawRowsToKeyedRows(rawRows: RawCell[][]): RawRow[] {
+    if (rawRows.length < 2) return [];
+    const headers = rawRows[0].map(h => String(h ?? '').trim());
+    return rawRows.slice(1).filter(r => r.some(v => v !== '' && v != null)).map(line => {
       const row: RawRow = {};
-      headers.forEach((h, i) => { row[h] = values[i] || ''; });
+      headers.forEach((h, i) => { row[h] = String(line[i] ?? ''); });
       return row;
     });
   }
 
-  async function parseXLSX(file: File): Promise<RawRow[]> {
+  async function parseXLSX(file: File): Promise<{ rows: RawRow[]; rawRows: RawCell[][] }> {
     const XLSX = await import('xlsx');
     const buffer = await file.arrayBuffer();
     const wb = XLSX.read(buffer, { type: 'array' });
     const ws = wb.Sheets[wb.SheetNames[0]];
+    const rawRows = XLSX.utils.sheet_to_json<RawCell[]>(ws, { header: 1, raw: false, defval: '' });
     const data = XLSX.utils.sheet_to_json<RawRow>(ws, { defval: '', raw: false });
-    return data.map(row => {
+    const rows = data.map(row => {
       const clean: RawRow = {};
       Object.entries(row).forEach(([k, v]) => { clean[k] = String(v); });
       return clean;
     });
+    return { rows, rawRows };
   }
 
   function applyImport() {
@@ -127,11 +148,23 @@ export default function StepGuests({ event, update, markComplete }: Props) {
     // de l'Excel, pour que la recherche invité fonctionne dès l'import.
     const { tables, guests: linkedNewGuests } = linkGuestsToTables(event.tables, newGuests);
     update({ tables, guests: [...event.guests, ...linkedNewGuests] });
-    setImportState({ step: 'done', headers: [], rows: [], mapping: {}, error: null });
+    setImportState({ ...IMPORT_STATE_IDLE, step: 'done' });
+  }
+
+  function applyGroupedImport() {
+    const newGuests: Guest[] = importState.groupedGuests.map(g => ({
+      ...createDefaultGuest(),
+      firstName: g.firstName,
+      lastName: g.lastName,
+      tableId: String(g.tableNumber), // valeur brute, réconciliée juste après
+    }));
+    const { tables, guests: linkedNewGuests } = linkGuestsToTables(event.tables, newGuests);
+    update({ tables, guests: [...event.guests, ...linkedNewGuests] });
+    setImportState({ ...IMPORT_STATE_IDLE, step: 'done' });
   }
 
   function cancelImport() {
-    setImportState({ step: 'idle', headers: [], rows: [], mapping: {}, error: null });
+    setImportState(IMPORT_STATE_IDLE);
   }
 
   // ── CRUD ─────────────────────────────────────────────────────────────────
@@ -216,6 +249,14 @@ export default function StepGuests({ event, update, markComplete }: Props) {
           importState={importState}
           onConfirm={applyImport}
           onBack={() => setImportState(prev => ({ ...prev, step: 'mapping' }))}
+          onCancel={cancelImport}
+        />
+      )}
+
+      {importState.step === 'grouped' && (
+        <GroupedImportPreviewPanel
+          guests={importState.groupedGuests}
+          onConfirm={applyGroupedImport}
           onCancel={cancelImport}
         />
       )}
@@ -418,6 +459,68 @@ function ImportPreviewPanel({
           Importer {rows.length} invités
         </button>
         <button onClick={onBack} className="text-[12px] text-[#9B7A56] hover:text-[#1A0F08]">← Modifier</button>
+        <button onClick={onCancel} className="text-[12px] text-[#9B7A56] hover:text-[#1A0F08] ml-auto">Annuler</button>
+      </div>
+    </div>
+  );
+}
+
+// ── Import "groupé par table" — aperçu ─────────────────────────────────────────
+function GroupedImportPreviewPanel({
+  guests, onConfirm, onCancel,
+}: {
+  guests: GroupedGuest[];
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  const tableNumbers = Array.from(new Set(guests.map(g => g.tableNumber))).sort((a, b) => a - b);
+  const preview = guests.slice(0, 8);
+
+  return (
+    <div className="rounded-2xl border bg-white mb-6 overflow-hidden" style={{ borderColor: 'rgba(26,15,8,0.1)' }}>
+      <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
+        <div>
+          <p className="text-[13px] font-semibold text-[#1A0F08]">Fichier organisé par table — {tableNumbers.length} tables, {guests.length} invités</p>
+          <p className="text-[11px] text-[#9B7A56] mt-0.5">
+            Format détecté automatiquement : une section « Table N » par table. Les tables seront créées et les invités placés directement.
+          </p>
+        </div>
+        <button onClick={onCancel} className="text-[#9B7A56] hover:text-[#1A0F08] flex-shrink-0 ml-3"><X size={16} /></button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-[11px]">
+          <thead>
+            <tr className="border-b" style={{ borderColor: 'rgba(26,15,8,0.06)' }}>
+              <th className="text-left px-4 py-2 font-medium text-[#9B7A56] uppercase tracking-wide">Table</th>
+              <th className="text-left px-4 py-2 font-medium text-[#9B7A56] uppercase tracking-wide">Prénom</th>
+              <th className="text-left px-4 py-2 font-medium text-[#9B7A56] uppercase tracking-wide">Nom</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y" style={{ borderColor: 'rgba(26,15,8,0.04)' }}>
+            {preview.map((g, i) => (
+              <tr key={i}>
+                <td className="px-4 py-2 text-[#1A0F08]">{g.tableNumber}</td>
+                <td className="px-4 py-2 text-[#1A0F08]">{g.firstName || '—'}</td>
+                <td className="px-4 py-2 text-[#1A0F08]">{g.lastName || '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {guests.length > 8 && (
+          <p className="text-[10px] text-[#9B7A56] px-4 py-2">… et {guests.length - 8} autre(s)</p>
+        )}
+      </div>
+
+      <div className="flex gap-3 px-5 py-4 border-t" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
+        <button
+          onClick={onConfirm}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-medium text-white"
+          style={{ background: '#B85C28' }}
+        >
+          <Check size={13} />
+          Importer {guests.length} invités sur {tableNumbers.length} tables
+        </button>
         <button onClick={onCancel} className="text-[12px] text-[#9B7A56] hover:text-[#1A0F08] ml-auto">Annuler</button>
       </div>
     </div>
