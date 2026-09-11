@@ -48,7 +48,7 @@ export default function StepSections({ event, update, markComplete }: Props) {
   }
 
   return (
-    <div className="max-w-xl mx-auto px-8 py-8">
+    <div className="max-w-xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
 
       <p className="text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-1">Galerie</p>
       <p className="text-[12px] text-[#9B7A56] mb-5">Section bonus, optionnelle, non incluse dans le parcours principal.</p>

@@ -8,6 +8,7 @@ const STORAGE_KEY = 'seat-mrahba-admin-events';
 
 interface AdminStore {
   events: Event[];
+  hydrated: boolean;
   createEvent: () => Event;
   updateEvent: (id: string, updates: Partial<Event>) => void;
   deleteEvent: (id: string) => void;
@@ -21,6 +22,13 @@ const AdminContext = createContext<AdminStore | null>(null);
 
 export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [events, setEvents] = useState<Event[]>([]);
+  // Tant que l'hydratation n'est pas terminée, un event absent de `events` ne veut
+  // rien dire (le localStorage n'a peut-être pas encore été lu) — les pages qui
+  // redirigent "si événement introuvable" doivent attendre `hydrated` avant de
+  // conclure, sinon un rechargement direct sur /admin/events/[id] rebondit vers
+  // la liste (bug particulièrement gênant sur mobile, où les pages rechargent
+  // plus souvent : changement d'appli, mémoire).
+  const [hydrated, setHydrated] = useState(false);
 
   // Hydrate from localStorage
   useEffect(() => {
@@ -29,6 +37,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       if (stored) setEvents(JSON.parse(stored));
     } catch {
       // ignore
+    } finally {
+      setHydrated(true);
     }
   }, []);
 
@@ -91,7 +101,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AdminContext.Provider value={{ events, createEvent, updateEvent, deleteEvent, duplicateEvent, getEvent, completeStep, publishEvent }}>
+    <AdminContext.Provider value={{ events, hydrated, createEvent, updateEvent, deleteEvent, duplicateEvent, getEvent, completeStep, publishEvent }}>
       {children}
     </AdminContext.Provider>
   );
