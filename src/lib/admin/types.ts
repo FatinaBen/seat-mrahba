@@ -8,8 +8,12 @@ export type TableType = 'round' | 'rectangle' | 'imperial';
 export type ThemePreset =
   | 'terracotta' | 'minimal' | 'maroc-chic'
   | 'olive' | 'black-luxury' | 'corporate';
-export type Typography = 'playfair' | 'inter' | 'cormorant';
+// Groupées par style : élégante/serif, moderne/sans-serif, manuscrite/calligraphique.
+export type Typography = 'playfair' | 'cormorant' | 'bodoni' | 'inter' | 'montserrat' | 'greatvibes';
 export type BorderRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
+export type LogoPlacement = 'header' | 'hero' | 'watermark';
+export type BackgroundType = 'color' | 'image';
+export type OverlayTone = 'none' | 'dark' | 'light';
 
 // ─── Builder Steps (étapes back-office) ───────────────────────────────────────
 // 1-8 : parcours principal demandé. 9-10 : fonctionnalités existantes conservées
@@ -49,15 +53,29 @@ export interface Table {
 }
 
 // ─── Theme ───────────────────────────────────────────────────────────────────
+// Un thème (preset) ne sert qu'à préremplir ces champs en un clic — une fois
+// posées ici, les valeurs sont la personnalisation persistante du client et ne
+// sont plus jamais réécrites automatiquement (voir StepDesign.tsx).
 export interface Theme {
   preset: ThemePreset;
   primaryColor: string;
   secondaryColor: string;
   buttonColor: string;
-  typography: Typography;
+  buttonTextColor: string;   // texte des boutons
+  textColor: string;         // titres / texte courant
+  typography: Typography;    // police des titres
+  bodyFont: Typography;      // police du texte courant
   borderRadius: BorderRadius;
-  heroImage: string;
+  heroImage: string;         // visuel Canva de la page d'accueil (étape "Page d'accueil")
   logo: string;
+  logoPlacement: LogoPlacement;
+  logoWatermarkOpacity: number; // 0-100, filigrane uniquement
+  logoWatermarkSize: number;    // 0-100 (% de la largeur), filigrane uniquement
+  backgroundType: BackgroundType;
+  backgroundColor: string;
+  backgroundImage: string;
+  backgroundOverlay: OverlayTone;
+  backgroundOverlayOpacity: number; // 0-100
   pattern: string; // 'none' | 'zellige' | 'dots' | 'lines' | 'arabesque'
 }
 
@@ -100,6 +118,8 @@ export interface Event {
   address: string;
   organizers: string;
   welcomeMessage: string; // message d'accueil affiché sur le site invité
+  displayTitle: string; // titre public (étape "Page d'accueil") — jamais le nom interne
+  ctaText: string; // texte du repère de scroll, vide = valeur par défaut selon `type`
   guestCount: number;
   status: EventStatus;
   guests: Guest[];
@@ -131,34 +151,85 @@ export const BUILDER_STEPS_DEFAULT: BuilderStep[] = [
   { key: 'design',    label: 'Personnalisation', completed: false },
 ];
 
-export const THEME_PRESETS: Record<ThemePreset, Omit<Theme, 'heroImage' | 'logo' | 'pattern'>> = {
+// Un thème = un point de départ. Il ne préremplit QUE les champs listés ici
+// (section "Couleurs personnalisées" + police des titres + arrondis) — jamais
+// le fond, le logo ou la police du texte courant, qui restent des choix propres
+// au client. Voir StepDesign.tsx pour la logique de préremplissage/reset.
+type ThemePresetFields = Pick<Theme,
+  'preset' | 'primaryColor' | 'secondaryColor' | 'buttonColor' | 'buttonTextColor' |
+  'textColor' | 'typography' | 'borderRadius'
+>;
+
+export const THEME_PRESETS: Record<ThemePreset, ThemePresetFields> = {
   terracotta: {
     preset: 'terracotta', primaryColor: '#B85C28', secondaryColor: '#8A7235',
-    buttonColor: '#B85C28', typography: 'playfair', borderRadius: 'lg',
+    buttonColor: '#B85C28', buttonTextColor: '#FFFFFF', textColor: '#1A0F08',
+    typography: 'playfair', borderRadius: 'lg',
   },
   minimal: {
     preset: 'minimal', primaryColor: '#1A1A1A', secondaryColor: '#666666',
-    buttonColor: '#1A1A1A', typography: 'inter', borderRadius: 'sm',
+    buttonColor: '#1A1A1A', buttonTextColor: '#FFFFFF', textColor: '#1A1A1A',
+    typography: 'inter', borderRadius: 'sm',
   },
   'maroc-chic': {
     preset: 'maroc-chic', primaryColor: '#8A4F1C', secondaryColor: '#C4963A',
-    buttonColor: '#8A4F1C', typography: 'cormorant', borderRadius: 'full',
+    buttonColor: '#8A4F1C', buttonTextColor: '#FFFFFF', textColor: '#1A0F08',
+    typography: 'cormorant', borderRadius: 'full',
   },
   olive: {
     preset: 'olive', primaryColor: '#5C6E3A', secondaryColor: '#8A7235',
-    buttonColor: '#5C6E3A', typography: 'playfair', borderRadius: 'md',
+    buttonColor: '#5C6E3A', buttonTextColor: '#FFFFFF', textColor: '#1A0F08',
+    typography: 'playfair', borderRadius: 'md',
   },
   'black-luxury': {
     preset: 'black-luxury', primaryColor: '#0A0A0A', secondaryColor: '#C4963A',
-    buttonColor: '#C4963A', typography: 'cormorant', borderRadius: 'none',
+    buttonColor: '#C4963A', buttonTextColor: '#0A0A0A', textColor: '#0A0A0A',
+    typography: 'cormorant', borderRadius: 'none',
   },
   corporate: {
     preset: 'corporate', primaryColor: '#1E3A5F', secondaryColor: '#4A7FB5',
-    buttonColor: '#1E3A5F', typography: 'inter', borderRadius: 'md',
+    buttonColor: '#1E3A5F', buttonTextColor: '#FFFFFF', textColor: '#1A1A1A',
+    typography: 'inter', borderRadius: 'md',
   },
 };
 
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   mariage: 'Mariage', fiancailles: 'Fiançailles', 'baby-shower': 'Baby Shower',
   anniversaire: 'Anniversaire', corporate: 'Corporate', gala: 'Gala', autre: 'Autre',
+};
+
+// Polices disponibles, groupées par style — source unique utilisée par le
+// sélecteur du dashboard (StepDesign) et par le rendu du site invité.
+export interface FontOption {
+  value: Typography;
+  label: string;
+  group: 'Élégante' | 'Moderne' | 'Manuscrite';
+  css: string;        // valeur font-family CSS
+  googleFont: string; // paramètre "family" pour l'URL Google Fonts
+}
+
+export const FONT_OPTIONS: FontOption[] = [
+  { value: 'playfair', label: 'Playfair Display', group: 'Élégante', css: '"Playfair Display", Georgia, serif', googleFont: 'Playfair+Display:ital,wght@0,400;0,500;1,400' },
+  { value: 'cormorant', label: 'Cormorant Garamond', group: 'Élégante', css: '"Cormorant Garamond", Georgia, serif', googleFont: 'Cormorant+Garamond:wght@400;500;600' },
+  { value: 'bodoni', label: 'Bodoni Moda', group: 'Élégante', css: '"Bodoni Moda", Georgia, serif', googleFont: 'Bodoni+Moda:wght@400;500;600' },
+  { value: 'inter', label: 'Inter', group: 'Moderne', css: 'Inter, system-ui, sans-serif', googleFont: 'Inter:wght@300;400;500;600' },
+  { value: 'montserrat', label: 'Montserrat', group: 'Moderne', css: 'Montserrat, system-ui, sans-serif', googleFont: 'Montserrat:wght@300;400;500;600' },
+  { value: 'greatvibes', label: 'Great Vibes', group: 'Manuscrite', css: '"Great Vibes", cursive', googleFont: 'Great+Vibes' },
+];
+
+export const FONT_GOOGLE_IMPORT_URL =
+  'https://fonts.googleapis.com/css2?' +
+  FONT_OPTIONS.map(f => `family=${f.googleFont}`).join('&') +
+  '&display=swap';
+
+// Texte du repère de scroll sous le titre, vu par l'invité (pas l'organisateur) —
+// point de vue "invité" par défaut, personnalisable via `event.ctaText`.
+export const CTA_TEXT_DEFAULTS: Record<EventType, string> = {
+  mariage: 'Rejoignez la célébration',
+  fiancailles: 'Rejoignez la célébration',
+  'baby-shower': 'Découvrez la fête',
+  anniversaire: 'Découvrez la fête',
+  corporate: "Découvrez l'événement",
+  gala: "Découvrez l'événement",
+  autre: "Découvrez l'événement",
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { Event } from '@/lib/admin/types';
+import { Event, EventType, EVENT_TYPE_LABELS, CTA_TEXT_DEFAULTS } from '@/lib/admin/types';
 import { CheckCircle2 } from 'lucide-react';
 
 interface Props {
@@ -9,10 +9,13 @@ interface Props {
   markComplete: () => void;
 }
 
-// Étape volontairement minimale : le contenu affiché à l'invité (mariés, lieu,
-// message d'accueil…) vient désormais du visuel Canva importé à l'étape
-// "Page d'accueil", pas d'un formulaire. Nom + Date ne servent qu'à toi,
-// pour identifier et trier tes événements dans le dashboard.
+// Sert à choisir le texte par défaut du repère de scroll ("Rejoignez la
+// célébration", etc.) — voir CTA_TEXT_DEFAULTS. N'apparaît nulle part
+// littéralement sur le site (contrairement au nom, purement interne).
+const EVENT_TYPES: EventType[] = [
+  'mariage', 'fiancailles', 'baby-shower', 'anniversaire', 'corporate', 'gala', 'autre',
+];
+
 export default function StepGeneral({ event, update, markComplete }: Props) {
   const isDone = event.builderSteps.find(s => s.key === 'general')?.completed;
 
@@ -47,6 +50,34 @@ export default function StepGeneral({ event, update, markComplete }: Props) {
         <input type="date" value={event.date} onChange={e => update({ date: e.target.value })}
           className={inp} style={s} onFocus={focus} onBlur={blur} />
       )}
+
+      {field('Type d\'événement',
+        <div className="grid grid-cols-4 gap-2">
+          {EVENT_TYPES.map(t => (
+            <button key={t} onClick={() => update({ type: t })}
+              className="py-2 px-2 rounded-xl text-[11px] font-medium transition-all border"
+              style={event.type === t
+                ? { background: '#B85C28', color: 'white', borderColor: '#B85C28' }
+                : { background: 'white', color: '#5A3C1E', borderColor: 'rgba(26,15,8,0.1)' }
+              }>
+              {EVENT_TYPE_LABELS[t]}
+            </button>
+          ))}
+        </div>
+      )}
+      <p className="text-[11px] text-[#9B7A56] -mt-3">
+        Choisit le texte par défaut du repère de défilement sur le site invité (ex: « Rejoignez la célébration »
+        pour un mariage). Réglable ci-dessous.
+      </p>
+
+      {field('Texte du repère de défilement (optionnel)',
+        <input value={event.ctaText} onChange={e => update({ ctaText: e.target.value })}
+          placeholder={CTA_TEXT_DEFAULTS[event.type]} className={inp} style={s} onFocus={focus} onBlur={blur} />
+      )}
+      <p className="text-[11px] text-[#9B7A56] -mt-3">
+        Vu par les invités sous le titre de l&apos;écran d&apos;accueil (si aucun visuel Canva n&apos;est importé). Laisse vide
+        pour utiliser le texte par défaut du type d&apos;événement.
+      </p>
 
       <div className="pt-4 border-t" style={{ borderColor: 'rgba(26,15,8,0.07)' }}>
         <button onClick={markComplete}
