@@ -34,10 +34,11 @@ const STEP_ICONS: Record<BuilderStepKey, React.ElementType> = {
   design: Palette,
 };
 
-// 1-8 : parcours principal. 9-10 : fonctionnalités existantes conservées en bonus.
+// 1-7 : parcours principal. 8-9 : fonctionnalités existantes conservées en bonus.
+// 10 : aperçu du site, en dernier — une fois tout le contenu et la personnalisation en place.
 const STEPS: BuilderStepKey[] = [
-  'general', 'home', 'guests', 'seating', 'menu', 'programme', 'qrcode', 'preview',
-  'gallery', 'design',
+  'general', 'home', 'guests', 'seating', 'menu', 'programme', 'qrcode',
+  'gallery', 'design', 'preview',
 ];
 
 interface Props { event: Event }

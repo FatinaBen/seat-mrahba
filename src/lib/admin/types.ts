@@ -20,8 +20,8 @@ export type OverlayTone = 'none' | 'dark' | 'light';
 // mais non prioritaires dans le nouveau parcours (galerie, personnalisation avancée).
 export type BuilderStepKey =
   | 'general' | 'home' | 'guests' | 'seating'
-  | 'menu' | 'programme' | 'qrcode' | 'preview'
-  | 'gallery' | 'design';
+  | 'menu' | 'programme' | 'qrcode'
+  | 'gallery' | 'design' | 'preview';
 
 export interface BuilderStep {
   key: BuilderStepKey;
@@ -146,9 +146,9 @@ export const BUILDER_STEPS_DEFAULT: BuilderStep[] = [
   { key: 'menu',      label: 'Menu',            completed: false },
   { key: 'programme', label: 'Programme',       completed: false },
   { key: 'qrcode',    label: 'QR Code',         completed: false },
-  { key: 'preview',   label: 'Aperçu du site',  completed: false },
   { key: 'gallery',   label: 'Galerie',         completed: false },
   { key: 'design',    label: 'Personnalisation', completed: false },
+  { key: 'preview',   label: 'Aperçu du site',  completed: false },
 ];
 
 // Un thème = un point de départ. Il ne préremplit QUE les champs listés ici
