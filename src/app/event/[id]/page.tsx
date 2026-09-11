@@ -396,6 +396,22 @@ function SeatingSection({ event, st }: { event: Event; st: SiteStyle }) {
 
 // ─── Programme ─────────────────────────────────────────────────────────────────
 function ProgrammeSection({ event, st }: { event: Event; st: SiteStyle }) {
+  // Visuel Canva importé : affiché tel quel, en plein écran — même traitement que
+  // la couverture de la page d'accueil (Hero avec hasCover), pas une image
+  // encartée dans une carte de largeur limitée.
+  if (event.programmeImage) {
+    return (
+      <section className="relative flex items-center justify-center" style={{ minHeight: '100svh', background: '#1A0F08' }}>
+        <img
+          src={event.programmeImage}
+          alt="Programme"
+          className="w-full h-full"
+          style={{ objectFit: 'contain', maxHeight: '100svh' }}
+        />
+      </section>
+    );
+  }
+
   return (
     <section className="px-6" style={{ background: `${GRAIN}, rgba(244,241,237,0.72)`, padding: '6rem 1.5rem' }}>
       <div style={{ maxWidth: 360, margin: '0 auto' }}>
@@ -407,36 +423,28 @@ function ProgrammeSection({ event, st }: { event: Event; st: SiteStyle }) {
           Le déroulé de la journée
         </h2>
 
-        {event.programmeImage ? (
-          <img
-            src={event.programmeImage}
-            alt="Programme"
-            style={{ width: '100%', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', display: 'block' }}
-          />
-        ) : (
-          <div className="relative">
-            <div className="absolute top-2 bottom-2"
-              style={{ left: 52, width: 1, background: `${st.primary}20` }} />
-            <div className="space-y-8">
-              {event.programme.map(item => (
-                <div key={item.id} className="flex gap-5 items-start">
-                  <span className="text-xs font-medium flex-shrink-0 pt-0.5"
-                    style={{ width: 40, textAlign: 'right', color: st.primary }}>
-                    {item.time}
-                  </span>
-                  <div className="flex-shrink-0 w-3 h-3 rounded-full mt-0.5 z-10"
-                    style={{ background: st.primary, boxShadow: `0 0 0 3px ${st.primary}20` }} />
-                  <div>
-                    <p className="text-sm font-semibold" style={{ color: st.textColor }}>{item.title}</p>
-                    {item.description && (
-                      <p className="text-xs mt-0.5" style={{ color: '#9B7A56' }}>{item.description}</p>
-                    )}
-                  </div>
+        <div className="relative">
+          <div className="absolute top-2 bottom-2"
+            style={{ left: 52, width: 1, background: `${st.primary}20` }} />
+          <div className="space-y-8">
+            {event.programme.map(item => (
+              <div key={item.id} className="flex gap-5 items-start">
+                <span className="text-xs font-medium flex-shrink-0 pt-0.5"
+                  style={{ width: 40, textAlign: 'right', color: st.primary }}>
+                  {item.time}
+                </span>
+                <div className="flex-shrink-0 w-3 h-3 rounded-full mt-0.5 z-10"
+                  style={{ background: st.primary, boxShadow: `0 0 0 3px ${st.primary}20` }} />
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: st.textColor }}>{item.title}</p>
+                  {item.description && (
+                    <p className="text-xs mt-0.5" style={{ color: '#9B7A56' }}>{item.description}</p>
+                  )}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );

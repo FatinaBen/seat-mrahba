@@ -491,3 +491,30 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
     (`displayTitle`), `StepDesign.tsx` (refonte complète), `PhonePreview.tsx`
     (inchangé fonctionnellement), `event/[id]/page.tsx` (rendu public :
     titre, CTA, styles calculés par thème, logo/fond/overlay, polices).
+
+### 11/09 — Visuel Canva de la page Programme mal affiché (bande + fond blanc)
+- Signalé : le visuel Canva importé sur l'étape Programme (`event.programmeImage`)
+  s'affichait comme une petite image encartée (carte à largeur limitée,
+  360px, coins arrondis, ombre) sous le label "Programme" / titre "Le
+  déroulé de la journée" — au lieu de remplir tout l'écran comme la
+  couverture de la page d'accueil (`event.theme.heroImage` dans `Hero`).
+- Cause : `ProgrammeSection` traitait l'image comme un contenu de section
+  classique (`width:100%` dans une carte `maxWidth:360` avec padding),
+  alors que `Hero` traite sa couverture comme un visuel plein écran
+  autonome (section `minHeight:100svh`, `object-fit:contain`, sans
+  titre/label superposé — le visuel Canva porte déjà toute l'info).
+- Correction : quand `event.programmeImage` est défini, `ProgrammeSection`
+  bascule désormais sur la même branche de rendu que `Hero` avec image
+  (section plein écran `minHeight:100svh`, fond `#1A0F08`, image
+  `object-fit:contain`, sans label/titre superposés — le visuel est
+  affiché "tel quel" comme annoncé dans l'étape Programme du dashboard).
+  Le rendu texte (timeline horaire) reste inchangé quand aucun visuel
+  n'est importé.
+- Vérifié visuellement (Playwright, viewport mobile 390×844) : la section
+  occupe exactement toute la hauteur/largeur de l'écran après le fix
+  (avant : section plus haute que l'écran, image encartée avec bandeau
+  blanc au-dessus et en dessous).
+- Note : `MenuSection` (`event.menuImage`) a très probablement le même
+  problème — pas corrigé ici car non demandé explicitement, à traiter en
+  suivant le même correctif si besoin.
+- Fichier modifié : `event/[id]/page.tsx` (`ProgrammeSection`).
