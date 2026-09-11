@@ -518,3 +518,28 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   problème — pas corrigé ici car non demandé explicitement, à traiter en
   suivant le même correctif si besoin.
 - Fichier modifié : `event/[id]/page.tsx` (`ProgrammeSection`).
+
+### 11/09 — Même correctif appliqué au Menu + réordonnancement du parcours (Aperçu en étape 10)
+- `MenuSection` (`event.menuImage`) avait exactement le même problème que
+  `ProgrammeSection` (image encartée au lieu de plein écran) — même
+  correctif appliqué : quand un visuel Canva est importé, section plein
+  écran `100svh`, `object-fit:contain`, sans titre/label superposés.
+  Comportement texte (liste du menu) inchangé en l'absence de visuel.
+- Réordonnancement du parcours du builder : "Aperçu du site" passe de
+  l'étape 8 à l'étape 10 (dernière), après Galerie (8) et Personnalisation
+  (9) — logique : on prévisualise une fois tout le contenu ET le style en
+  place, pas avant. Nouvel ordre : Informations → Page d'accueil → Invités
+  → Plan de table → Menu → Programme → QR Code → Galerie →
+  Personnalisation → Aperçu du site.
+- Deux tableaux devaient rester synchronisés (même ordre, même longueur) :
+  `BUILDER_STEPS_DEFAULT` (`types.ts`) et `STEPS` (`EventWizard.tsx`, liste
+  de clés utilisée pour l'index courant/navigation) — les deux mis à jour.
+  Aucune autre logique ne dépendait de l'ancien ordre (navigation
+  suivant/précédent, progression, numérotation : tout dérive dynamiquement
+  de ces tableaux, rien de codé en dur).
+- Vérifié (Playwright) : ordre affiché dans la sidebar admin conforme,
+  navigation "Suivant" depuis Personnalisation mène bien à Aperçu du site
+  (dernière étape, bouton "Suivant" désactivé une fois dessus), rendu
+  plein écran du visuel Menu conforme à Programme/Hero.
+- Fichiers modifiés : `types.ts` (`BuilderStepKey`, `BUILDER_STEPS_DEFAULT`),
+  `EventWizard.tsx` (`STEPS`), `event/[id]/page.tsx` (`MenuSection`).

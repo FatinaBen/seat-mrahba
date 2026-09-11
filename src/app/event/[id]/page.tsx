@@ -452,6 +452,21 @@ function ProgrammeSection({ event, st }: { event: Event; st: SiteStyle }) {
 
 // ─── Menu ──────────────────────────────────────────────────────────────────────
 function MenuSection({ event, st }: { event: Event; st: SiteStyle }) {
+  // Visuel Canva importé : affiché tel quel, en plein écran — même traitement que
+  // la couverture de la page d'accueil (Hero avec hasCover) et le Programme.
+  if (event.menuImage) {
+    return (
+      <section className="relative flex items-center justify-center" style={{ minHeight: '100svh', background: '#1A0F08' }}>
+        <img
+          src={event.menuImage}
+          alt="Menu"
+          className="w-full h-full"
+          style={{ objectFit: 'contain', maxHeight: '100svh' }}
+        />
+      </section>
+    );
+  }
+
   return (
     <section style={{ padding: '6rem 1.25rem' }}>
       <div style={{ maxWidth: 400, margin: '0 auto' }}>
@@ -463,29 +478,21 @@ function MenuSection({ event, st }: { event: Event; st: SiteStyle }) {
           Au programme ce soir
         </h2>
 
-        {event.menuImage ? (
-          <img
-            src={event.menuImage}
-            alt="Menu"
-            style={{ width: '100%', borderRadius: 16, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', display: 'block' }}
-          />
-        ) : (
-          <div className="space-y-6">
-            {event.menu.map(s => (
-              <div key={s.id}>
-                <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: st.primary }}>{s.label}</p>
-                <ul className="space-y-2">
-                  {s.items.map(item => (
-                    <li key={item.id} className="flex gap-3 items-start text-sm" style={{ color: '#5A3C1E' }}>
-                      <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ background: st.primary }} />
-                      {item.name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="space-y-6">
+          {event.menu.map(s => (
+            <div key={s.id}>
+              <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: st.primary }}>{s.label}</p>
+              <ul className="space-y-2">
+                {s.items.map(item => (
+                  <li key={item.id} className="flex gap-3 items-start text-sm" style={{ color: '#5A3C1E' }}>
+                    <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ background: st.primary }} />
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
