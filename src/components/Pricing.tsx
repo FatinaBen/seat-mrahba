@@ -19,31 +19,38 @@ const extras = [
     icon: Palette,
     title: 'Personnalisation graphique avancée',
     desc: "Un design plus poussé de l'univers visuel de votre événement — page d'accueil et éléments graphiques sur mesure.",
+    price: '250–450 DH',
   },
   {
     icon: UtensilsCrossed,
     title: 'Menu digital',
     desc: 'Création et intégration d’un menu personnalisé dans votre mini-site.',
+    price: '100–150 DH',
   },
   {
     icon: CalendarDays,
     title: 'Programme de la soirée',
     desc: 'Création et intégration du programme de votre événement.',
+    price: '100–150 DH',
   },
   {
     icon: Layers,
     title: 'Menu & Programme',
     desc: 'La possibilité de combiner les deux, pour une expérience complète.',
+    price: '180–250 DH',
+    note: 'Plus avantageux que les deux options prises séparément.',
   },
   {
     icon: Printer,
     title: 'Personnalisation des supports QR',
     desc: "Le support imprimé à l'image de votre mariage : design sur mesure et impression selon vos besoins.",
+    price: 'Sur devis',
   },
   {
     icon: Sparkles,
     title: 'Demande personnalisée',
     desc: 'Une envie particulière ? Parlons-en.',
+    price: 'Sur devis',
   },
 ];
 
@@ -258,14 +265,6 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-
-              <a
-                href="#contact"
-                className="block text-center py-3.5 px-6 rounded-full text-[13.5px] font-medium transition-all active:scale-[0.97]"
-                style={{ background: 'white', color: '#B85C28' }}
-              >
-                Demander un devis
-              </a>
             </div>
           </motion.div>
 
@@ -318,26 +317,31 @@ export default function Pricing() {
                       style={{ background: 'rgba(138,114,53,0.1)' }}>
                       <Icon className="w-4 h-4 text-[#8A7235]" strokeWidth={1.75} />
                     </div>
-                    <div>
-                      <p className="text-[14px] font-medium text-[#1A0F08] mb-1">{extra.title}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-3 mb-1">
+                        <p className="text-[14px] font-medium text-[#1A0F08]">{extra.title}</p>
+                        <span
+                          className="flex-shrink-0 text-[11.5px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap"
+                          style={{ background: 'rgba(184,92,40,0.1)', color: '#B85C28' }}
+                        >
+                          {extra.price}
+                        </span>
+                      </div>
                       <p className="text-[13px] leading-snug text-[#9B7A56]">{extra.desc}</p>
+                      {extra.note && (
+                        <p className="text-[11.5px] leading-snug mt-1.5" style={{ color: '#8A7235' }}>
+                          ✦ {extra.note}
+                        </p>
+                      )}
                     </div>
                   </motion.div>
                 );
               })}
             </div>
 
-            <div className="text-center">
-              <p className="text-[13px] text-[#8A7235] mb-5">
-                Tarif sur devis, selon vos envies et les besoins de votre événement.
-              </p>
-              <a
-                href="#contact"
-                className="inline-block px-8 py-3.5 rounded-full text-[13.5px] font-medium text-white bg-[#B85C28] hover:opacity-90 active:scale-[0.97] transition-all"
-              >
-                Demander un devis
-              </a>
-            </div>
+            <p className="text-center text-[12.5px] text-[#9B7A56]">
+              Prix indicatifs · ajustés selon les besoins de votre événement.
+            </p>
           </motion.div>
         </div>
       </section>

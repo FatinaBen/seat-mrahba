@@ -105,8 +105,8 @@ export default function Footer() {
             </h4>
             <div className="space-y-4">
               {[
-                { label: 'Email', value: 'bonjour@seat-mrahba.com' },
-                { label: 'WhatsApp', value: '+212 6 00 00 00 00' },
+                { label: 'Email', value: 'contact@seat-mrahba.com' },
+                { label: 'WhatsApp', value: '+212 6 69 09 00 00' },
                 { label: 'Instagram', value: '@seat.mrahba' },
               ].map(({ label, value }) => (
                 <div key={label}>

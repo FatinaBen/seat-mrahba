@@ -543,3 +543,37 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   plein écran du visuel Menu conforme à Programme/Hero.
 - Fichiers modifiés : `types.ts` (`BuilderStepKey`, `BUILDER_STEPS_DEFAULT`),
   `EventWizard.tsx` (`STEPS`), `event/[id]/page.tsx` (`MenuSection`).
+
+### 16/09 — Site vitrine : contact, offres Mrahba+ tarifées, nettoyage des CTA
+- **Incohérence de contact corrigée** : `Footer.tsx` affichait
+  `bonjour@seat-mrahba.com` et `+212 6 00 00 00 00` (placeholders), différents
+  de `Contact.tsx` (`contact@seat-mrahba.com` / `+212 6 69 09 00 00`, les
+  bonnes valeurs). Harmonisé sur ces dernières partout sur le site.
+- **Mrahba+ tarifée** : chaque option de `extras` (`Pricing.tsx`) affiche
+  désormais une fourchette de prix (badge à côté du titre) au lieu du bloc
+  générique "Tarif sur devis" : Personnalisation graphique avancée
+  250–450 DH, Menu digital 100–150 DH, Programme de la soirée 100–150 DH,
+  Menu & Programme (combo) 180–250 DH avec une note "plus avantageux que
+  les deux options séparément", Personnalisation des supports QR et
+  Demande personnalisée restent "Sur devis" (dépendent du matériau/
+  fournisseur ou du besoin). Le bloc générique en bas de section est
+  remplacé par une note neutre "Prix indicatifs · ajustés selon les
+  besoins de votre événement."
+- **Nettoyage des CTA "devis" redondants** : suppression de tous les
+  boutons/liens "Demander un devis", "Demander un devis gratuit",
+  "Commencer maintenant", "Sublimez votre événement" pointant vers
+  `#contact`, dans `Navbar.tsx` (CTA desktop + CTA mobile — le lien
+  "Contact" du menu suffit), `Hero.tsx` (gardé "Voir la démo →"),
+  `Pricing.tsx` (CTA sous la Formule Mrahba et sous Mrahba+),
+  `HowItWorks.tsx`, `Testimonials.tsx`, `WhyUs.tsx`. Volontairement
+  conservés : le CTA "Demander un devis pour le support →" (section
+  Supports QR Code, seule partie qui reste réellement sur devis) et le
+  CTA "Nous contacter" de la FAQ (texte différent, non listé, sert un but
+  distinct — support/question plutôt que vente).
+- Vérifié (Playwright) : 0 occurrence des 3 CTA nommés supprimés, 1 seule
+  occurrence restante de "Demander un devis" (le CTA des supports QR),
+  email/téléphone harmonisés partout (2 occurrences de chaque, valeurs
+  correctes), rendu visuel de la section Offres (prix par carte, pas de
+  CTA superflu) et du footer conformes.
+- Fichiers modifiés : `Footer.tsx`, `Pricing.tsx`, `Navbar.tsx`, `Hero.tsx`,
+  `HowItWorks.tsx`, `Testimonials.tsx`, `WhyUs.tsx`.
