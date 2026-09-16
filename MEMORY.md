@@ -577,3 +577,16 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   CTA superflu) et du footer conformes.
 - Fichiers modifiés : `Footer.tsx`, `Pricing.tsx`, `Navbar.tsx`, `Hero.tsx`,
   `HowItWorks.tsx`, `Testimonials.tsx`, `WhyUs.tsx`.
+
+### 16/09 — Logo de marque dans la Navbar
+- Remplacé le pictogramme générique (étoile/sparkle en SVG inline) à côté
+  du nom "Seat & Mrahba" en haut à gauche par le vrai logo de marque
+  fourni par l'utilisatrice (silhouette de chaise en tressage, PNG à fond
+  transparent, déjà rogné à son contour).
+- Asset ajouté dans `public/brand/logo-mark.png`. Utilisé en `<img>`
+  simple (cohérent avec le reste du site, pas de `next/image`), hauteur
+  fixe `h-7`, largeur auto pour garder les proportions.
+- Uniquement la Navbar a été modifiée (seul endroit demandé, "en haut à
+  gauche du site"). Le Footer utilise encore l'ancien pictogramme SVG —
+  à harmoniser si besoin, non fait ici car non demandé.
+- Fichier modifié : `Navbar.tsx`. Fichier ajouté : `public/brand/logo-mark.png`.
