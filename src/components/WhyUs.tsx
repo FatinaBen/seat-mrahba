@@ -90,21 +90,6 @@ export default function WhyUs() {
           ))}
         </div>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center"
-        >
-          <a
-            href="#contact"
-            className="inline-block px-8 py-3.5 rounded-full text-[13px] font-medium text-[#1A0F08] bg-[#E8C49A] hover:bg-white active:scale-[0.97] transition-all"
-          >
-            Sublimez votre événement →
-          </a>
-        </motion.div>
-
       </div>
     </section>
   );

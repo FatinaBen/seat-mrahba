@@ -107,21 +107,6 @@ export default function HowItWorks() {
           ))}
         </div>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.65 }}
-          className="text-center mt-16"
-        >
-          <a
-            href="#contact"
-            className="inline-block text-[13px] font-medium text-[#B85C28] border border-[#B85C28] px-8 py-3 rounded-full hover:bg-[#B85C28] hover:text-white active:scale-[0.97] transition-all"
-          >
-            Commencer maintenant →
-          </a>
-        </motion.div>
-
       </div>
     </section>
   );

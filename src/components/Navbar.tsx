@@ -80,19 +80,6 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Desktop CTA */}
-            <div className="hidden md:block">
-              <button
-                onClick={() => handleNavClick('#contact')}
-                className="px-5 py-2.5 rounded-full text-[13px] font-medium text-white transition-all duration-200 active:scale-95"
-                style={{ background: '#B85C28' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#A0501F')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#B85C28')}
-              >
-                Demander un devis
-              </button>
-            </div>
-
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -143,20 +130,6 @@ export default function Navbar() {
                   {link.label}
                 </motion.button>
               ))}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: navLinks.length * 0.04 }}
-                className="pt-3 pb-2"
-              >
-                <button
-                  onClick={() => handleNavClick('#contact')}
-                  className="w-full py-3 rounded-full text-[14px] font-medium text-white transition-colors"
-                  style={{ background: '#B85C28' }}
-                >
-                  Demander un devis gratuit
-                </button>
-              </motion.div>
             </div>
           </motion.div>
         )}

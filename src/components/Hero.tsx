@@ -100,15 +100,6 @@ export default function Hero() {
 
             <motion.div variants={item} className="flex flex-wrap gap-3">
               <button
-                onClick={() => scrollTo('#contact')}
-                className="px-7 py-3.5 rounded-full text-[14px] font-medium text-white transition-all duration-200 active:scale-[0.97]"
-                style={{ background: '#B85C28', boxShadow: '0 4px 20px rgba(184,92,40,0.3)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#A0501F')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#B85C28')}
-              >
-                Demander un devis gratuit
-              </button>
-              <button
                 onClick={() => scrollTo('#demo')}
                 className="px-7 py-3.5 rounded-full text-[14px] font-medium border text-[#B85C28] hover:bg-[#B85C28] hover:text-white active:scale-[0.97] transition-all duration-200"
                 style={{ borderColor: '#B85C28' }}

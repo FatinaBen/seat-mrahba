@@ -93,24 +93,6 @@ export default function Testimonials() {
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center mt-16"
-        >
-          <a
-            href="#contact"
-            className="inline-block px-8 py-3.5 rounded-full text-[13px] font-medium text-white transition-all active:scale-[0.97]"
-            style={{ background: '#B85C28', boxShadow: '0 4px 20px rgba(184,92,40,0.25)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#A0501F')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = '#B85C28')}
-          >
-            Demander un devis gratuit →
-          </a>
-        </motion.div>
-
       </div>
     </section>
   );
