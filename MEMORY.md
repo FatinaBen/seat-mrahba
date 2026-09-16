@@ -590,3 +590,19 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   gauche du site"). Le Footer utilise encore l'ancien pictogramme SVG —
   à harmoniser si besoin, non fait ici car non demandé.
 - Fichier modifié : `Navbar.tsx`. Fichier ajouté : `public/brand/logo-mark.png`.
+
+### 16/09 — Agrandissement du logo + Mrahba+ passée en prix fixes
+- Logo de la Navbar agrandi de `h-7` (28px) à `h-11` (44px) pour plus de
+  présence à côté du nom.
+- Mrahba+ (`Pricing.tsx`) : les fourchettes indicatives remplacées par des
+  prix fixes là où c'est possible — Menu digital 120 DH, Programme de la
+  soirée 120 DH, Menu & Programme (combo) 200 DH (note sur l'avantage
+  conservée). Personnalisation graphique avancée reste une fourchette
+  250–450 DH mais avec une nouvelle phrase explicative sur ce qui fait
+  varier le prix (nombre d'éléments à personnaliser, visuels déjà fournis
+  ou non). Personnalisation des supports QR et Demande personnalisée
+  restent "Sur devis", inchangées.
+- La note générique en bas de la section Mrahba+ ("Prix indicatifs…")
+  n'était plus exacte une fois la plupart des prix fixés — remplacée par
+  "Tarifs par prestation · sur devis pour les options sur mesure."
+- Fichier modifié : `Pricing.tsx`, `Navbar.tsx`.
