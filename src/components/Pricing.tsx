@@ -20,24 +20,25 @@ const extras = [
     title: 'Personnalisation graphique avancée',
     desc: "Un design plus poussé de l'univers visuel de votre événement — page d'accueil et éléments graphiques sur mesure.",
     price: '250–450 DH',
+    note: 'Le tarif dépend du nombre d’éléments à personnaliser et si vos visuels sont déjà prêts.',
   },
   {
     icon: UtensilsCrossed,
     title: 'Menu digital',
     desc: 'Création et intégration d’un menu personnalisé dans votre mini-site.',
-    price: '100–150 DH',
+    price: '120 DH',
   },
   {
     icon: CalendarDays,
     title: 'Programme de la soirée',
     desc: 'Création et intégration du programme de votre événement.',
-    price: '100–150 DH',
+    price: '120 DH',
   },
   {
     icon: Layers,
     title: 'Menu & Programme',
     desc: 'La possibilité de combiner les deux, pour une expérience complète.',
-    price: '180–250 DH',
+    price: '200 DH',
     note: 'Plus avantageux que les deux options prises séparément.',
   },
   {
@@ -340,7 +341,7 @@ export default function Pricing() {
             </div>
 
             <p className="text-center text-[12.5px] text-[#9B7A56]">
-              Prix indicatifs · ajustés selon les besoins de votre événement.
+              Tarifs par prestation · sur devis pour les options sur mesure.
             </p>
           </motion.div>
         </div>
