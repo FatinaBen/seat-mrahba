@@ -55,7 +55,7 @@ export default function Navbar() {
               className="flex items-center gap-2 group flex-shrink-0"
               aria-label="Seat & Mrahba"
             >
-              <img src="/brand/logo-mark.png" alt="" aria-hidden="true" className="h-7 w-auto flex-shrink-0" />
+              <img src="/brand/logo-mark.png" alt="" aria-hidden="true" className="h-11 w-auto flex-shrink-0" />
               <span
                 className="text-[19px] font-bold"
                 style={{ fontFamily: 'Playfair Display, Georgia, serif', color: '#8A7235' }}
