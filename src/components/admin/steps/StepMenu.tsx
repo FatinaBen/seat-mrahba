@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { Event } from '@/lib/admin/types';
+import { compressImageToDataURL } from '@/lib/admin/utils';
 import { CheckCircle2, Upload, X, ImageIcon, ToggleLeft, ToggleRight } from 'lucide-react';
 
 interface Props {
@@ -19,13 +20,14 @@ export default function StepMenu({ event, update, markComplete }: Props) {
     update({ sections: { ...event.sections, menu: !active } });
   }
 
-  function handleFile(files: FileList | null) {
+  async function handleFile(files: FileList | null) {
     const file = files?.[0];
     if (!file) return;
     if (!['image/png', 'image/jpeg'].includes(file.type)) return;
-    const reader = new FileReader();
-    reader.onload = e => update({ menuImage: e.target?.result as string });
-    reader.readAsDataURL(file);
+    // Compressé avant stockage : un visuel Canva non compressé peut dépasser le
+    // quota localStorage et échouer à se sauvegarder silencieusement.
+    const dataUrl = await compressImageToDataURL(file);
+    update({ menuImage: dataUrl });
   }
 
   return (

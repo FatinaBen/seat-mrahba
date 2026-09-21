@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Event, Table, TableType, Guest } from '@/lib/admin/types';
-import { createDefaultTable } from '@/lib/admin/utils';
+import { createDefaultTable, compressImageToDataURL } from '@/lib/admin/utils';
 import { CheckCircle2, Plus, Trash2, Wand2, GripVertical, ChevronDown, ChevronUp, X, ImageIcon } from 'lucide-react';
 
 interface Props {
@@ -23,13 +23,14 @@ export default function StepSeating({ event, update, markComplete }: Props) {
   const [dragGuest, setDragGuest] = useState<string | null>(null);
   const planFileRef = useRef<HTMLInputElement>(null);
 
-  function handlePlanImage(files: FileList | null) {
+  async function handlePlanImage(files: FileList | null) {
     const file = files?.[0];
     if (!file) return;
     if (!['image/png', 'image/jpeg'].includes(file.type)) return;
-    const reader = new FileReader();
-    reader.onload = e => update({ seatingImage: e.target?.result as string });
-    reader.readAsDataURL(file);
+    // Compressé avant stockage : un visuel non compressé peut dépasser le
+    // quota localStorage et échouer à se sauvegarder silencieusement.
+    const dataUrl = await compressImageToDataURL(file);
+    update({ seatingImage: dataUrl });
   }
 
   function addTable() {

@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState, useRef, useCallback } from 'react';
 import { Event, Guest, Table, FONT_OPTIONS, FONT_GOOGLE_IMPORT_URL, CTA_TEXT_DEFAULTS } from '@/lib/admin/types';
+import { compressImageToDataURL } from '@/lib/admin/utils';
 import { Search, Camera, X, Upload, ChevronDown } from 'lucide-react';
 
 const STORAGE_KEY = 'seat-mrahba-admin-events';
@@ -30,9 +31,15 @@ function loadPhotos(id: string): string[] {
   } catch { return []; }
 }
 
-function savePhotos(id: string, photos: string[]) {
-  try { localStorage.setItem(PHOTOS_KEY(id), JSON.stringify(photos)); }
-  catch { /* storage full */ }
+function savePhotos(id: string, photos: string[]): boolean {
+  try {
+    localStorage.setItem(PHOTOS_KEY(id), JSON.stringify(photos));
+    return true;
+  } catch {
+    // Quota localStorage dépassé — signalé à l'appelant plutôt qu'avalé
+    // silencieusement (sinon la photo disparaît sans explication).
+    return false;
+  }
 }
 
 // Titre vu par l'invité : uniquement `displayTitle` (étape "Page d'accueil"),
@@ -513,16 +520,19 @@ function GallerySection({ eventId, st }: { eventId: string; st: SiteStyle }) {
     const newPhotos: string[] = [];
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('image/')) continue;
-      const dataUrl = await new Promise<string>(res => {
-        const reader = new FileReader();
-        reader.onload = e => res(e.target?.result as string);
-        reader.readAsDataURL(file);
-      });
+      // Compressée avant stockage : des photos de téléphone non compressées
+      // dépassent vite le quota localStorage et échouent à se sauvegarder
+      // silencieusement (galerie qui reste vide malgré l'upload).
+      const dataUrl = await compressImageToDataURL(file, { maxWidth: 1600, maxHeight: 1600 });
       newPhotos.push(dataUrl);
     }
     setPhotos(prev => {
       const updated = [...prev, ...newPhotos];
-      savePhotos(eventId, updated);
+      if (!savePhotos(eventId, updated)) {
+        // Rien n'est réellement enregistré : ne pas laisser croire l'inverse.
+        alert("Photo(s) trop lourde(s) pour être enregistrée(s) — réessayez avec moins de photos à la fois.");
+        return prev;
+      }
       return updated;
     });
     setUploading(false);

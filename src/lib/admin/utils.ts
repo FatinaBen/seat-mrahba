@@ -252,3 +252,48 @@ export const STATUS_COLOR: Record<string, { bg: string; text: string; label: str
   published: { bg: 'rgba(90,122,90,0.1)',   text: '#5A7A5A', label: 'Publié' },
   past:      { bg: 'rgba(26,15,8,0.06)',    text: '#9B7A56', label: 'Terminé' },
 };
+
+// ─── Compression d'image avant stockage ─────────────────────────────────────────
+// Bug historique : les visuels Canva (souvent plusieurs Mo en PNG, export vertical
+// 1080×1920) étaient stockés tels quels en base64 dans localStorage. Plusieurs
+// visuels sur un même événement (accueil, programme, menu, plan de table, fond,
+// logo) dépassaient facilement le quota du navigateur (~5-10 Mo par origine) ;
+// l'écriture échouait alors silencieusement (catch vide dans store.tsx), donc
+// le nouveau visuel restait en mémoire côté admin mais n'était jamais persisté —
+// invisible sur le mini-site invité, qui relit localStorage depuis zéro.
+// Fix : redimensionner et recompresser chaque image côté client avant de
+// l'enregistrer, pour rester largement sous le quota même avec plusieurs visuels.
+interface CompressImageOptions {
+  maxWidth?: number;
+  maxHeight?: number;
+  /** 0 à 1. Ignoré si `keepPng` (le PNG est sans perte). */
+  quality?: number;
+  /** Conserve le PNG (transparence) au lieu de convertir en JPEG — pour les logos. */
+  keepPng?: boolean;
+}
+
+export function compressImageToDataURL(file: File, options: CompressImageOptions = {}): Promise<string> {
+  const { maxWidth = 1080, maxHeight = 1920, quality = 0.85, keepPng = false } = options;
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error('Lecture du fichier impossible'));
+    reader.onload = () => {
+      const img = new window.Image();
+      img.onerror = () => reject(new Error('Image illisible'));
+      img.onload = () => {
+        const ratio = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+        const width = Math.max(1, Math.round(img.width * ratio));
+        const height = Math.max(1, Math.round(img.height * ratio));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { resolve(reader.result as string); return; } // fallback : image non redimensionnée
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(keepPng ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+}

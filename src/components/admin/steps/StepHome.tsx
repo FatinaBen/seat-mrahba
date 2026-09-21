@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { Event, Theme } from '@/lib/admin/types';
+import { compressImageToDataURL } from '@/lib/admin/utils';
 import { CheckCircle2, Upload, X, ImageIcon } from 'lucide-react';
 
 interface Props {
@@ -19,13 +20,14 @@ export default function StepHome({ event, update, markComplete }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const image = event.theme.heroImage;
 
-  function handleFile(files: FileList | null) {
+  async function handleFile(files: FileList | null) {
     const file = files?.[0];
     if (!file) return;
     if (!['image/png', 'image/jpeg'].includes(file.type)) return;
-    const reader = new FileReader();
-    reader.onload = e => updateTheme(event, update, { heroImage: e.target?.result as string });
-    reader.readAsDataURL(file);
+    // Compressé avant stockage : un visuel Canva non compressé peut dépasser le
+    // quota localStorage et échouer à se sauvegarder silencieusement.
+    const dataUrl = await compressImageToDataURL(file);
+    updateTheme(event, update, { heroImage: dataUrl });
   }
 
   return (
