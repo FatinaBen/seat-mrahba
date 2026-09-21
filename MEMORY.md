@@ -606,3 +606,52 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   n'était plus exacte une fois la plupart des prix fixés — remplacée par
   "Tarifs par prestation · sur devis pour les options sur mesure."
 - Fichier modifié : `Pricing.tsx`, `Navbar.tsx`.
+
+### 21/09 — Bug critique : les visuels Canva ne se sauvegardaient pas (silencieux)
+- Signalé : "j'importe mes visuels Canva dans le dashboard admin mais ça ne
+  se génère pas sur le mini-site final."
+- **Cause racine identifiée et reproduite** : chaque visuel importé (page
+  d'accueil, programme, menu, plan de table, fond de site, galerie) est lu
+  en base64 (`FileReader.readAsDataURL`) et stocké tel quel, sans aucune
+  compression, dans `localStorage` (clé `seat-mrahba-admin-events`, un seul
+  blob JSON pour tous les événements). Un export Canva réaliste (format
+  vertical conseillé 1080×1920, avec une image de fond/texture) pèse
+  facilement plusieurs Mo en PNG brut. Le quota `localStorage` d'un
+  navigateur est typiquement de ~5-10 Mo **par origine, tous events et
+  toutes clés confondus** — un seul gros visuel suffit à le dépasser, et
+  `localStorage.setItem()` lève alors une exception (`QuotaExceededError`)
+  qui était **avalée silencieusement** par un `catch { /* ignore */ }`
+  dans `store.tsx` (persistance de l'admin) et dans `savePhotos()`
+  (galerie invité, `event/[id]/page.tsx`). Résultat : l'image restait
+  visible dans l'admin (état React en mémoire) mais n'était jamais
+  réellement écrite sur disque — le site invité, qui relit `localStorage`
+  depuis zéro à chaque chargement, ne la voyait donc jamais. Reproduit et
+  confirmé avec Playwright : upload d'un visuel de test de 17 Mo → `false`
+  sur la persistance réelle, aucune image sur le site public.
+- **Fix (double)** :
+  1. **Compression avant stockage** (nouvelle fonction
+     `compressImageToDataURL()`, `utils.ts`) : redimensionne (canvas) au
+     format conseillé 1080×1920 et recompresse en JPEG qualité 0.85 —
+     sauf le logo, qui reste en PNG (transparence nécessaire pour le
+     filigrane) mais plafonné à 600×600. Appliquée aux 7 points d'import :
+     `StepHome` (accueil), `StepProgramme`, `StepMenu`, `StepSeating`
+     (plan de secours), `StepDesign` (logo + fond de site), et la galerie
+     invité (`event/[id]/page.tsx`). Un visuel de test de 17 Mo brut
+     redescend à ~360 Ko une fois compressé — 5 visuels de ce type sur un
+     même événement (accueil + programme + menu + plan de table + fond)
+     totalisent ~1,8 Mo, contre ~85 Mo bruts avant.
+  2. **Filet de sécurité** : les échecs d'écriture localStorage ne sont
+     plus jamais silencieux. `store.tsx` alerte désormais clairement
+     l'admin dès qu'une sauvegarde échoue réellement ("visuel trop lourd
+     ou trop de visuels au total"), sans spammer si l'échec persiste sur
+     plusieurs modifications d'affilée. `savePhotos()` retourne un
+     booléen de succès ; la galerie invité alerte et annule l'ajout côté
+     UI si l'écriture a échoué, au lieu de laisser croire que la photo est
+     enregistrée.
+- Vérifié de bout en bout avec Playwright : reproduction du bug sur le
+  code d'avant (échec silencieux confirmé), puis re-test identique sur le
+  code corrigé (persistance réussie, image bien affichée sur le site
+  invité après relecture complète de `localStorage`).
+- Fichiers modifiés : `utils.ts` (nouvelle fonction), `store.tsx` (alerte
+  non-silencieuse), `StepHome.tsx`, `StepProgramme.tsx`, `StepMenu.tsx`,
+  `StepSeating.tsx`, `StepDesign.tsx`, `event/[id]/page.tsx`.

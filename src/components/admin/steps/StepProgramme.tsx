@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Event, ProgrammeItem } from '@/lib/admin/types';
-import { generateId } from '@/lib/admin/utils';
+import { generateId, compressImageToDataURL } from '@/lib/admin/utils';
 import { CheckCircle2, Upload, X, ImageIcon, ToggleLeft, ToggleRight, Plus, Trash2 } from 'lucide-react';
 
 interface Props {
@@ -24,13 +24,14 @@ export default function StepProgramme({ event, update, markComplete }: Props) {
     update({ sections: { ...event.sections, programme: !active } });
   }
 
-  function handleFile(files: FileList | null) {
+  async function handleFile(files: FileList | null) {
     const file = files?.[0];
     if (!file) return;
     if (!['image/png', 'image/jpeg'].includes(file.type)) return;
-    const reader = new FileReader();
-    reader.onload = e => update({ programmeImage: e.target?.result as string });
-    reader.readAsDataURL(file);
+    // Compressé avant stockage : un visuel Canva non compressé peut dépasser le
+    // quota localStorage et échouer à se sauvegarder silencieusement.
+    const dataUrl = await compressImageToDataURL(file);
+    update({ programmeImage: dataUrl });
   }
 
   function addP() {

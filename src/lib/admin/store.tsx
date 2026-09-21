@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import type { Event, BuilderStepKey } from './types';
 import { createDefaultEvent, markStepComplete } from './utils';
 
@@ -42,12 +42,25 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Persist on change
+  // Persist on change.
+  // Ne jamais avaler l'échec silencieusement : un visuel Canva volumineux peut
+  // dépasser le quota localStorage (~5-10 Mo/origine) — sans alerte, l'admin
+  // pense avoir sauvegardé alors que rien n'est persisté, et le visuel
+  // n'apparaît jamais sur le mini-site invité (qui relit localStorage à part).
+  const warnedRef = useRef(false);
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-    } catch {
-      // ignore
+      warnedRef.current = false;
+    } catch (err) {
+      if (!warnedRef.current) {
+        warnedRef.current = true;
+        console.error('Échec de sauvegarde (quota localStorage dépassé ?)', err);
+        alert(
+          "Impossible d'enregistrer : le visuel importé est trop lourd (ou trop de visuels au total).\n\n" +
+          "Réduisez la taille de l'export Canva (ou remplacez un visuel existant) et réessayez."
+        );
+      }
     }
   }, [events]);
 

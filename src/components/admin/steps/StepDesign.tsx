@@ -5,7 +5,7 @@ import {
   Event, Theme, ThemePreset, Typography, BorderRadius, LogoPlacement, OverlayTone,
   THEME_PRESETS, FONT_OPTIONS,
 } from '@/lib/admin/types';
-import { generateId } from '@/lib/admin/utils';
+import { generateId, compressImageToDataURL } from '@/lib/admin/utils';
 import {
   CheckCircle2, Upload, X, RotateCcw, Save, Trash2, LayoutTemplate, Image as ImageIcon, Sparkles,
 } from 'lucide-react';
@@ -121,20 +121,19 @@ export default function StepDesign({ event, update, markComplete }: Props) {
     persistCustomPresets(updated);
   }
 
-  function readImage(file: File, onDone: (dataUrl: string) => void) {
-    const reader = new FileReader();
-    reader.onload = e => onDone(e.target?.result as string);
-    reader.readAsDataURL(file);
+  // Compressées avant stockage : un visuel non compressé peut dépasser le quota
+  // localStorage et échouer à se sauvegarder silencieusement.
+  async function handleLogo(files: FileList | null) {
+    if (!files?.[0]) return;
+    // PNG conservé (pas de JPEG) pour garder la transparence, utile en filigrane.
+    const dataUrl = await compressImageToDataURL(files[0], { maxWidth: 600, maxHeight: 600, keepPng: true });
+    updateTheme(event, update, { logo: dataUrl });
   }
 
-  function handleLogo(files: FileList | null) {
+  async function handleBgImage(files: FileList | null) {
     if (!files?.[0]) return;
-    readImage(files[0], url => updateTheme(event, update, { logo: url }));
-  }
-
-  function handleBgImage(files: FileList | null) {
-    if (!files?.[0]) return;
-    readImage(files[0], url => updateTheme(event, update, { backgroundType: 'image', backgroundImage: url }));
+    const dataUrl = await compressImageToDataURL(files[0]);
+    updateTheme(event, update, { backgroundType: 'image', backgroundImage: dataUrl });
   }
 
   const label = 'block text-[11px] font-medium tracking-wide uppercase text-[#9B7A56] mb-3';
