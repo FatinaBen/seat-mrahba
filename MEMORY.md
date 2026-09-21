@@ -655,3 +655,48 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
 - Fichiers modifiés : `utils.ts` (nouvelle fonction), `store.tsx` (alerte
   non-silencieuse), `StepHome.tsx`, `StepProgramme.tsx`, `StepMenu.tsx`,
   `StepSeating.tsx`, `StepDesign.tsx`, `event/[id]/page.tsx`.
+
+### 21/09 — Suite : le bug persistait sur les événements existants + "Marquer comme fait" bloqué
+- Signalé à nouveau juste après le fix précédent : "je mets les images
+  dans menu/programme/accueil mais toujours le bug, elles n'apparaissent
+  pas dans l'aperçu" + "marquer comme fait ça bug aussi, je n'arrive pas".
+- Vérifié d'abord que le fix précédent fonctionne bien sur un événement
+  **neuf** (Playwright, dev ET build de prod) : upload, "Marquer comme
+  complété", hard reload, rendu public — tout est passé. Le bug restant
+  ne pouvait donc concerner que des événements **déjà existants**, créés
+  avant le fix.
+- **Cause racine confirmée par reproduction** : un événement créé avant
+  l'ajout de la compression peut contenir un champ image resté non
+  compressé (un premier visuel "passé de justesse" sous le quota avant
+  qu'un suivant échoue). Ce champ à lui seul peut occuper la quasi-totalité
+  du quota localStorage (5 Mo sur Chromium) — **toute sauvegarde
+  ultérieure sur cet événement échoue alors**, y compris des actions qui
+  n'ont rien à voir avec l'image en cause : un nouvel upload sur une
+  *autre* section, ou simplement cliquer "Marquer comme complété" (même
+  effet de persistance globale de l'event, donc même échec). L'alerte
+  ajoutée au fix précédent ne se déclenche qu'une fois par "série
+  d'échecs" (pour ne pas spammer) — après ce premier avertissement,
+  d'autres tentatives échouaient silencieusement, ce qui correspond
+  exactement au "je n'arrive pas" sans mention de popup.
+  Reproduit précisément avec Playwright : injection d'un vieux champ
+  "hérité" de 3,4 Mo dans un événement de test → upload Menu et "Marquer
+  comme complété" échouent tous les deux, sans alerte visible (déjà
+  déclenchée une fois avant).
+- **Fix : réparation automatique et silencieuse au chargement**. Nouvelle
+  fonction `repairOversizedEventImages()` (`utils.ts`) : à l'hydratation
+  du store (`store.tsx`), chaque événement est scanné en tâche de fond ;
+  tout champ image (accueil, programme, menu, plan de table, fond, logo)
+  dont la taille dépasse ~700 Ko est recompressé sur place via le même
+  pipeline que l'upload (`compressDataURL`, extrait de
+  `compressImageToDataURL` pour pouvoir aussi partir d'une data URL déjà
+  stockée, pas seulement d'un `File`). Si rien n'a besoin d'être réparé,
+  aucun re-render ni ré-écriture n'est déclenché (comparaison par
+  référence). L'utilisateur n'a rien à faire : à la prochaine ouverture
+  du dashboard, l'événement est automatiquement "dégonflé".
+- Revérifié avec Playwright : même scénario qu'au-dessus (3,4 Mo de champ
+  hérité injecté) → après rechargement, le champ redescend à ~400 Ko,
+  upload Menu et "Marquer comme complété" réussissent tous les deux,
+  visuel bien visible sur le site invité. Re-testé aussi les scénarios
+  "événement neuf" (non affectés) pour confirmer l'absence de régression.
+- Fichiers modifiés : `utils.ts` (`compressDataURL`,
+  `repairOversizedEventImages`), `store.tsx` (appel au chargement).

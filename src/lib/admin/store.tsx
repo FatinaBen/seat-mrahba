@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import type { Event, BuilderStepKey } from './types';
-import { createDefaultEvent, markStepComplete } from './utils';
+import { createDefaultEvent, markStepComplete, repairOversizedEventImages } from './utils';
 
 const STORAGE_KEY = 'seat-mrahba-admin-events';
 
@@ -34,7 +34,21 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setEvents(JSON.parse(stored));
+      if (stored) {
+        const parsed: Event[] = JSON.parse(stored);
+        setEvents(parsed);
+
+        // Réparation silencieuse : un événement créé avant l'ajout de la
+        // compression d'image peut contenir un visuel resté non compressé,
+        // qui à lui seul peut ensuite bloquer TOUTE sauvegarde ultérieure
+        // sur cet événement (nouvel upload, "Marquer comme complété"…).
+        // On recompresse ici les champs concernés, en tâche de fond, sans
+        // bloquer l'affichage — si rien à réparer, aucun re-render déclenché.
+        (async () => {
+          const repaired = await Promise.all(parsed.map(repairOversizedEventImages));
+          if (repaired.some((e, i) => e !== parsed[i])) setEvents(repaired);
+        })();
+      }
     } catch {
       // ignore
     } finally {
