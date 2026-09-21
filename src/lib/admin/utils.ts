@@ -272,28 +272,72 @@ interface CompressImageOptions {
   keepPng?: boolean;
 }
 
-export function compressImageToDataURL(file: File, options: CompressImageOptions = {}): Promise<string> {
+// Cœur du redimensionnement/recompression : part d'une data URL déjà en mémoire
+// (pas besoin du fichier d'origine) — utilisé à l'upload ET pour réparer a
+// posteriori les images déjà stockées (voir `repairOversizedEventImages`).
+export function compressDataURL(dataUrl: string, options: CompressImageOptions = {}): Promise<string> {
   const { maxWidth = 1080, maxHeight = 1920, quality = 0.85, keepPng = false } = options;
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onerror = () => reject(new Error('Image illisible'));
+    img.onload = () => {
+      const ratio = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+      const width = Math.max(1, Math.round(img.width * ratio));
+      const height = Math.max(1, Math.round(img.height * ratio));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { resolve(dataUrl); return; } // fallback : image non redimensionnée
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(keepPng ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+}
+
+export function compressImageToDataURL(file: File, options: CompressImageOptions = {}): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(reader.error ?? new Error('Lecture du fichier impossible'));
-    reader.onload = () => {
-      const img = new window.Image();
-      img.onerror = () => reject(new Error('Image illisible'));
-      img.onload = () => {
-        const ratio = Math.min(1, maxWidth / img.width, maxHeight / img.height);
-        const width = Math.max(1, Math.round(img.width * ratio));
-        const height = Math.max(1, Math.round(img.height * ratio));
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) { resolve(reader.result as string); return; } // fallback : image non redimensionnée
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(keepPng ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', quality));
-      };
-      img.src = reader.result as string;
-    };
+    reader.onload = () => compressDataURL(reader.result as string, options).then(resolve, reject);
     reader.readAsDataURL(file);
   });
+}
+
+// ─── Réparation des images déjà stockées (migration silencieuse) ───────────────
+// Un événement créé avant l'ajout de la compression peut contenir un visuel
+// resté non compressé (ex. un premier visuel passé de justesse sous le quota
+// avant que d'autres échouent) : ce champ, à lui seul, peut ensuite empêcher
+// TOUTE sauvegarde ultérieure sur cet événement (nouvel upload, "Marquer comme
+// complété"…), silencieusement. On répare donc au chargement : tout champ
+// image dépassant un seuil raisonnable est recompressé sur place.
+const OVERSIZED_THRESHOLD = 700 * 1024; // ~700 Ko de data URL : au-delà, jamais un visuel déjà compressé par ce pipeline.
+
+interface ImageFieldSpec { get: (e: Event) => string | undefined; set: (e: Event, v: string) => Event; keepPng?: boolean }
+
+const IMAGE_FIELDS: ImageFieldSpec[] = [
+  { get: e => e.theme.heroImage, set: (e, v) => ({ ...e, theme: { ...e.theme, heroImage: v } }) },
+  { get: e => e.programmeImage, set: (e, v) => ({ ...e, programmeImage: v }) },
+  { get: e => e.menuImage, set: (e, v) => ({ ...e, menuImage: v }) },
+  { get: e => e.seatingImage, set: (e, v) => ({ ...e, seatingImage: v }) },
+  { get: e => e.theme.backgroundImage, set: (e, v) => ({ ...e, theme: { ...e.theme, backgroundImage: v } }) },
+  { get: e => e.theme.logo, set: (e, v) => ({ ...e, theme: { ...e.theme, logo: v } }), keepPng: true },
+];
+
+/** Recompresse en place les champs image d'un événement qui dépassent le seuil.
+ *  Retourne le même objet (référence inchangée) si rien n'avait besoin d'être réparé. */
+export async function repairOversizedEventImages(event: Event): Promise<Event> {
+  let result = event;
+  for (const field of IMAGE_FIELDS) {
+    const value = field.get(result);
+    if (!value || value.length <= OVERSIZED_THRESHOLD) continue;
+    try {
+      const fixed = await compressDataURL(value, field.keepPng ? { keepPng: true, maxWidth: 600, maxHeight: 600 } : {});
+      result = field.set(result, fixed);
+    } catch {
+      // Image illisible/corrompue : laissée telle quelle plutôt que de faire échouer toute la réparation.
+    }
+  }
+  return result;
 }
