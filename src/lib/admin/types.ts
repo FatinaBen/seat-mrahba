@@ -66,7 +66,8 @@ export interface Theme {
   typography: Typography;    // police des titres
   bodyFont: Typography;      // police du texte courant
   borderRadius: BorderRadius;
-  heroImage: string;         // visuel Canva de la page d'accueil (étape "Page d'accueil")
+  heroImage: string;         // visuel Canva de la page d'accueil, déjà recadré 9:16 (étape "Page d'accueil")
+  heroImageSource: string;   // fichier importé avant recadrage — permet de rouvrir l'outil de recadrage sans repartir de zéro
   logo: string;
   logoPlacement: LogoPlacement;
   logoWatermarkOpacity: number; // 0-100, filigrane uniquement
@@ -127,9 +128,11 @@ export interface Event {
   theme: Theme;
   sections: Sections;
   menu: MenuSection[];
-  menuImage: string; // visuel Canva importé
+  menuImage: string; // visuel Canva importé, déjà recadré 9:16
+  menuImageSource: string; // fichier importé avant recadrage — pour rouvrir l'outil de recadrage
   programme: ProgrammeItem[];
-  programmeImage: string; // visuel Canva importé (prioritaire sur `programme`)
+  programmeImage: string; // visuel Canva importé (prioritaire sur `programme`), déjà recadré 9:16
+  programmeImageSource: string; // fichier importé avant recadrage — pour rouvrir l'outil de recadrage
   seatingImage: string; // visuel Canva optionnel du plan de table (en plus du plan généré)
   gallery: string[]; // photos uploadées par les invités
   builderSteps: BuilderStep[];

@@ -227,9 +227,10 @@ function GuestSite({ event }: { event: Event }) {
 }
 
 // ─── Hero ──────────────────────────────────────────────────────────────────────
-// Avec visuel Canva importé (page d'accueil) : l'image est affichée en entier,
-// sans recadrage ni déformation (object-fit: contain) — c'est un design fini,
-// on ne superpose pas de texte généré par-dessus.
+// Avec visuel Canva importé (page d'accueil) : déjà recadré au format vertical
+// 9:16 par l'admin à l'import (voir ImageUploadCropper) — affiché en object-fit
+// cover pour remplir tout l'écran sans bande noire, quel que soit le ratio exact
+// de l'appareil ; c'est un design fini, on ne superpose pas de texte généré par-dessus.
 // Sans visuel : écran d'accueil généré (dégradé + grain), avec titre + CTA
 // personnalisables (étapes "Page d'accueil" et "Informations").
 function Hero({ event, st }: { event: Event; st: SiteStyle }) {
@@ -238,15 +239,11 @@ function Hero({ event, st }: { event: Event; st: SiteStyle }) {
 
   if (hasCover) {
     return (
-      <section
-        className="relative flex items-center justify-center"
-        style={{ minHeight: '100svh', background: '#1A0F08' }}
-      >
+      <section className="relative" style={{ height: '100svh', background: '#1A0F08' }}>
         <img
           src={event.theme.heroImage}
           alt={heroTitle(event)}
-          className="w-full h-full"
-          style={{ objectFit: 'contain', maxHeight: '100svh' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
         <div className="anim-scroll absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <div className="bounce"><ChevronDown size={18} className="text-white/50" /></div>
@@ -403,17 +400,17 @@ function SeatingSection({ event, st }: { event: Event; st: SiteStyle }) {
 
 // ─── Programme ─────────────────────────────────────────────────────────────────
 function ProgrammeSection({ event, st }: { event: Event; st: SiteStyle }) {
-  // Visuel Canva importé : affiché tel quel, en plein écran — même traitement que
-  // la couverture de la page d'accueil (Hero avec hasCover), pas une image
-  // encartée dans une carte de largeur limitée.
+  // Visuel Canva importé (déjà recadré 9:16 à l'import) : plein écran, même
+  // traitement que la couverture de la page d'accueil — object-fit cover pour
+  // ne jamais laisser de bande noire, pas une image encartée dans une carte de
+  // largeur limitée.
   if (event.programmeImage) {
     return (
-      <section className="relative flex items-center justify-center" style={{ minHeight: '100svh', background: '#1A0F08' }}>
+      <section className="relative" style={{ height: '100svh', background: '#1A0F08' }}>
         <img
           src={event.programmeImage}
           alt="Programme"
-          className="w-full h-full"
-          style={{ objectFit: 'contain', maxHeight: '100svh' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </section>
     );
@@ -459,16 +456,16 @@ function ProgrammeSection({ event, st }: { event: Event; st: SiteStyle }) {
 
 // ─── Menu ──────────────────────────────────────────────────────────────────────
 function MenuSection({ event, st }: { event: Event; st: SiteStyle }) {
-  // Visuel Canva importé : affiché tel quel, en plein écran — même traitement que
-  // la couverture de la page d'accueil (Hero avec hasCover) et le Programme.
+  // Visuel Canva importé (déjà recadré 9:16 à l'import) : plein écran, même
+  // traitement que la couverture de la page d'accueil et le Programme —
+  // object-fit cover pour ne jamais laisser de bande noire.
   if (event.menuImage) {
     return (
-      <section className="relative flex items-center justify-center" style={{ minHeight: '100svh', background: '#1A0F08' }}>
+      <section className="relative" style={{ height: '100svh', background: '#1A0F08' }}>
         <img
           src={event.menuImage}
           alt="Menu"
-          className="w-full h-full"
-          style={{ objectFit: 'contain', maxHeight: '100svh' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </section>
     );

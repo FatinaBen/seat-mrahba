@@ -1,9 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
 import { Event } from '@/lib/admin/types';
-import { compressImageToDataURL } from '@/lib/admin/utils';
-import { CheckCircle2, Upload, X, ImageIcon, ToggleLeft, ToggleRight } from 'lucide-react';
+import { CheckCircle2, ImageIcon, ToggleLeft, ToggleRight } from 'lucide-react';
+import ImageUploadCropper from '../ImageUploadCropper';
 
 interface Props {
   event: Event;
@@ -13,21 +12,10 @@ interface Props {
 
 export default function StepMenu({ event, update, markComplete }: Props) {
   const isDone = event.builderSteps.find(s => s.key === 'menu')?.completed;
-  const fileRef = useRef<HTMLInputElement>(null);
   const active = event.sections.menu;
 
   function toggle() {
     update({ sections: { ...event.sections, menu: !active } });
-  }
-
-  async function handleFile(files: FileList | null) {
-    const file = files?.[0];
-    if (!file) return;
-    if (!['image/png', 'image/jpeg'].includes(file.type)) return;
-    // Compressé avant stockage : un visuel Canva non compressé peut dépasser le
-    // quota localStorage et échouer à se sauvegarder silencieusement.
-    const dataUrl = await compressImageToDataURL(file);
-    update({ menuImage: dataUrl });
   }
 
   return (
@@ -57,37 +45,17 @@ export default function StepMenu({ event, update, markComplete }: Props) {
 
       {active && (
         <div className="flex gap-8 items-start flex-wrap">
-          {/* Import / preview */}
+          {/* Import / recadrage / preview */}
           <div className="flex-1 min-w-[260px]">
-            <p className="text-[11px] text-[#9B7A56] mb-3">
-              Importez votre menu créé sur Canva (format vertical 1080×1920 px conseillé). Il sera affiché tel quel, sans modification.
-            </p>
-            {event.menuImage ? (
-              <div className="relative rounded-2xl overflow-hidden border" style={{ borderColor: 'rgba(26,15,8,0.1)' }}>
-                <img src={event.menuImage} alt="Menu" className="w-full object-contain" style={{ maxHeight: 320, background: '#F4F1ED' }} />
-                <button
-                  onClick={() => update({ menuImage: '' })}
-                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 flex items-center justify-center">
-                  <X size={12} className="text-white" />
-                </button>
-                <button
-                  onClick={() => fileRef.current?.click()}
-                  className="absolute bottom-2 right-2 px-3 py-1.5 rounded-lg bg-black/50 text-white text-[11px]">
-                  Remplacer le visuel
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => fileRef.current?.click()}
-                className="w-full h-56 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-colors hover:border-[#B85C28]"
-                style={{ borderColor: 'rgba(26,15,8,0.12)', background: 'white' }}>
-                <Upload size={20} className="text-[#C4A882]" />
-                <p className="text-[12px] font-medium text-[#1A0F08]">Importer le visuel</p>
-                <p className="text-[10px] text-[#C4A882]">PNG ou JPG</p>
-              </button>
-            )}
-            <input ref={fileRef} type="file" accept="image/png,image/jpeg" className="hidden"
-              onChange={e => handleFile(e.target.files)} />
+            <ImageUploadCropper
+              image={event.menuImage}
+              sourceImage={event.menuImageSource}
+              onChange={({ image, source }) => update({ menuImage: image, menuImageSource: source })}
+              onRemove={() => update({ menuImage: '', menuImageSource: '' })}
+              hint="Importez votre menu créé sur Canva. Il est recadré au format vertical à la validation, pour remplir tout l'écran sans bande noire."
+              alt="Menu"
+              emptyHeight={224}
+            />
           </div>
 
           {/* Aperçu mobile */}
@@ -95,7 +63,7 @@ export default function StepMenu({ event, update, markComplete }: Props) {
             <p className="text-[10px] uppercase tracking-wide text-[#9B7A56] mb-2 text-center">Aperçu mobile</p>
             <div className="relative rounded-[28px] border-[6px] border-[#1A0F08] overflow-hidden shadow-lg" style={{ width: 140, height: 280, background: '#fff' }}>
               {event.menuImage ? (
-                <img src={event.menuImage} alt="" className="w-full h-full object-contain" style={{ background: '#fff' }} />
+                <img src={event.menuImage} alt="" className="w-full h-full object-cover" style={{ background: '#fff' }} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <ImageIcon size={20} className="text-[rgba(26,15,8,0.15)]" />
