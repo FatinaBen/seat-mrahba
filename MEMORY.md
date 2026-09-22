@@ -700,3 +700,61 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   "événement neuf" (non affectés) pour confirmer l'absence de régression.
 - Fichiers modifiés : `utils.ts` (`compressDataURL`,
   `repairOversizedEventImages`), `store.tsx` (appel au chargement).
+
+### 22/09 — Recadrage à l'upload (façon "story") pour Page d'accueil, Menu, Programme
+- Demandé : les visuels Canva importés (Page d'accueil, Menu, Programme)
+  s'affichaient dans leur ratio d'origine sur le mini-site, avec des
+  bandes noires en haut/bas quand ce ratio ne correspond pas au cadre
+  mobile. Demande explicite d'un outil de recadrage à l'upload (façon
+  "story" Instagram, ratio 9:16 fixe, zoom/déplacement, aperçu temps réel),
+  composant réutilisable pour les trois sections (et les suivantes),
+  possibilité de rouvrir le recadrage plus tard.
+- **Nouveau composant partagé** `ImageUploadCropper.tsx` (utilise
+  `react-easy-crop`, seule dépendance ajoutée — pas d'équivalent existant
+  dans le projet) : gère l'upload, l'aperçu, le modal de recadrage
+  (zoom/déplacement, grille 9:16, boutons Annuler/Valider) et le bouton
+  "Recadrer" pour rouvrir l'outil sur un visuel déjà importé. Utilisé tel
+  quel par `StepHome`, `StepMenu`, `StepProgramme` — une seule
+  implémentation du crop, pas trois.
+- **Deux champs par visuel** : le résultat déjà recadré (`heroImage`,
+  `menuImage`, `programmeImage` — utilisé pour l'affichage) et le fichier
+  importé avant recadrage, recompressé mais pas rogné (`heroImageSource`,
+  `menuImageSource`, `programmeImageSource` — nouveaux champs `types.ts`).
+  Sans ce second champ, rouvrir l'outil de recadrage repartirait de
+  l'image déjà rognée : impossible de "dézoomer" pour revoir une partie
+  coupée au premier recadrage. Les deux champs sont compressés (le
+  résultat via le crop-to-canvas, la source via `compressDataURL`) et
+  couverts par la réparation automatique de la session précédente
+  (`repairOversizedEventImages`, `IMAGE_FIELDS` étendu).
+- À la validation, le recadrage est dessiné sur un canvas à une résolution
+  de sortie fixe (1080×1920, le format vertical conseillé) puis exporté en
+  JPEG — garantit un rendu identique quel que soit le fichier importé.
+- **Bug découvert et corrigé au passage, indispensable pour tenir la
+  promesse "sans bande noire"** : même en garantissant un visuel stocké
+  exactement 9:16, le rendu public gardait `object-fit: contain` (choix
+  initial pour ne jamais rogner un design fini) — changé en `cover` pour
+  les trois sections (`Hero` avec `hasCover`, `MenuSection`,
+  `ProgrammeSection`, `event/[id]/page.tsx`), puisque l'écran réel d'un
+  téléphone n'est jamais exactement 9:16 non plus. Un second bug, plus
+  subtil, a aussi été trouvé et corrigé en testant visuellement : le
+  `<img>` lui-même (flex + `w-full h-full` + `maxHeight:100svh`, sans
+  hauteur explicite sur le parent) ne remplissait pas toute la hauteur de
+  la section dans certains cas — laissant des bandes du fond sombre de la
+  section visibles même avec `object-fit:cover` appliqué. Les trois
+  sections sont passées en positionnement absolu (`position:absolute;
+  inset:0`) dans une section à `height:100svh` fixe (plus `minHeight`) —
+  garantit un remplissage pixel-parfait du viewport, vérifié à 390×844.
+- Vérifié de bout en bout avec Playwright : upload d'un visuel paysage
+  (4:3, ratio très différent de 9:16) sur les trois sections → modal de
+  recadrage affiché, validation → image stockée exactement 1080×1920,
+  bouton "Recadrer" rouvre l'outil sur le fichier source, "Annuler" ne
+  modifie rien, suppression (X) efface les deux champs et fait
+  réapparaître la note d'aide adaptée. Rendu public capturé en plein écran
+  mobile (390×844) sans aucune bande, pour les trois sections. Aucune
+  régression sur "Marquer comme complété" ni sur la réparation automatique
+  des événements existants (sessions précédentes).
+- Fichiers modifiés : `types.ts` (champs `*Source`), `utils.ts`
+  (`IMAGE_FIELDS` étendu), `StepHome.tsx`, `StepMenu.tsx`,
+  `StepProgramme.tsx`, `event/[id]/page.tsx` (object-fit + positionnement).
+  Fichier ajouté : `ImageUploadCropper.tsx`. Dépendance ajoutée :
+  `react-easy-crop`.
