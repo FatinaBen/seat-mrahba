@@ -16,7 +16,7 @@
 // pour permettre de rouvrir l'outil et changer le cadrage plus tard sans repartir
 // d'un fichier déjà rogné (on perdrait alors les parties coupées la première fois).
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import Cropper, { Area, Point } from 'react-easy-crop';
 import { Upload, X, Crop as CropIcon } from 'lucide-react';
 import { compressDataURL } from '@/lib/admin/utils';
@@ -70,6 +70,20 @@ async function cropToDataURL(imageSrc: string, area: Area, outputWidth = 1080, o
   return canvas.toDataURL('image/jpeg', 0.85);
 }
 
+/** Zone centrée au ratio cible, en pixels de l'image d'origine (zoom 1, non
+ *  déplacée) — même résultat que le cadrage par défaut de react-easy-crop.
+ *  Calculée nous-mêmes pour ne jamais dépendre uniquement du callback
+ *  `onCropComplete` de la librairie (voir pourquoi ci-dessous). */
+function defaultCropArea(naturalWidth: number, naturalHeight: number, aspect: number): Area {
+  const imageAspect = naturalWidth / naturalHeight;
+  if (imageAspect > aspect) {
+    const width = naturalHeight * aspect;
+    return { x: (naturalWidth - width) / 2, y: 0, width, height: naturalHeight };
+  }
+  const height = naturalWidth / aspect;
+  return { x: 0, y: (naturalHeight - height) / 2, width: naturalWidth, height };
+}
+
 export default function ImageUploadCropper({
   image, sourceImage, onChange, onRemove, hint, alt, emptyHeight = 224, aspect = 9 / 16,
 }: ImageUploadCropperProps) {
@@ -79,10 +93,32 @@ export default function ImageUploadCropper({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [working, setWorking] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const onCropComplete = useCallback((_area: Area, areaPixels: Area) => {
     setCroppedAreaPixels(areaPixels);
   }, []);
+
+  // Précharge l'image dès l'ouverture du modal, et en déduit un cadrage par
+  // défaut (centré, zoom 1) immédiatement — sans attendre le callback
+  // `onCropComplete` de react-easy-crop. Bug corrigé : si ce callback ne se
+  // déclenche jamais (image très lourde/longue à décoder sur mobile,
+  // décodage qui échoue), "Valider le cadrage" restait désactivé pour
+  // toujours (`disabled={!croppedAreaPixels}`) — l'admin restait bloqué
+  // derrière le modal plein écran, sans pouvoir même atteindre le bouton
+  // "Marquer comme complété" plus bas sur la page.
+  useEffect(() => {
+    if (!pendingSrc) { setLoadError(null); return; }
+    let cancelled = false;
+    setLoadError(null);
+    loadImageElement(pendingSrc).then(img => {
+      if (cancelled) return;
+      setCroppedAreaPixels(defaultCropArea(img.naturalWidth, img.naturalHeight, aspect));
+    }).catch(() => {
+      if (!cancelled) setLoadError("Cette image n'a pas pu être chargée. Réessayez avec un autre fichier.");
+    });
+    return () => { cancelled = true; };
+  }, [pendingSrc, aspect]);
 
   async function handleFileSelect(files: FileList | null) {
     const file = files?.[0];
@@ -122,6 +158,11 @@ export default function ImageUploadCropper({
       ]);
       onChange({ image: croppedResult, source: compressedSource });
       setPendingSrc(null);
+    } catch {
+      // Jamais d'échec silencieux : le modal reste ouvert (l'admin garde la
+      // main via Annuler) mais on dit clairement ce qui s'est passé, plutôt
+      // que de laisser le bouton tourner indéfiniment sur "Traitement…".
+      setLoadError("Le recadrage a échoué. Réessayez, ou importez un autre fichier.");
     } finally {
       setWorking(false);
     }
@@ -166,8 +207,13 @@ export default function ImageUploadCropper({
 
       {pendingSrc && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(10,5,2,0.75)' }}>
-          <div className="w-full max-w-sm rounded-2xl overflow-hidden" style={{ background: '#1A0F08' }}>
-            <div className="relative w-full" style={{ height: 420, background: '#0A0502' }}>
+          {/* maxHeight + overflow-y : sur un petit écran mobile, le cadreur (hauteur fixe)
+              + le pied de modal pouvaient ensemble dépasser la hauteur visible de
+              l'écran — les boutons Annuler/Valider se retrouvaient rendus hors-écran,
+              inatteignables (aucun scroll possible sur le modal). Le pied reste
+              toujours accessible, au pire via un scroll sur le modal lui-même. */}
+          <div className="w-full max-w-sm rounded-2xl overflow-y-auto" style={{ background: '#1A0F08', maxHeight: '92svh' }}>
+            <div className="relative w-full" style={{ height: 'min(420px, 48svh)', background: '#0A0502' }}>
               <Cropper
                 image={pendingSrc}
                 crop={crop}
@@ -190,6 +236,9 @@ export default function ImageUploadCropper({
                 />
               </div>
               <p className="text-[10px] text-white/40">Déplacez et zoomez l&apos;image pour choisir la partie visible sur le mini-site.</p>
+              {loadError && (
+                <p className="text-[11px] text-[#E8A598] bg-[#E8A598]/10 rounded-lg px-3 py-2">{loadError}</p>
+              )}
               <div className="flex gap-2 pt-1">
                 <button
                   onClick={closeCropper}

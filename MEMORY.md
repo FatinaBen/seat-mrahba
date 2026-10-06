@@ -758,3 +758,53 @@ avec un service haut de gamme dédié aux mariages/événements élégants.
   `StepProgramme.tsx`, `event/[id]/page.tsx` (object-fit + positionnement).
   Fichier ajouté : `ImageUploadCropper.tsx`. Dépendance ajoutée :
   `react-easy-crop`.
+
+### 06/10 — Modal de recadrage bloquant sur mobile (suite du recadrage à l'upload)
+- Signalé : "quand je mets les JPEG/Canva des menus/programme, ils ne
+  ressortent pas sur le mini-site, je n'arrive pas à appuyer sur 'Marquer
+  comme complété'" — uniquement sur Page d'accueil/Menu/Programme (les
+  trois étapes qui utilisent `ImageUploadCropper`), Informations continue
+  de fonctionner normalement.
+- **Cause racine confirmée par reproduction** : le modal de recadrage
+  (`ImageUploadCropper`) a une hauteur fixe (zone de crop 420px + pied de
+  modal) sans limite de hauteur ni scroll. Sur un vrai téléphone, la
+  hauteur de viewport utilisable (une fois la barre d'adresse et la barre
+  d'outils du navigateur visibles) peut descendre à ~450-550px — en
+  dessous de ce seuil, les boutons "Annuler"/"Valider le cadrage" sont
+  rendus **hors de l'écran visible**, sans aucun moyen de scroller jusqu'à
+  eux. Reproduit avec Playwright à 480px de hauteur de viewport : le
+  bouton "Valider" se retrouvait à y=468-511, dépassant les 480px
+  disponibles — inatteignable au doigt (Playwright, lui, peut cliquer
+  "hors écran" via son auto-scroll interne, ce qu'un vrai doigt ne peut
+  pas faire — d'où le fait que mes propres tests précédents, sur desktop,
+  n'avaient rien détecté). Coincé derrière ce modal plein écran
+  (`fixed inset-0`), impossible d'atteindre "Marquer comme complété" plus
+  bas sur la page — ce qui explique aussi le symptôme "images qui ne
+  ressortent pas" (le recadrage n'était jamais validé).
+- Second bug, plus rare mais trouvé et corrigé en même temps : le bouton
+  "Valider le cadrage" restait désactivé (`disabled={!croppedAreaPixels}`)
+  tant que le callback `onCropComplete` de `react-easy-crop` n'avait pas
+  déclenché une première fois — sur une image longue à décoder, ce
+  callback pouvait tarder ou (en cas d'échec de décodage) ne jamais se
+  déclencher, laissant le bouton désactivé indéfiniment sans aucun message.
+- **Fix** :
+  - Modal plafonné à `maxHeight: 92svh` + `overflow-y-auto` — ne dépasse
+    plus jamais l'écran visible ; si le contenu est malgré tout trop haut,
+    un scroll (sur le modal lui-même) reste possible plutôt qu'un
+    débordement invisible. Zone de crop passée à une hauteur responsive
+    (`min(420px, 48svh)`) pour limiter le besoin de scroller en pratique.
+  - Cadrage par défaut (centré, zoom 1) calculé nous-mêmes dès l'ouverture
+    du modal (dès que l'image précitée a fini de charger), sans dépendre
+    uniquement du callback de la librairie — "Valider" est utilisable
+    immédiatement, avant toute interaction.
+  - Erreurs de chargement/recadrage désormais affichées explicitement
+    dans le modal (plus d'échec silencieux) ; le `try/catch` autour de
+    `confirmCrop()` garantit que le bouton ne reste jamais bloqué sur
+    "Traitement…".
+- Revérifié avec Playwright à 480px de hauteur : bouton "Valider"
+  désormais entièrement dans le viewport, utilisable dès 150ms après
+  ouverture, flux complet (upload → crop → valider → marquer comme
+  complété) fonctionnel sur les trois sections, rendu public conforme.
+  Confirmé la régression sur le code d'avant le fix (même test, bouton
+  hors-écran) pour valider le diagnostic.
+- Fichier modifié : `ImageUploadCropper.tsx`.
